@@ -6,6 +6,8 @@ both
 - sudo /Library/Tomcat/bin/startup.sh    
 - sudo /Library/Tomcat/bin/shutdown.sh     
 - $ `mvn clean package tomcat7:deploy`    
+- $ `mvn tomcat7:undeploy`    
+
 
 ---
 
@@ -31,9 +33,9 @@ GCE
 [http://173.255.114.111:8080/manager/html](http://173.255.114.111:8080/manager/html)    
 [http://173.255.114.111:8080/host-manager/html](http://173.255.114.111:8080/host-manager/html)    
 
-- ~~$ `sudo service tomcat7 start`~~    
-- ~~$ `sudo service tomcat7 restart`~~    
-- ~~$ `sudo service tomcat7 stop`~~      
+~~sudo service tomcat7 start~~    
+~~sudo service tomcat7 restart~~    
+~~sudo service tomcat7 stop~~      
 
 ---
 

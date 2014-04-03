@@ -1,0 +1,110 @@
+/* General Demo Style */
+
+.containerheadbar > header {
+	width: 90%;
+	max-width: 69em;
+	margin: 0 auto;
+	padding: 0.875em 1.875em 1.875em;
+}
+
+.containerheadbar > header h1 {
+	font-size: 2.125em;
+	line-height: 1.3;
+	margin: 0;
+	float: left;
+	font-weight: 400;
+}
+
+.containerheadbar > header span {
+	display: block;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5em;
+	padding: 0 0 0.6em 0.1em;
+}
+
+.containerheadbar > header nav {
+	float: right;
+}
+
+.containerheadbar > header nav a {
+	display: block;
+	float: left;
+	position: relative;
+	width: 2.5em;
+	height: 2.5em;
+	background: #fff;
+	border-radius: 50%;
+	color: transparent;
+	margin: 0 0.1em;
+	border: 4px solid #47a3da;
+	text-indent: -8000px;
+}
+
+.containerheadbar > header nav a:after {
+	content: attr(data-info);
+	color: #47a3da;
+	position: absolute;
+	width: 600%;
+	top: 120%;
+	text-align: right;
+	right: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.containerheadbar > header nav a:hover:after {
+	opacity: 1;
+}
+
+.containerheadbar > header nav a:hover {
+	background: #47a3da;
+}
+
+.containerheadbar > header button {
+	float: left;
+	display: block;
+	position: relative;
+	width: 2.5em;
+	height: 2.5em;
+	background: #fff;
+	border-radius: 50%;
+	color: transparent;
+	margin: 0 0.1em;
+	border: 4px solid #47a3da;
+	text-indent: -8000px;
+}
+
+.containerheadbar > header button:after {
+	float: left;
+	content: attr(data-info);
+	color: #47a3da;
+	position: absolute;
+	width: 600%;
+	top: 120%;
+	text-align: right;
+	right: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.containerheadbar > header button:hover:after {
+	opacity: 1;
+}
+
+.containerheadbar > header button:hover {
+	background: #47a3da;
+}
+
+.containerheadbar > header button.active {
+	background: #0d77b6;
+}
+
+.containerheadbar > header button.disabled {
+	background: #aaa;
+	pointer-events: none;
+}
+
+.containerheadbar > header nav a:hover:before {
+	color: #fff;
+}
