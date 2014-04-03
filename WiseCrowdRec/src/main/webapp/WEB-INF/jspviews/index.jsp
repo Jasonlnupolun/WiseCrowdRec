@@ -107,7 +107,7 @@
     <body class="cbp-spmenu-push">
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
     		<h3>Left Menu</h3>
-    		<a href="http://localhost:8080/WiseCrowdRecWebApp/">Back to home</a>
+    		<a href=${pageContext.request.contextPath}>Back to home</a>
     <!-- AJAX json begin -->
     			
     	<br><br><br>
@@ -205,7 +205,7 @@
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
     		<h3>Right Menu</h3>
-    		<a href="http://localhost:8080/WiseCrowdRecWebApp/">Back to home</a>  
+    		<a href=${pageContext.request.contextPath}>Back to home</a>  
     <!-- Sentiment Analysis begin -->
 
 	<!-- Sentiment Analysis end -->
