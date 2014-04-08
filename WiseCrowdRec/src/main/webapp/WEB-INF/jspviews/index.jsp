@@ -207,6 +207,26 @@
     		<h3>Right Menu</h3>
     		<a href=${pageContext.request.contextPath}>Back to home</a>  
     <!-- Sentiment Analysis begin -->
+	<div class="container">
+	
+		<div class="row">
+			<div class="col-md-6">
+				<textarea class="form-control" rows="3"
+					placeholder="Text...  current time: ${serverTime}." id="text"
+					name="text"></textarea>
+				
+				<input type="checkbox" id="twitterSearchEnabled" name="twitterSearchEnabled">Search Keywords on Twitter 
+				<input type="submit" value="Run Sentiment Analysis" id="submit"
+					class="btn btn-success">
+			</div>
+		</div>
+		<div id="loading" style="display: none;" class="container">
+			<img src="resources/images/loader.gif" alt="Please wait.." />
+		</div>
+
+		<div id="result" class="row"></div>
+	 
+	</div>
 
 	<!-- Sentiment Analysis end -->
 	 
@@ -221,7 +241,7 @@
     			<nav>
     				<!-- http://tympanus.net/Blueprints/QuotesRotator/ -->
     				<a href="#" class="icon-arrow-left" data-info="Posts">Posts</a>
-    				<a href="#" class="icon-drop" data-info="Menus Templates from Codrops">Menus Templates from Codrops</a>
+    				<a href="#" class="icon-drop" data-info="#">#</a>
     				
     			</nav>
     			<button id="showLeftPush" class="icon-drop" data-info="Show/Hide Left Push Menu">Show/Hide Left Push Menu</button>
