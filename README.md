@@ -23,6 +23,8 @@ local
 [http://localhost:8080/manager/html](http://localhost:8080/manager/html)      
 [http://localhost:8080/host-manager/html](http://localhost:8080/host-manager/html)     
 
+- Before importing this Maven project into eclipse, run $ `mvn eclipse:eclipse`      
+
 ---
 
 GCE  
