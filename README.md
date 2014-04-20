@@ -1,6 +1,41 @@
 WiseCrowdRec
 ============
 
+Setup project path in system bash file, for example, in Mac OS:  
+- $ `vim ~/.bash_profile`    
+
+```
+# WiseCrowdRec project home
+export WISECROWDREC_HOME=/Users/workspace/WiseCrowdRec/
+export PATH=$PATH:$WISECROWDREC_HOME/bin
+```
+
+- $ `source ~/.bash_profile`    
+
+---
+
+- Create the file named `config.properties` in `src/main/resources`  
+- Put your [twitter app](https://apps.twitter.com/) OAuth and WiseCrowdRec config info in `config.properties` as follows:   
+
+```
+debug=true
+oauth.consumerKey=********
+oauth.consumerSecret=********
+oauth.accessToken=********
+oauth.accessTokenSecret=********
+
+SEARCH_PHRASES=movie
+```
+
+---
+
+- `start_WiseCrowdRec.sh`    
+- `deployWCRonTomcat.sh`  
+- `startStreamCollection.sh`  
+- `beforeCommit.sh`  
+
+---
+
 both
 
 - sudo /Library/Tomcat/bin/startup.sh    
