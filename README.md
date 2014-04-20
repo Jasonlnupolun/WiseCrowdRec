@@ -36,10 +36,10 @@ SEARCH_PHRASES=movie
 
 ---
 
-both
+both on local and GCE    
 
-- sudo /Library/Tomcat/bin/startup.sh    
-- sudo /Library/Tomcat/bin/shutdown.sh     
+- /Library/Tomcat/bin/startup.sh    
+- /Library/Tomcat/bin/shutdown.sh     
 - $ `mvn clean package tomcat7:deploy`    
 - $ `mvn tomcat7:undeploy`    
 
@@ -63,6 +63,8 @@ local
 ---
 
 GCE  
+
+- $ `sudo su`    
 
 [http://173.255.114.111:8080/](http://173.255.114.111:8080/)    
 [http://173.255.114.111:8080/docs/](http://173.255.114.111:8080/docs/)    
