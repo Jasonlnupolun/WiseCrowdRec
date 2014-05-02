@@ -7,24 +7,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.feiyu.database.CassandraManipulator;
+import com.feiyu.storm.streamingdatacollection.bolt.EntityCountBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMetadataBolt;
+import com.feiyu.storm.streamingdatacollection.bolt.InfoFilterBolt;
 import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamSpout;
 
 import twitter4j.conf.ConfigurationBuilder;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.topology.TopologyBuilder;
+import backtype.storm.tuple.Fields;
 
 public class Topology {
 
-    private static final String TOPOLOGY_NAME = "Streaming-Data-Collection";
-    private static final int MESSAGE_TIMEOUT_SECS = 120;
-	private static final int TWITTER_SPOUT_PARALLELISM_HINT = 2;
-	private static final int GMD_BOLT_PARALLELISM_HINT = 5;
-	private static Properties _wcrProps;
-	private static ConfigurationBuilder _twitterConf;
+    private final String TOPOLOGY_NAME = "Streaming-Data-Collection";
+    private final int MESSAGE_TIMEOUT_SECS = 120;
+	private final int TWITTER_SPOUT_PARALLELISM_HINT = 2;
+	private final int GMD_BOLT_PARALLELISM_HINT = 5;
+	private final int IF_BOLT_PARALLELISM_HINT = 5;
+	private final int EC_BOLT_PARALLELISM_HINT = 5;
+	private Properties _wcrProps;
+	private ConfigurationBuilder _twitterConf;
+	private CassandraManipulator _cm;
 	
-	public static void getWiseCrowdRecConfigInfo () throws IOException {
+	public void getWiseCrowdRecConfigInfo () throws IOException {
 		_wcrProps = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
         _wcrProps.load(in);
@@ -38,10 +45,20 @@ public class Topology {
 			.setOAuthAccessToken(_wcrProps.getProperty("oauth.accessToken"))
 			.setOAuthAccessTokenSecret(_wcrProps.getProperty("oauth.accessTokenSecret"));
 	}
+	
+	public void cassandraInitial() {
+		_cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost");
+		_cm.addToPool();
+	}
 
-	public static void main(String[] args) throws IOException {
+	public void startTopology(String searchPhrases) throws IOException {
 		// Get WiseCrowdRec configuration information
-		getWiseCrowdRecConfigInfo ();
+		getWiseCrowdRecConfigInfo();
+		
+		// Initialize Cassandra database
+//		cassandraInitial();
+		
+		_wcrProps.setProperty("SEARCH_PHRASES", searchPhrases);
 		
 		// Get storm topology configuration information
 		Config config = new Config();
@@ -58,6 +75,8 @@ public class Topology {
 		TopologyBuilder b = new TopologyBuilder();
 		b.setSpout("TwitterQuaryStreamSpout", new TwitterQuaryStreamSpout(_twitterConf, _wcrProps), TWITTER_SPOUT_PARALLELISM_HINT);
         b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamSpout");
+        b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
+        b.setBolt("EntityCountBolt", new EntityCountBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entity", "category"));
 
 		final LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology(TOPOLOGY_NAME, config, b.createTopology());
@@ -67,9 +86,15 @@ public class Topology {
 			public void run() {
 				cluster.killTopology(TOPOLOGY_NAME);
 				cluster.shutdown();
+//				_cm.shutdownPool(); // shutdown cassandra pool
+				System.exit(0);
 			}
 		});
-
+	}
+	
+	public static void main(String[] argv) throws IOException {
+		Topology t = new Topology();
+		t.startTopology("movie");
 	}
 
 }

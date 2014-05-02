@@ -3,22 +3,41 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
-	<meta charset="UTF-8" />
+	<meta name="description" content="WiseCrowdRec">
+	<meta name="keywords" content="HTML,CSS,XML,JavaScript,WiseCrowdRec,Recommender system">
+	<meta name="author" content="Fei Yu (faustineinsun)">
+	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-	<title>Information Recommendation</title>
-	<meta name="description" content="Blueprint: Slide and Push Menus" />
-	<meta name="keywords" content="sliding menu, pushing menu, navigation, responsive, menu, css, jquery" />
-	<meta name="author" content="Codrops" />
+	<title>WiseCrowdRec</title>
+	
 	<!--  link rel="shortcut icon" href="../favicon.ico" -->
 	<link rel="stylesheet" type="text/css" href="resources/css/headbar.css" />
 	<link rel="stylesheet" type="text/css" href="resources/css/component.css" />
 	<link rel="stylesheet" type="text/css" href="resources/css/bootstrap.css">
+
 	<script src="resources/js/codrops/modernizr.custom.js"></script>
 	<script type="text/javascript" src="./resources/js/vivagraph/vivagraph.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
 	<script src="resources/js/codrops/classie.js"></script>
+	
+	<!-- scroll bar start-->
+	<!-- from perfect-scrollbar https://github.com/noraesae/perfect-scrollbar -->
+	<!-- modified by feiyu -->
+    <link href="resources/css/perfect-scrollbar.css" rel="stylesheet" type="text/css">
+   	<script src="resources/js/perfectscrollbar/jquery.mousewheel.js"></script>
+    <script src="resources/js/perfectscrollbar/perfect-scrollbar.js"></script>	
+    <style>
+        .contentHolder { position:relative; margin:25px; padding:5 px; width: 800px; height: 500px; overflow: hidden; }
+    </style>	
+	<script>
+      		jQuery(document).ready(function ($) {
+        		"use strict";
+        	$('#Default').perfectScrollbar();
+      	});
+    </script>
+	<!-- scroll bar end-->
+	
 	<script type="text/javascript">
 		function start() {
 			socialGraph();
@@ -47,7 +66,7 @@
             function menuNav () {
             	var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
             	menuRight = document.getElementById( 'cbp-spmenu-s2' ),
-            	menuTop = document.getElementById( 'cbp-spmenu-s3' ),
+            	//menuTop = document.getElementById( 'cbp-spmenu-s3' ),
             	menuBottom = document.getElementById( 'cbp-spmenu-s4' ),
             	//showLeft = document.getElementById( 'showLeft' ),
             	showRight = document.getElementById( 'showRight' ),
@@ -107,7 +126,7 @@
     <body class="cbp-spmenu-push">
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
     		<h3>Left Menu</h3>
-    		<a href=${pageContext.request.contextPath}>Back to home</a>
+    		<a href="${pageContext.request.contextPath}">Back to home</a>
     <!-- AJAX json begin -->
     			
     	<br><br><br>
@@ -192,11 +211,10 @@
 			if(personId === undefined || personId < 0 || personId > 3) {
 				$('#idError').show();
 				return false;
-			}
-			else {
+			} else {
 				$('#idError').hide();
 				return true;
-			}
+			};
 		}
 		
 	</script>
@@ -205,8 +223,10 @@
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
     		<h3>Right Menu</h3>
-    		<a href=${pageContext.request.contextPath}>Back to home</a>  
-    <!-- Sentiment Analysis begin -->
+    		<a href="${pageContext.request.contextPath}">Back to home</a>  	
+    		
+    <!-- Sentiment Analysis begin from https://github.com/shekhargulati/day20-stanford-sentiment-analysis-demo -->
+    <!-- modified by feiyu -->
 	<div class="container">
 	
 		<div class="row">
@@ -218,17 +238,146 @@
 				<input type="checkbox" id="twitterSearchEnabled" name="twitterSearchEnabled">Search Keywords on Twitter 
 				<input type="submit" value="Run Sentiment Analysis" id="submit"
 					class="btn btn-success">
+				<input type="submit" value="Search and Get Entities" id="submitQuery"
+					class="btn btn-success">
 			</div>
 		</div>
 		<div id="loading" style="display: none;" class="container">
 			<img src="resources/images/loader.gif" alt="Please wait.." />
 		</div>
 
-		<div id="result" class="row"></div>
-	 
+		<div id="Default" class="contentHolder">
+      		<div id="result" class="row"></div>
+    	</div>
+	
 	</div>
+    
+		<script type="text/template" id="searchResult">
+	<div class="col-md-{{divSize}}" id="{{keyword}}">
+		<h2>{{keyword}} <small>Sentiment Analysis</small></h2>
+		<ul class="unstyled">
+			{{#sentiments}}
+				<div class="{{cssClass}}">
+					{{line}}
+				</div>
+			{{/sentiments}}
+		</ul>
+	</div>
+</script>
 
-	<!-- Sentiment Analysis end -->
+	<script type="text/template" id="textResult">
+	<div class="col-md-12">
+				<div class="{{cssClass}}">
+					{{line}}
+				</div>
+	</div>
+</script>
+
+	<script type="text/javascript" src="resources/js/jquery.js"></script>
+	<script type="text/javascript"
+		src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+	<script type="text/javascript">
+		$("#submit")
+				.on(
+						"click",
+						function(event) {
+							$("#result").empty();
+							event.preventDefault();
+							$('#loading').show();
+							var twitterSearchEnabled = $('#twitterSearchEnabled').is(":checked") ? true : false;
+							var text = $("textarea#text").val();
+							if (text && twitterSearchEnabled) {
+								var searchKeywords = text;
+								$.get('${pageContext.request.contextPath}/restapi/searchKeywords?searchKeywords='+ searchKeywords,
+										function(result) {
+													$('#loading').hide();
+													console.log('result : '
+															+ result);
+													var numberOfSearchKeywords = result.length;
+													var divSize = 12 / numberOfSearchKeywords;
+													for ( var i = 0; i < numberOfSearchKeywords; i++) {
+														var searchResultForKeyword = result[i];
+														var keyword = searchResultForKeyword.keyword;
+														var tweetsWithSentiments = searchResultForKeyword.sentiments;
+														var data = {
+															divSize : divSize,
+															keyword : keyword,
+															sentiments : tweetsWithSentiments,};
+														var template = $('#searchResult').html();
+														var html = Mustache.to_html(template, data);
+														$('#result').append(html);
+													};
+												});
+
+							}else if(text && !twitterSearchEnabled){
+								$.get('${pageContext.request.contextPath}/restapi/text?text='+ text,
+										function(result) {
+													$('#loading').hide();
+													console.log('result : ' + result);
+													var data = {
+														cssClass : result.cssClass,
+														line : result.line,};
+													var template = $('#textResult').html();
+													var html = Mustache.to_html(template, data);
+													$('#result').append(html);
+										});
+							}else{
+								alert("Please enter text in textarea");
+							};
+						});
+		$("#submitQuery")
+		.on(
+				"click",
+				function(event) {
+					$("#result").empty();
+					event.preventDefault();
+					$('#loading').show();
+					var twitterSearchEnabled = $('#twitterSearchEnabled').is(":checked") ? true : false;
+					var text = $("textarea#text").val();
+					if (text && twitterSearchEnabled) {
+						var searchPhrases = text;
+						$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases,
+								function(result) {
+											$('#loading').hide();
+											console.log('result : ' + result);
+											var numberOfSearchKeywords = result.length;
+											var divSize = 12 / numberOfSearchKeywords;
+											for ( var i = 0; i < numberOfSearchKeywords; i++) {
+												var searchResultForKeyword = result[i];
+												var keyword = searchResultForKeyword.keyword;
+												var tweetsWithSentiments = searchResultForKeyword.sentiments;
+												var data = {
+													divSize : divSize,
+													keyword : keyword,
+													sentiments : tweetsWithSentiments,};
+												var template = $('#searchResult').html();
+												var html = Mustache.to_html(template, data);
+												$('#result').append(html);
+											};
+										});
+
+					}else if(text && !twitterSearchEnabled){
+						$.get('${pageContext.request.contextPath}/restapi/text?text='+ text,
+								function(result) {
+											$('#loading').hide();
+											console.log('result : ' + result);
+											var data = {
+												cssClass : result.cssClass,
+												line : result.line,};
+											var template = $('#textResult').html();
+											var html = Mustache.to_html(template, data);
+											$('#result').append(html);
+								});
+					}else{
+						alert("Please enter text in textarea");
+					};
+				});
+
+		
+	</script>	
+	
+	
+	<!-- Sentiment Analysis end from https://github.com/shekhargulati/day20-stanford-sentiment-analysis-demo -->
 	 
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="cbp-spmenu-s4">

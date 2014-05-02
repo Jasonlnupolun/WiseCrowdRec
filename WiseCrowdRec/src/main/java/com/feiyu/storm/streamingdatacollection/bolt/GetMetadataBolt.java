@@ -14,18 +14,13 @@ import twitter4j.Status;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.feiyu.model.Tweet;
 import com.feiyu.tools.EntityExtraction;
 
 @SuppressWarnings("serial")
 public class GetMetadataBolt extends BaseRichBolt {
-	private static final Logger _logger = LoggerFactory.getLogger(GetMetadataBolt.class);
 	private static Tweet _t = new Tweet();
 	private OutputCollector _collector;
 
@@ -35,7 +30,6 @@ public class GetMetadataBolt extends BaseRichBolt {
 		_collector = collector;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void execute(Tuple input) {
 		Status tweet = (Status) input.getValueByField("tweet");
@@ -54,28 +48,29 @@ public class GetMetadataBolt extends BaseRichBolt {
 			//_logger.info("No entities have been extracted from this tweet!");
 		}
 		_t.setEntities(hm);
-		String entities = "{";
-		if (hm != null) {
-			Iterator it = hm.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry pairs = (Map.Entry)it.next();
-				entities += "<"+pairs.getKey() + " = " + pairs.getValue()+">";
-				it.remove(); // avoids a ConcurrentModificationException
-			} 
-		}
-		entities += "}";
-		
-		if (_t.getLang().equals("en")) {
-			_logger.info("---> " + _t.getLang() 
-					+ " --> "+ _t.getTime().toString()
-					+ " --> "+ _t.getText() 
-					+ " --> " + entities);
-		}
-		_collector.emit(new Values(tweet));
+//		String entities = "{";
+//		if (hm != null) {
+//			Iterator it = hm.entrySet().iterator();
+//			while (it.hasNext()) {
+//				Map.Entry pairs = (Map.Entry)it.next();
+//				entities += "<"+pairs.getKey() + " = " + pairs.getValue()+">";
+//				it.remove(); // avoids a ConcurrentModificationException
+//			} 
+//		}
+//		entities += "}";
+//		
+//		if (_t.getLang().equals("en")) {
+//			_showInfo = "---> " + _t.getLang() 
+//					+ " --> "+ _t.getTime().toString()
+//					+ " --> "+ _t.getText() 
+//					+ " --> " + entities;
+//			_logger.info(_showInfo);
+//		}
+		_collector.emit(new Values(_t));
 	}
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("metadata"));
+		declarer.declare(new Fields("tweetMetadata"));
 	}
 }

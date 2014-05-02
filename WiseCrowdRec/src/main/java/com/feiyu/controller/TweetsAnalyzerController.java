@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import com.feiyu.model.Person;
 import com.feiyu.service.PersonService;
 
@@ -80,4 +79,23 @@ public class TweetsAnalyzerController {
 		return "Saved person: " + person.toString();
 	}
 	// End: From example https://github.com/stevehanson/spring-mvc-ajax
+	
+	
+//	@RequestMapping(value = "restapi/searchPhrases", method = RequestMethod.GET)
+//	@ResponseBody
+//	public List<Result> searchPhrases(@RequestParam("searchPhrases") String searchPhrases) {
+//        List<Result> results = new ArrayList<>();
+//        if (searchPhrases == null || searchPhrases.length() == 0) {
+//            return results;
+//        }
+//
+//        Topology t = new Topology();
+//        t.startTopology(searchPhrases);
+//        
+//        
+//        
+//        Result result = new Result(keyword, sentiments);
+//        results.add(result);
+//        return results;
+//    }
 }

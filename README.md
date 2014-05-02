@@ -1,6 +1,25 @@
 WiseCrowdRec
 ============
 
+---
+Cassandra   
+- [pelops](https://github.com/s7/scale7-pelops): A Java client library for the Cassandra database    
+- Open Cassandra -> $ cassandra -f  
+- Open CQL3 -> $ cqlsh   
+
+- chmod +x schemaCassandra.txt  
+- Put schema into cassandra -> $ cat schemaCassandra.txt | cassandra-cli -h localhost  
+
+- run java code  
+- $ cassandra-cli -h localhost  
+- [default@unknown] use wcrkeyspace;  
+- [default@unknown] list tweets;  
+
+"[NOTE: Transactional topologies have been deprecated -- use the Trident framework instead.](https://github.com/nathanmarz/storm/wiki/Transactional-topologies)"  
+[Trident tutorial](https://github.com/nathanmarz/storm/wiki/Trident-tutorial)    
+
+---
+
 Setup project path in system bash file, for example, in Mac OS:  
 - $ `vim ~/.bash_profile`    
 
