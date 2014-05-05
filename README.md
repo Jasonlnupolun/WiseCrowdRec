@@ -1,7 +1,6 @@
 WiseCrowdRec
 ============
 
----
 Cassandra   
 - [pelops](https://github.com/s7/scale7-pelops): A Java client library for the Cassandra database    
 - Open Cassandra -> $ cassandra -f  

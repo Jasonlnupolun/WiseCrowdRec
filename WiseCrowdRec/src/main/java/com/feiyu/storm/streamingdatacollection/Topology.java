@@ -47,7 +47,7 @@ public class Topology {
 	}
 	
 	public void cassandraInitial() {
-		_cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost");
+		_cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
 		_cm.addToPool();
 	}
 

@@ -18,9 +18,16 @@
         <version.maven-war-plugin>2.4</version.maven-war-plugin>
         <twitter4j-version>[4.0,)</twitter4j-version>
         <hbase.version>0.98.1-hadoop2</hbase.version>
+        <cassandra.version>2.0.7</cassandra.version>
     </properties>
 
     <dependencies>
+        <!-- cassandra -->
+        <dependency>
+			<groupId>org.apache.cassandra</groupId>
+			<artifactId>cassandra-all</artifactId>
+			<version>${cassandra.version}</version>
+		</dependency>
         <!-- commons-collections -->
         <dependency>
 			<groupId>commons-collections</groupId>
