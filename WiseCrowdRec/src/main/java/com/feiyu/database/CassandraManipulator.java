@@ -89,13 +89,4 @@ public class CassandraManipulator {
 		_logger.info("Entity: " + Selector.getColumnStringValue(columns, "entity"));
 		_logger.info("Category: " + Selector.getColumnStringValue(columns, "category"));
 	}
-
-	public static void main(String[] argv) throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, URISyntaxException, IOException, TException { //		PropertyConfigurator.configure(CassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
-		CassandraManipulator cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
-		cm.initialSchema();
-		cm.addToPool();
-		cm.insertDataToDB("tw","ann","person");
-		cm.queryDB("tw");
-		cm.shutdownPool();
-	}
 }
