@@ -17,7 +17,6 @@ import org.apache.cassandra.thrift.ConsistencyLevel;
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.UnavailableException;
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.thrift.TException;
 import org.scale7.cassandra.pelops.Cluster;
 import org.scale7.cassandra.pelops.Mutator;
@@ -34,7 +33,7 @@ public class CassandraManipulator {
 	private static Cluster _cluster;
 	private static String _host = null;
 	private static Integer _port;
-	private static String _sqlFilePath = "schema/schemaCassandra.txt";
+	private static String _sqlFilePath = "cassandra/schemaCassandra.txt";
 	
 	public CassandraManipulator(String pool, String keyspace, 
 			String colFamily, String host, Integer port) {
@@ -46,7 +45,7 @@ public class CassandraManipulator {
 		_cluster = new Cluster(_host, _port);
 	}
 	
-	public void executeCommands() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
+	public void initialSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
 		CliMain.connect(_host, _port);
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(_sqlFilePath);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
@@ -91,10 +90,9 @@ public class CassandraManipulator {
 		_logger.info("Category: " + Selector.getColumnStringValue(columns, "category"));
 	}
 
-	public static void main(String[] argv) throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, URISyntaxException, IOException, TException {
-		PropertyConfigurator.configure(CassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
+	public static void main(String[] argv) throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, URISyntaxException, IOException, TException { //		PropertyConfigurator.configure(CassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
 		CassandraManipulator cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
-		cm.executeCommands();
+		cm.initialSchema();
 		cm.addToPool();
 		cm.insertDataToDB("tw","ann","person");
 		cm.queryDB("tw");
