@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.feiyu.database.CassandraManipulator;
+import com.feiyu.database.PelopsCassandraManipulator;
 import com.feiyu.storm.streamingdatacollection.bolt.EntityCountBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMetadataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.InfoFilterBolt;
@@ -29,7 +29,7 @@ public class Topology {
 	private final int EC_BOLT_PARALLELISM_HINT = 5;
 	private Properties _wcrProps;
 	private ConfigurationBuilder _twitterConf;
-	private CassandraManipulator _cm;
+	private PelopsCassandraManipulator _cm;
 	
 	public void getWiseCrowdRecConfigInfo () throws IOException {
 		_wcrProps = new Properties();
@@ -47,7 +47,7 @@ public class Topology {
 	}
 	
 	public void cassandraInitial() {
-		_cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
+		_cm = new PelopsCassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
 		_cm.addToPool();
 	}
 

@@ -221,12 +221,17 @@
 			<artifactId>jmock-junit4</artifactId>
 		<version>2.6.0</version>
 		</dependency>
-        <!-- pelops: A Java library for accessing the Cassandra database-->
+        <!-- Java libraries for accessing the Cassandra database-->
         <dependency>
         	<groupId>org.scale7</groupId>
         	<artifactId>scale7-pelops</artifactId>
         	<version>1.3-1.1.x</version>
     	</dependency>
+    	<dependency>
+			<groupId>com.netflix.astyanax</groupId>
+			<artifactId>astyanax</artifactId>
+			<version>1.56.48</version>
+		</dependency>
             
     </dependencies>
 

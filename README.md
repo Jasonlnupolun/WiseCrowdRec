@@ -1,18 +1,20 @@
 WiseCrowdRec
 ============
 
-Cassandra   
-- [pelops](https://github.com/s7/scale7-pelops): A Java client library for the Cassandra database    
-- Open Cassandra -> $ cassandra -f  
-- Open CQL3 -> $ cqlsh   
+[Shapeshifter](https://github.com/turn/shapeshifter): Protocol Buffers -> JSON    
 
-- chmod +x schemaCassandra.txt  
-- Put schema into cassandra -> $ cat schemaCassandra.txt | cassandra-cli -h localhost  
+---
 
-- run java code  
-- $ cassandra-cli -h localhost  
-- [default@unknown] use wcrkeyspace;  
-- [default@unknown] list tweets;  
+- Cassandra   
+    - ~~Pelops,Hector~~ -> [Astyanax](https://github.com/Netflix/astyanax): A Java client library for the Cassandra database    
+    - Open Cassandra -> $ bin/cassandra -f  
+    - Open CQL3 -> $ bin/cqlsh   
+    - chmod +x schemaCassandra.txt  
+    - Put schema into cassandra -> $ cat schemaCassandra.txt | bin/cassandra-cli -h localhost  
+    - run java code  
+    - $ bin/cassandra-cli -h localhost  
+        - [default@unknown] use wcrkeyspace;  
+        - [default@unknown] list tweets;  
 
 "[NOTE: Transactional topologies have been deprecated -- use the Trident framework instead.](https://github.com/nathanmarz/storm/wiki/Transactional-topologies)"  
 [Trident tutorial](https://github.com/nathanmarz/storm/wiki/Trident-tutorial)    

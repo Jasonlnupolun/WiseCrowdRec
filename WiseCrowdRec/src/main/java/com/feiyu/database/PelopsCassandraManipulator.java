@@ -25,17 +25,17 @@ import org.scale7.cassandra.pelops.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CassandraManipulator {
-	private static final Logger _logger = LoggerFactory.getLogger(CassandraManipulator.class);
-	private static String _pool = null;
-	private static String _keyspace = null;
-	private static String _colFamily = null;
-	private static Cluster _cluster;
-	private static String _host = null;
-	private static Integer _port;
-	private static String _sqlFilePath = "cassandra/schemaCassandra.txt";
+public class PelopsCassandraManipulator {
+	private static final Logger _logger = LoggerFactory.getLogger(PelopsCassandraManipulator.class);
+	private final String _pool;
+	private final String _keyspace;
+	private final String _colFamily;
+	private final Cluster _cluster;
+	private final String _host;
+	private final Integer _port;
+	private final String _sqlFilePath = "cassandra/schemaCassandra.txt";
 	
-	public CassandraManipulator(String pool, String keyspace, 
+	public PelopsCassandraManipulator(String pool, String keyspace, 
 			String colFamily, String host, Integer port) {
 		_pool = pool;
 		_keyspace = keyspace;

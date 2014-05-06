@@ -9,14 +9,15 @@ import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.thrift.TException;
 import org.junit.Test;
 
-public class TestCassandraManipulator {
+public class TestPelopsCassandraManipulator {
 	@Test
 	public void testWholeProcess() throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, URISyntaxException, IOException, TException {
-			CassandraManipulator cm = new CassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
-			cm.initialSchema();
-			cm.addToPool();
-			cm.insertDataToDB("tw","ann","person");
-			cm.queryDB("tw");
-			cm.shutdownPool();
+//		PropertyConfigurator.configure(AstyanaxCassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
+		PelopsCassandraManipulator cm = new PelopsCassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
+		cm.initialSchema();
+		cm.addToPool();
+		cm.insertDataToDB("tw","ann","person");
+		cm.queryDB("tw");
+		cm.shutdownPool();
 	}
 }
