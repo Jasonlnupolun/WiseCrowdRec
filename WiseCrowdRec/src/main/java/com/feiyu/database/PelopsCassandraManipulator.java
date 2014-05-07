@@ -16,6 +16,7 @@ import org.apache.cassandra.thrift.Column;
 import org.apache.cassandra.thrift.ConsistencyLevel;
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
+import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.thrift.TException;
 import org.scale7.cassandra.pelops.Cluster;
@@ -45,7 +46,7 @@ public class PelopsCassandraManipulator {
 		_cluster = new Cluster(_host, _port);
 	}
 	
-	public void initialSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
+	public void initialSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ClassNotFoundException, TimedOutException {
 		CliMain.connect(_host, _port);
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(_sqlFilePath);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));

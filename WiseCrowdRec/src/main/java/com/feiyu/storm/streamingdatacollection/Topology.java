@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.PropertyConfigurator;
+
+import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.database.PelopsCassandraManipulator;
 import com.feiyu.storm.streamingdatacollection.bolt.EntityCountBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMetadataBolt;
@@ -93,8 +96,8 @@ public class Topology {
 	}
 	
 	public static void main(String[] argv) throws IOException {
+//		PropertyConfigurator.configure(AstyanaxCassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
 		Topology t = new Topology();
 		t.startTopology("movie");
 	}
-
 }

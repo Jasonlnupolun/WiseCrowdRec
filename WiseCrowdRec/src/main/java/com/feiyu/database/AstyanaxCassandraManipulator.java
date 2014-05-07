@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.cassandra.cli.CliMain;
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
+import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -76,7 +77,7 @@ public class AstyanaxCassandraManipulator {
 				StringSerializer.get());  // Column Serializer
 	}
 
-	public void cliSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
+	public void cliSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ClassNotFoundException, TimedOutException {
 		CliMain.connect(_host, _port);
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(SQL_FILE_PATH);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));

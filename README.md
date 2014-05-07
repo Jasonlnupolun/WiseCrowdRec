@@ -2,6 +2,13 @@ WiseCrowdRec
 ============
 
 [Shapeshifter](https://github.com/turn/shapeshifter): Protocol Buffers -> JSON    
+[JSON -> JavaScript](http://www.mkyong.com/javascript/how-to-access-json-object-in-javascript/)  
+
+---
+
+Elasticsearch
+
+- $ ./bin/elasticsearch -d  
 
 ---
 
