@@ -11,8 +11,11 @@ import org.junit.Test;
 
 public class TestPelopsCassandraManipulator {
 	@Test
-	public void testWholeProcess() throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, URISyntaxException, IOException, TException {
-//		PropertyConfigurator.configure(AstyanaxCassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
+	public void testWholeProcess() 
+			throws NotFoundException, InvalidRequestException, NoSuchFieldException, 
+			UnavailableException, IllegalAccessException, InstantiationException, 
+			URISyntaxException, IOException, TException {
+		//		PropertyConfigurator.configure(AstyanaxCassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
 		PelopsCassandraManipulator cm = new PelopsCassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
 		cm.initialSchema();
 		cm.addToPool();

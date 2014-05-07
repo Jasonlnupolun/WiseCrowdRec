@@ -19,6 +19,8 @@ import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.netflix.astyanax.AstyanaxContext;
 import com.netflix.astyanax.Keyspace;
 import com.netflix.astyanax.MutationBatch;
@@ -36,17 +38,17 @@ import com.netflix.astyanax.serializers.StringSerializer;
 import com.netflix.astyanax.thrift.ThriftFamilyFactory;
 
 public class AstyanaxCassandraManipulator {
-	private static final Logger _logger = LoggerFactory.getLogger(AstyanaxCassandraManipulator.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AstyanaxCassandraManipulator.class);
+	private static final String SQL_FILE_PATH = "cassandra/schemaCassandra.txt";
 	private final String _cluster;
+	private final String _keyspaceName;
+	private final String _columnFamilyName;
 	private final String _pool;
 	private final String _host;
 	private final Integer _port;
 	private AstyanaxContext<Keyspace> context;
-	private static Keyspace _keyspace;
-	private final String _keyspaceName;
-	private ColumnFamily<Integer, String> _columnFamily;
-	private static String _columnFamilyName;
-	private final String _sqlFilePath = "cassandra/schemaCassandra.txt";
+	private static Keyspace KS_AST;
+	private static ColumnFamily<Integer, String> CF_AST;
 
 	public AstyanaxCassandraManipulator(String cluster, String keyspaceName, 
 			String columnFamilyName, String pool, String host, Integer port) {
@@ -68,15 +70,15 @@ public class AstyanaxCassandraManipulator {
 		.buildKeyspace(ThriftFamilyFactory.getInstance());
 
 		context.start();
-		_keyspace = context.getClient();
-		_columnFamily = ColumnFamily.newColumnFamily(_columnFamilyName,
+		KS_AST = context.getClient();
+		CF_AST = ColumnFamily.newColumnFamily(_columnFamilyName,
 				IntegerSerializer.get(),  // Key Serializer
 				StringSerializer.get());  // Column Serializer
 	}
 
 	public void cliSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
 		CliMain.connect(_host, _port);
-		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(_sqlFilePath);
+		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(SQL_FILE_PATH);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 		String line = null;
 		while ((line = br.readLine()) != null) {
@@ -86,28 +88,72 @@ public class AstyanaxCassandraManipulator {
 		CliMain.disconnect();
 	}
 
-
 	public void insertDataToDB(int rowKey, String entity, String category) throws ConnectionException, InterruptedException, ExecutionException {
-		MutationBatch mb = _keyspace.prepareMutationBatch();//The mutator is not thread safe
-		mb.withRow(_columnFamily, rowKey)
+		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
+		mb.withRow(CF_AST, rowKey)
 		.putColumn("entity", entity)
 		.putColumn("category", category);
 
 		// no asynchronous feature
 		@SuppressWarnings("unused")
 		OperationResult<Void> result = mb.execute();
+	}
+
+
+	public void insertDataToDB_asynchronous(int rowKey, String entity, String category) throws ConnectionException, InterruptedException, ExecutionException {
+		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
+		mb.withRow(CF_AST, rowKey)
+		.putColumn("entity", entity)
+		.putColumn("category", category);
 
 		// asynchronous feature
-		//		Future<OperationResult<Void>> future = mb.executeAsync();
-		//		_result = future.get();
+		ListenableFuture<OperationResult<Void>> future = mb.executeAsync();
+		@SuppressWarnings("unused")
+		OperationResult<Void> result = future.get();
 	}
 
 	public void queryDB(Integer rowKey) throws ConnectionException, InterruptedException, ExecutionException {
-		ColumnList<String> columns = _keyspace.prepareQuery(_columnFamily)
+		// no asynchronous feature
+		ColumnList<String> columns = KS_AST.prepareQuery(CF_AST)
 				.getKey(rowKey)
-				.execute().getResult();
+				.execute()
+				.getResult();
+		String logger = "";
 		for (Column<String> column : columns) {
-			_logger.info(column.getName()+":"+column.getValue(StringSerializer.get()));
+			logger += "<"+column.getName()+":"+column.getValue(StringSerializer.get()) +">";
 		}
+		LOG.info(logger);
+	}
+
+	public void queryDB_asynchronous(Integer rowKey) throws ConnectionException, InterruptedException, ExecutionException {
+		// asynchronous feature
+		final ListenableFuture<OperationResult<ColumnList<String>>> listenableFuture = KS_AST
+				.prepareQuery(CF_AST)
+				.getKey(rowKey)
+				.executeAsync();
+		listenableFuture.addListener( new Runnable() {
+			@Override
+			public void run() {
+				if (listenableFuture.isCancelled() || !listenableFuture.isDone()) {
+					LOG.info("listenableFuture is cancelled or is not ");
+					return;
+				}
+				OperationResult<ColumnList<String>> result = null;
+
+				try {
+					result = listenableFuture.get();
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+					LOG.error("Can not retrieve the result.");
+				}
+
+				ColumnList<String> columns = result.getResult();
+				String logger = "";
+				for (Column<String> column : columns) {
+					logger += "<"+column.getName()+":"+column.getValue(StringSerializer.get()) +">";
+				}
+				LOG.info(logger+"-->listenableFuture is successful");
+			}
+		}, MoreExecutors.sameThreadExecutor());
 	}
 }
