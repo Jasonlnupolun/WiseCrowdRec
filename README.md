@@ -108,6 +108,7 @@ local
 [GCE](https://cloud.google.com/products/compute-engine/)      
 
 - $ `sudo su`    
+- $ `source ~/.bash_profile`  
 
 [http://173.255.114.111:8080/](http://173.255.114.111:8080/)    
 [http://173.255.114.111:8080/docs/](http://173.255.114.111:8080/docs/)    
