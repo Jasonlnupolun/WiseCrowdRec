@@ -1,6 +1,22 @@
 WiseCrowdRec
 ============
 
+- [x] Streaming processing - Storm   
+- [x] nosql - Cassandra   
+- [ ] data search - Elasticsearch   
+- [ ] Zookeeper  
+- [x] Hadoop 2.2.0   
+- [x] Machine learning lib - Mahout  
+- [x] nlp  
+    - [x] core NLP  
+    - [x] Calais      
+- [x] Tomcat  
+- [x] Spring MVC  
+- [ ] Ajax  
+- [x] Google Compute Engine  
+
+--- 
+
 [Shapeshifter](https://github.com/turn/shapeshifter): Protocol Buffers -> JSON    
 [JSON -> JavaScript](http://www.mkyong.com/javascript/how-to-access-json-object-in-javascript/)  
 
@@ -89,7 +105,7 @@ local
 
 ---
 
-GCE  
+[GCE](https://cloud.google.com/products/compute-engine/)      
 
 - $ `sudo su`    
 

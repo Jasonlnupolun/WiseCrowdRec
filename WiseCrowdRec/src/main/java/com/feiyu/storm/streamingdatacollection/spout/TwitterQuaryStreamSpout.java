@@ -33,7 +33,7 @@ import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import twitter4j.conf.ConfigurationBuilder;
 
-import com.feiyu.tools.SearchTweetsImpl;
+import com.feiyu.util.SearchTweetsImpl;
 
 @SuppressWarnings("serial")
 public class TwitterQuaryStreamSpout extends BaseRichSpout {

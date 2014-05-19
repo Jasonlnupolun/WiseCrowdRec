@@ -5,16 +5,21 @@ package com.feiyu.storm.streamingdatacollection;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.cassandra.thrift.InvalidRequestException;
+import org.apache.cassandra.thrift.NotFoundException;
+import org.apache.cassandra.thrift.TimedOutException;
+import org.apache.cassandra.thrift.UnavailableException;
+import org.apache.thrift.TException;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
-import com.feiyu.database.PelopsCassandraManipulator;
 import com.feiyu.storm.streamingdatacollection.bolt.EntityCountBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMetadataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.InfoFilterBolt;
 import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamSpout;
+import com.feiyu.util.GlobalVariables;
 
 import twitter4j.conf.ConfigurationBuilder;
 import backtype.storm.Config;
@@ -32,7 +37,6 @@ public class Topology {
 	private final int EC_BOLT_PARALLELISM_HINT = 5;
 	private Properties _wcrProps;
 	private ConfigurationBuilder _twitterConf;
-	private PelopsCassandraManipulator _cm;
 	
 	public void getWiseCrowdRecConfigInfo () throws IOException {
 		_wcrProps = new Properties();
@@ -49,17 +53,21 @@ public class Topology {
 			.setOAuthAccessTokenSecret(_wcrProps.getProperty("oauth.accessTokenSecret"));
 	}
 	
-	public void cassandraInitial() {
-		_cm = new PelopsCassandraManipulator("pool","wcrkeyspace","tweets","localhost",9160);
-		_cm.addToPool();
+	public void cassandraInitial() 
+			throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, 
+			IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, 
+			URISyntaxException, IOException, TException {
+		GlobalVariables.AST_CASSANDRA_MNPLT= new AstyanaxCassandraManipulator("wcrCluster","wcrkeyspace","tweets","wcrPool","localhost",9160);
+		GlobalVariables.AST_CASSANDRA_MNPLT.initialSetup();
+		GlobalVariables.AST_CASSANDRA_MNPLT.cliSchema();
 	}
 
-	public void startTopology(String searchPhrases) throws IOException {
+	public void startTopology(String searchPhrases) throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
 		// Get WiseCrowdRec configuration information
 		getWiseCrowdRecConfigInfo();
 		
 		// Initialize Cassandra database
-//		cassandraInitial();
+		cassandraInitial();
 		
 		_wcrProps.setProperty("SEARCH_PHRASES", searchPhrases);
 		
@@ -79,7 +87,7 @@ public class Topology {
 		b.setSpout("TwitterQuaryStreamSpout", new TwitterQuaryStreamSpout(_twitterConf, _wcrProps), TWITTER_SPOUT_PARALLELISM_HINT);
         b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamSpout");
         b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
-        b.setBolt("EntityCountBolt", new EntityCountBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entity", "category"));
+        b.setBolt("EntityCountBolt", new EntityCountBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
 
 		final LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology(TOPOLOGY_NAME, config, b.createTopology());
@@ -95,7 +103,7 @@ public class Topology {
 		});
 	}
 	
-	public static void main(String[] argv) throws IOException {
+	public static void main(String[] argv) throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
 //		PropertyConfigurator.configure(AstyanaxCassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
 		Topology t = new Topology();
 		t.startTopology("movie");

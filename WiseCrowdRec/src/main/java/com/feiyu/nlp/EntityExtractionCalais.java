@@ -3,7 +3,7 @@
  * https://code.google.com/p/j-calais/
  * http://www.opencalais.com/APIkey
  */
-package com.feiyu.tools;
+package com.feiyu.nlp;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import mx.bigdata.jcalais.CalaisObject;
 import mx.bigdata.jcalais.CalaisResponse;
 import mx.bigdata.jcalais.rest.CalaisRestClient;
 
-public class EntityExtraction {
+public class EntityExtractionCalais {
 	private Tweet _t = new Tweet();
 	private HashMap<String, String> _hm = new HashMap<String, String>(); 
 	

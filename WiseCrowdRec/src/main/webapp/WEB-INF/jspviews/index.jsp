@@ -72,7 +72,7 @@
             	showRight = document.getElementById( 'showRight' ),
             	showBottom = document.getElementById( 'showBottom' ),
             	showLeftPush = document.getElementById( 'showLeftPush' ),
-            	showRightPush = document.getElementById( 'showRightPush' ),
+            	//showRightPush = document.getElementById( 'showRightPush' ),
             	body = document.body;
 
             	/*showLeft.onclick = function() {
@@ -96,12 +96,12 @@
             		classie.toggle( menuLeft, 'cbp-spmenu-open' );
             		disableOther( 'showLeftPush' );
             	};
-            	showRightPush.onclick = function() {
+           /*  	showRightPush.onclick = function() {
             		classie.toggle( this, 'active' );
             		classie.toggle( body, 'cbp-spmenu-push-toleft' );
             		classie.toggle( menuRight, 'cbp-spmenu-open' );
             		disableOther( 'showRightPush' );
-            	};
+            	}; */
             }
             function disableOther( button ) {
             	/*if( button !== 'showLeft' ) {
@@ -116,9 +116,9 @@
             	if( button !== 'showLeftPush' ) {
             		classie.toggle( showLeftPush, 'disabled' );
             	}
-            	if( button !== 'showRightPush' ) {
+            /* 	if( button !== 'showRightPush' ) {
             		classie.toggle( showRightPush, 'disabled' );
-            	}
+            	} */
             }
         </script>
     </head>
@@ -222,8 +222,7 @@
     <!-- AJAX json end -->
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
-    		<h3>Right Menu</h3>
-    		<a href="${pageContext.request.contextPath}">Back to home</a>  	
+    		<a href="${pageContext.request.contextPath}">Back to home</a>
     		
     <!-- Sentiment Analysis begin from https://github.com/shekhargulati/day20-stanford-sentiment-analysis-demo -->
     <!-- modified by feiyu -->
@@ -235,16 +234,18 @@
 					placeholder="Text...  current time: ${serverTime}." id="text"
 					name="text"></textarea>
 				
-				<input type="checkbox" id="twitterSearchEnabled" name="twitterSearchEnabled">Search Keywords on Twitter 
-				<input type="submit" value="Run Sentiment Analysis" id="submit"
-					class="btn btn-success">
-				<input type="submit" value="Search and Get Entities" id="submitQuery"
-					class="btn btn-success">
+				<input type="submit" value="Search Phrases & Run Sentiment Analysis" id="submit" class="btn btn-success">
 			</div>
 		</div>
 		<div id="loading" style="display: none;" class="container">
 			<img src="resources/images/loader.gif" alt="Please wait.." />
 		</div>
+		
+		<c:if test="${not empty serverTime}">
+		<div class="textarea">
+		${serverTime}
+		</div>
+		</c:if>
 
 		<div id="Default" class="contentHolder">
       		<div id="result" class="row"></div>
@@ -252,24 +253,15 @@
 	
 	</div>
     
-		<script type="text/template" id="searchResult">
-	<div class="col-md-{{divSize}}" id="{{keyword}}">
-		<h2>{{keyword}} <small>Sentiment Analysis</small></h2>
+	<script type="text/template" id="searchResult">
+	<div class="col-md-12" id="{{keywordPhrases}}">
 		<ul class="unstyled">
-			{{#sentiments}}
-				<div class="{{cssClass}}">
-					{{line}}
+			{{#entityList}}
+				<div class="alert alert-success">
+					{{text}}
 				</div>
-			{{/sentiments}}
+			{{/entityList}}
 		</ul>
-	</div>
-</script>
-
-	<script type="text/template" id="textResult">
-	<div class="col-md-12">
-				<div class="{{cssClass}}">
-					{{line}}
-				</div>
 	</div>
 </script>
 
@@ -278,102 +270,34 @@
 		src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
 	<script type="text/javascript">
 		$("#submit")
-				.on(
-						"click",
+				.on("click",
 						function(event) {
 							$("#result").empty();
 							event.preventDefault();
 							$('#loading').show();
-							var twitterSearchEnabled = $('#twitterSearchEnabled').is(":checked") ? true : false;
 							var text = $("textarea#text").val();
-							if (text && twitterSearchEnabled) {
-								var searchKeywords = text;
-								$.get('${pageContext.request.contextPath}/restapi/searchKeywords?searchKeywords='+ searchKeywords,
-										function(result) {
-													$('#loading').hide();
-													console.log('result : '
-															+ result);
-													var numberOfSearchKeywords = result.length;
-													var divSize = 12 / numberOfSearchKeywords;
-													for ( var i = 0; i < numberOfSearchKeywords; i++) {
-														var searchResultForKeyword = result[i];
-														var keyword = searchResultForKeyword.keyword;
-														var tweetsWithSentiments = searchResultForKeyword.sentiments;
-														var data = {
-															divSize : divSize,
-															keyword : keyword,
-															sentiments : tweetsWithSentiments,};
-														var template = $('#searchResult').html();
-														var html = Mustache.to_html(template, data);
-														$('#result').append(html);
-													};
-												});
-
-							}else if(text && !twitterSearchEnabled){
-								$.get('${pageContext.request.contextPath}/restapi/text?text='+ text,
-										function(result) {
-													$('#loading').hide();
-													console.log('result : ' + result);
-													var data = {
-														cssClass : result.cssClass,
-														line : result.line,};
-													var template = $('#textResult').html();
-													var html = Mustache.to_html(template, data);
-													$('#result').append(html);
-										});
+							var searchPhrases = text;
+							if (text) {
+								$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases,
+								 function(entityList) {
+									$('#loading').hide();
+									console.log('entityList : ' + entityList);
+									var data = { keywordPhrases: searchPhrases+"->"+entityList.keywordPhrases,};
+									var template = "Keyword Phrases:{{keywordPhrases}}";
+									var html = Mustache.to_html(template, data);
+									$('#result').append(html);  
+				
+									var data = {
+										keywordPhrases : entityList.keywordPhrases,
+										entityList : entityList.entitiesInfo,};
+									var template = $('#searchResult').html();
+									var html = Mustache.to_html(template, data);
+									$('#result').append(html); 
+								});
 							}else{
 								alert("Please enter text in textarea");
 							};
 						});
-		$("#submitQuery")
-		.on(
-				"click",
-				function(event) {
-					$("#result").empty();
-					event.preventDefault();
-					$('#loading').show();
-					var twitterSearchEnabled = $('#twitterSearchEnabled').is(":checked") ? true : false;
-					var text = $("textarea#text").val();
-					if (text && twitterSearchEnabled) {
-						var searchPhrases = text;
-						$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases,
-								function(result) {
-											$('#loading').hide();
-											console.log('result : ' + result);
-											var numberOfSearchKeywords = result.length;
-											var divSize = 12 / numberOfSearchKeywords;
-											for ( var i = 0; i < numberOfSearchKeywords; i++) {
-												var searchResultForKeyword = result[i];
-												var keyword = searchResultForKeyword.keyword;
-												var tweetsWithSentiments = searchResultForKeyword.sentiments;
-												var data = {
-													divSize : divSize,
-													keyword : keyword,
-													sentiments : tweetsWithSentiments,};
-												var template = $('#searchResult').html();
-												var html = Mustache.to_html(template, data);
-												$('#result').append(html);
-											};
-										});
-
-					}else if(text && !twitterSearchEnabled){
-						$.get('${pageContext.request.contextPath}/restapi/text?text='+ text,
-								function(result) {
-											$('#loading').hide();
-											console.log('result : ' + result);
-											var data = {
-												cssClass : result.cssClass,
-												line : result.line,};
-											var template = $('#textResult').html();
-											var html = Mustache.to_html(template, data);
-											$('#result').append(html);
-								});
-					}else{
-						alert("Please enter text in textarea");
-					};
-				});
-
-		
 	</script>	
 	
 	

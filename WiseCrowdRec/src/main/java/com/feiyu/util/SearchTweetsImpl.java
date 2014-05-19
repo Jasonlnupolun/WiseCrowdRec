@@ -1,7 +1,7 @@
 /**
  * @author feiyu
  */
-package com.feiyu.tools;
+package com.feiyu.util;
 
 import java.util.List;
 import java.util.Properties;

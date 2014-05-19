@@ -1,7 +1,7 @@
 /**
  * @author feiyu
  */
-package com.feiyu.tools;
+package com.feiyu.util;
 
 public interface SearchTweets {
 	

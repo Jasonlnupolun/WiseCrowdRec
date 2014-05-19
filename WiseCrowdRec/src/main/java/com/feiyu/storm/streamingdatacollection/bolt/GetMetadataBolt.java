@@ -16,11 +16,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
 import com.feiyu.model.Tweet;
-import com.feiyu.tools.EntityExtraction;
+import com.feiyu.nlp.EntityExtractionCalais;
+import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
 
 @SuppressWarnings("serial")
 public class GetMetadataBolt extends BaseRichBolt {
+//	private static final Logger _logger = LoggerFactory.getLogger(GetMetadataBolt.class);
 	private static Tweet _t = new Tweet();
 	private OutputCollector _collector;
 
@@ -33,7 +38,7 @@ public class GetMetadataBolt extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {
 		Status tweet = (Status) input.getValueByField("tweet");
-		EntityExtraction entityExtract = new EntityExtraction();
+		EntityExtractionCalais entityExtract = new EntityExtractionCalais();
 		HashMap<String, String> hm = null;
 		
 		// Get Metadata
@@ -48,24 +53,11 @@ public class GetMetadataBolt extends BaseRichBolt {
 			//_logger.info("No entities have been extracted from this tweet!");
 		}
 		_t.setEntities(hm);
-//		String entities = "{";
-//		if (hm != null) {
-//			Iterator it = hm.entrySet().iterator();
-//			while (it.hasNext()) {
-//				Map.Entry pairs = (Map.Entry)it.next();
-//				entities += "<"+pairs.getKey() + " = " + pairs.getValue()+">";
-//				it.remove(); // avoids a ConcurrentModificationException
-//			} 
-//		}
-//		entities += "}";
-//		
-//		if (_t.getLang().equals("en")) {
-//			_showInfo = "---> " + _t.getLang() 
-//					+ " --> "+ _t.getTime().toString()
-//					+ " --> "+ _t.getText() 
-//					+ " --> " + entities;
-//			_logger.info(_showInfo);
-//		}
+		
+		SentimentAnalyzerCoreNLP sentiment = new SentimentAnalyzerCoreNLP();
+		_t.setSentiment(sentiment.getSentiment(tweet.getText()));
+		
+//		_logger.info(_t.toString());
 		_collector.emit(new Values(_t));
 	}
 
