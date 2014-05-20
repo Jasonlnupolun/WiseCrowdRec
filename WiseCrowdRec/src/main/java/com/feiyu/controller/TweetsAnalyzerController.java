@@ -211,7 +211,7 @@ public class TweetsAnalyzerController {
 		};
 
 		threadListenStream.start();
-		Thread.sleep(60000);
+		Thread.sleep(25000);
 		threadQueryDB.start();
 		Thread.sleep(5000);
 		shutdownThreadQueryDB();

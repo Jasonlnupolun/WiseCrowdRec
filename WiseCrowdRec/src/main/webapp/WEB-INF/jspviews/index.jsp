@@ -16,13 +16,11 @@
 	<link rel="stylesheet" type="text/css" href="resources/css/bootstrap.css">
 
 	<script src="resources/js/codrops/modernizr.custom.js"></script>
-	<script type="text/javascript" src="./resources/js/vivagraph/vivagraph.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
 	<script src="resources/js/codrops/classie.js"></script>
 	
-	<!-- scroll bar start-->
-	<!-- from perfect-scrollbar https://github.com/noraesae/perfect-scrollbar -->
+	<!-- scroll bar start from perfect-scrollbar https://github.com/noraesae/perfect-scrollbar -->
 	<!-- modified by feiyu -->
     <link href="resources/css/perfect-scrollbar.css" rel="stylesheet" type="text/css">
    	<script src="resources/js/perfectscrollbar/jquery.mousewheel.js"></script>
@@ -38,90 +36,22 @@
     </script>
 	<!-- scroll bar end-->
 	
+	<!-- start social graph from http://bl.ocks.org/mbostock/929623  modified by feiyu-->
+    <link href="resources/css/social-graph.css" rel="stylesheet" type="text/css">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script type="text/javascript" src="resources/js/wisecrowdrec/socialgraph.js"></script>
+	<!-- end http://bl.ocks.org/mbostock/929623  -->
+	
+	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
+
 	<script type="text/javascript">
 		function start() {
-			socialGraph();
 			menuNav();
+			socialgraph();
 			validatePersonId(personId);
 		}
-		function socialGraph () {
-                // Step 1. We create a graph object.
-                var graph = Viva.Graph.graph();
-
-                // Step 2. We add nodes and edges to the graph:
-                graph.addLink(1, 2);
-
-                /* Note: graph.addLink() creates new nodes if they are not yet
-                   present in the graph. Thus calling this method is equivalent to:
-
-                   graph.addNode(1);
-                   graph.addNode(2);
-                   graph.addLink(1, 2);
-                   */
-
-                // Step 3. Render the graph.
-                var renderer = Viva.Graph.View.renderer(graph);
-                renderer.run();
-            }
-            function menuNav () {
-            	var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
-            	menuRight = document.getElementById( 'cbp-spmenu-s2' ),
-            	//menuTop = document.getElementById( 'cbp-spmenu-s3' ),
-            	menuBottom = document.getElementById( 'cbp-spmenu-s4' ),
-            	//showLeft = document.getElementById( 'showLeft' ),
-            	showRight = document.getElementById( 'showRight' ),
-            	showBottom = document.getElementById( 'showBottom' ),
-            	showLeftPush = document.getElementById( 'showLeftPush' ),
-            	//showRightPush = document.getElementById( 'showRightPush' ),
-            	body = document.body;
-
-            	/*showLeft.onclick = function() {
-            		classie.toggle( this, 'active' );
-            		classie.toggle( menuLeft, 'cbp-spmenu-open' );
-            		disableOther( 'showLeft' );
-            	};*/
-            	showRight.onclick = function() {
-            		classie.toggle( this, 'active' );
-            		classie.toggle( menuRight, 'cbp-spmenu-open' );
-            		disableOther( 'showRight' );
-            	};
-            	showBottom.onclick = function() {
-            		classie.toggle( this, 'active' );
-            		classie.toggle( menuBottom, 'cbp-spmenu-open' );
-            		disableOther( 'showBottom' );
-            	};
-            	showLeftPush.onclick = function() {
-            		classie.toggle( this, 'active' );
-            		classie.toggle( body, 'cbp-spmenu-push-toright' );
-            		classie.toggle( menuLeft, 'cbp-spmenu-open' );
-            		disableOther( 'showLeftPush' );
-            	};
-           /*  	showRightPush.onclick = function() {
-            		classie.toggle( this, 'active' );
-            		classie.toggle( body, 'cbp-spmenu-push-toleft' );
-            		classie.toggle( menuRight, 'cbp-spmenu-open' );
-            		disableOther( 'showRightPush' );
-            	}; */
-            }
-            function disableOther( button ) {
-            	/*if( button !== 'showLeft' ) {
-            		classie.toggle( showLeft, 'disabled' );
-            	}*/
-            	if( button !== 'showRight' ) {
-            		classie.toggle( showRight, 'disabled' );
-            	}
-            	if( button !== 'showBottom' ) {
-            		classie.toggle( showBottom, 'disabled' );
-            	}
-            	if( button !== 'showLeftPush' ) {
-            		classie.toggle( showLeftPush, 'disabled' );
-            	}
-            /* 	if( button !== 'showRightPush' ) {
-            		classie.toggle( showRightPush, 'disabled' );
-            	} */
-            }
-        </script>
-    </head>
+     </script>
+   </head>
     
     <body class="cbp-spmenu-push">
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
@@ -265,7 +195,7 @@
 	</div>
 </script>
 
-	<script type="text/javascript" src="resources/js/jquery.js"></script>
+	<!--  script type="text/javascript" src="resources/js/jquery.js"></script-->
 	<script type="text/javascript"
 		src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
 	<script type="text/javascript">
@@ -307,6 +237,7 @@
     	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="cbp-spmenu-s4">
     		<h3>Bottom Menu</h3>
             <a href="http://tympanus.net/codrops/?p=14725">Slide and push menus template</a>
+            <a href="http://bl.ocks.org/mbostock">http://bl.ocks.org/mbostock</a>
     	</nav>
     	<div class="containerheadbar">
     		<header>

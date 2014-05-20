@@ -14,6 +14,7 @@ WiseCrowdRec
 - [x] Spring MVC  
 - [ ] Ajax  
 - [x] Google Compute Engine  
+- [ ] Log  
 
 --- 
 
