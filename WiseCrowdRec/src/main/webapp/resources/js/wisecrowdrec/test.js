@@ -1,7 +1,7 @@
 /**
  * reference: http://bl.ocks.org/mbostock
  */
-function test() {
+function test(source) {
    var width = 1500,
    height = 900;
 
@@ -9,7 +9,7 @@ function test() {
 
    var force = d3.layout.force()
    	.size([width, height])
-   	.nodes([{}]) // initialize with a single node
+//   	.nodes([{}]) // initialize with a single node
    	.linkDistance(30)
    	.charge(-60)
    	.on("tick", tick);
@@ -18,8 +18,7 @@ function test() {
    	.attr("width", width)
    	.attr("height", height)
    	.on("mousemove", mousemove)
-   	.on("mousedown", mousedown)
-   	.on("message", message);
+   	.on("mousedown", mousedown);
 
    svg.append("rect")
    	.attr("width", width)
@@ -34,15 +33,17 @@ function test() {
    	.attr("r", 30)
    	.attr("transform", "translate(-100,-100)")
    	.attr("class", "cursor");
-
-   var source = new EventSource("/ServerSentEventsD3");
-  
+   
    restart();
+   message();
    
    function message() {
 	   source.onmessage = function(event) {
-	   n=nodes.push({x: Math.random()*width, y: Math.random()*height});
-	   }
+//		   var node = {x: event.id, y: event.data};
+//		   var node = {x: 500, y: 500};
+		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
+		   restart();
+	   };
    }
 
    function mousemove() {

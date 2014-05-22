@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.feiyu.util.GlobalVariables;
-
 @SuppressWarnings("serial")
 @WebServlet("/ServerSentEventsD3")
 public class ServerSentEventsD3 extends HttpServlet implements ActionListener  {
@@ -34,12 +32,14 @@ public class ServerSentEventsD3 extends HttpServlet implements ActionListener  {
 		response.setHeader("Connection", "keep-alive");
 
 		PrintWriter out = response.getWriter();
-		
 
 		while (true) {
-			out.print("id: " + "ServerTime" + "\n");
-			out.print("data: " + new Date().toString() + "\n\n");
+			out.print("id: 500\n");
+			out.print("data: 300\n\n");
 			out.flush();
+//			out.print("id: " + "ServerTime" + "\n");
+//			out.print("data: " + new Date().toString() + "\n\n");
+//			out.flush();
 			// out.close(); //Do not close the writer!
 			try {
 				Thread.currentThread();

@@ -45,9 +45,15 @@
 	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
 
 	<script type="text/javascript">
+		if (typeof (EventSource) !== "undefined") {
+   			var source = new EventSource("${pageContext.request.contextPath}/ServerSentEventsD3");
+ 	 	} else {
+ 	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
+  		}
+		
 		function start() {
 			menuNav();
-			test();
+			test(source);
 			validatePersonId(personId);
 		}
      </script>
