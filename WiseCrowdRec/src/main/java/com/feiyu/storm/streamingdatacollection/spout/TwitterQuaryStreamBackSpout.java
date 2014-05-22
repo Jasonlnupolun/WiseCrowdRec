@@ -24,28 +24,24 @@ import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
-import twitter4j.conf.ConfigurationBuilder;
 
 import com.feiyu.util.SearchTweetsImpl;
 
 @SuppressWarnings("serial")
-public class TwitterQuaryStreamSpout extends BaseRichSpout {
+public class TwitterQuaryStreamBackSpout extends BaseRichSpout {
 	private SpoutOutputCollector _collector;
 	private LinkedBlockingQueue<Status> _queue = null;
 	private TwitterStream _twitterStream;
-	private static Properties _wcrProps;
-	private static ConfigurationBuilder _twitterConf;
-
-	public TwitterQuaryStreamSpout (ConfigurationBuilder twitterConf, Properties wcrProps) {
-		_twitterConf = twitterConf;
-		_wcrProps = wcrProps;
+	private String _keywordPhrase;
+	
+	public TwitterQuaryStreamBackSpout (String keywordPhrase) {
+		_keywordPhrase = keywordPhrase;
 	}
 
 	@Override
@@ -89,8 +85,8 @@ public class TwitterQuaryStreamSpout extends BaseRichSpout {
 			}
 
 		};
-		SearchTweetsImpl t = new SearchTweetsImpl(_twitterConf, _wcrProps, listener, _twitterStream);
-		t.searchTweetsFromNowOn();
+		SearchTweetsImpl t = new SearchTweetsImpl(listener, _twitterStream, _keywordPhrase);
+		t.searchTweetsFromNowOn(false);
 		//t.searchTweetsRandomSample();
 	}
 

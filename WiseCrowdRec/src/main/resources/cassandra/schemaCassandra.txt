@@ -2,5 +2,5 @@ drop keyspace wcrkeyspace;
 create keyspace wcrkeyspace;
 use wcrkeyspace;
 
-create column family tweets with column_type = 'Standard' and comparator = 'UTF8Type' and default_validation_class = 'UTF8Type' and key_validation_class = 'UTF8Type';
-  
+create column family backgroundsearch with column_type = 'Standard' and comparator = 'UTF8Type' and default_validation_class = 'UTF8Type' and key_validation_class = 'UTF8Type'; 
+create column family dynamicsearch with column_type = 'Standard' and comparator = 'UTF8Type' and default_validation_class = 'UTF8Type' and key_validation_class = 'UTF8Type'; 

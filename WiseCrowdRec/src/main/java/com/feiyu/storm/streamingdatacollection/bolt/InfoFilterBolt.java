@@ -21,7 +21,7 @@ import backtype.storm.tuple.Values;
 
 @SuppressWarnings("serial")
 public class InfoFilterBolt implements IBasicBolt {
-	private static final Logger _logger = LoggerFactory.getLogger(GetMetadataBolt.class);
+	private static final Logger _logger = LoggerFactory.getLogger(InfoFilterBolt.class);
 	private static Tweet _t = new Tweet();
 	HashMap<String, String> hm = null;
 

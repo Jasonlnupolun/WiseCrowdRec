@@ -39,7 +39,7 @@
 	<!-- start social graph from http://bl.ocks.org/mbostock/929623  modified by feiyu-->
     <link href="resources/css/social-graph.css" rel="stylesheet" type="text/css">
 	<script src="http://d3js.org/d3.v3.min.js"></script>
-	<script type="text/javascript" src="resources/js/wisecrowdrec/socialgraph.js"></script>
+	<script type="text/javascript" src="resources/js/wisecrowdrec/test.js"></script>
 	<!-- end http://bl.ocks.org/mbostock/929623  -->
 	
 	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
@@ -47,7 +47,7 @@
 	<script type="text/javascript">
 		function start() {
 			menuNav();
-			socialgraph();
+			test();
 			validatePersonId(personId);
 		}
      </script>
@@ -57,6 +57,22 @@
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
     		<h3>Left Menu</h3>
     		<a href="${pageContext.request.contextPath}">Back to home</a>
+    		
+<!-- sse -->
+
+ 	<div id="ServerTime"></div>
+	 <script>
+  		if (typeof (EventSource) !== "undefined") {
+   			var source = new EventSource("${pageContext.request.contextPath}/ServerSentEventsD3");
+   			source.onmessage = function(event) {
+   			 document.getElementById("ServerTime").innerHTML += event.data
+     		 + "<br><br>";
+ 		  };
+ 	 	} else {
+ 	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
+  		}
+ </script>
+ <!-- end sse -->
     <!-- AJAX json begin -->
     			
     	<br><br><br>

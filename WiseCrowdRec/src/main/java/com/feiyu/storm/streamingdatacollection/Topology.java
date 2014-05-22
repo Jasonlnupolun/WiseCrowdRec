@@ -4,24 +4,23 @@
 package com.feiyu.storm.streamingdatacollection;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Properties;
 
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.thrift.TException;
 
-import com.feiyu.database.AstyanaxCassandraManipulator;
-import com.feiyu.storm.streamingdatacollection.bolt.EntityCountBolt;
+import com.feiyu.storm.streamingdatacollection.bolt.EntityCount2CassandraBackBolt;
+import com.feiyu.storm.streamingdatacollection.bolt.EntityCount2CassandraDynaBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMetadataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.InfoFilterBolt;
-import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamSpout;
-import com.feiyu.util.GlobalVariables;
+import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamBackSpout;
+import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamDynaSpout;
+import com.feiyu.util.InitializeWCR;
 
-import twitter4j.conf.ConfigurationBuilder;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.topology.TopologyBuilder;
@@ -29,47 +28,15 @@ import backtype.storm.tuple.Fields;
 
 public class Topology {
 
-    private final String TOPOLOGY_NAME = "Streaming-Data-Collection";
+    private String TOPOLOGY_NAME;
     private final int MESSAGE_TIMEOUT_SECS = 120;
-	private final int TWITTER_SPOUT_PARALLELISM_HINT = 2;
-	private final int GMD_BOLT_PARALLELISM_HINT = 5;
-	private final int IF_BOLT_PARALLELISM_HINT = 5;
-	private final int EC_BOLT_PARALLELISM_HINT = 5;
-	private Properties _wcrProps;
-	private ConfigurationBuilder _twitterConf;
-	
-	public void getWiseCrowdRecConfigInfo () throws IOException {
-		_wcrProps = new Properties();
-		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
-        _wcrProps.load(in);
-        
-        // Set Twitter app oauth infor
-		_twitterConf = new ConfigurationBuilder();
-		//twitterConf.setIncludeEntitiesEnabled(true);
-		_twitterConf.setDebugEnabled(Boolean.valueOf(_wcrProps.getProperty("debug")))
-			.setOAuthConsumerKey(_wcrProps.getProperty("oauth.consumerKey"))
-			.setOAuthConsumerSecret(_wcrProps.getProperty("oauth.consumerSecret"))
-			.setOAuthAccessToken(_wcrProps.getProperty("oauth.accessToken"))
-			.setOAuthAccessTokenSecret(_wcrProps.getProperty("oauth.accessTokenSecret"));
-	}
-	
-	public void cassandraInitial() 
-			throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, 
-			IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, 
-			URISyntaxException, IOException, TException {
-		GlobalVariables.AST_CASSANDRA_MNPLT= new AstyanaxCassandraManipulator("wcrCluster","wcrkeyspace","tweets","wcrPool","localhost",9160);
-		GlobalVariables.AST_CASSANDRA_MNPLT.initialSetup();
-		GlobalVariables.AST_CASSANDRA_MNPLT.cliSchema();
-	}
+	private final int TWITTER_SPOUT_PARALLELISM_HINT = 1;
+	private final int GMD_BOLT_PARALLELISM_HINT = 1;
+	private final int IF_BOLT_PARALLELISM_HINT = 1;
+	private final int EC_BOLT_PARALLELISM_HINT = 1;
 
-	public void startTopology(String searchPhrases) throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
-		// Get WiseCrowdRec configuration information
-		getWiseCrowdRecConfigInfo();
-		
-		// Initialize Cassandra database
-		cassandraInitial();
-		
-		_wcrProps.setProperty("SEARCH_PHRASES", searchPhrases);
+	public void startTopology(boolean isDynamicSearch, String tpName, String keywordPhrases) throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
+		TOPOLOGY_NAME = tpName;
 		
 		// Get storm topology configuration information
 		Config config = new Config();
@@ -84,28 +51,45 @@ public class Topology {
 		 */
 
 		TopologyBuilder b = new TopologyBuilder();
-		b.setSpout("TwitterQuaryStreamSpout", new TwitterQuaryStreamSpout(_twitterConf, _wcrProps), TWITTER_SPOUT_PARALLELISM_HINT);
-        b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamSpout");
-        b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
-        b.setBolt("EntityCountBolt", new EntityCountBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
+        
+		if (!isDynamicSearch) {
+			b.setSpout("TwitterQuaryStreamBackSpout", new TwitterQuaryStreamBackSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
+			b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamBackSpout");
+			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
+			b.setBolt("EntityCount2CassandraBackBolt", new EntityCount2CassandraBackBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
+		} else {
+			b.setSpout("TwitterQuaryStreamDynaSpout", new TwitterQuaryStreamDynaSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
+			b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamDynaSpout");
+			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
+			b.setBolt("EntityCount2CassandraDynaBolt", new EntityCount2CassandraDynaBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
+		}
 
 		final LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology(TOPOLOGY_NAME, config, b.createTopology());
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				cluster.killTopology(TOPOLOGY_NAME);
-				cluster.shutdown();
-//				_cm.shutdownPool(); // shutdown cassandra pool
-				System.exit(0);
-			}
-		});
+//		Runtime.getRuntime().addShutdownHook(new Thread() {
+//			@Override
+//			public void run() {
+//				cluster.killTopology(TOPOLOGY_NAME);
+//				cluster.shutdown();
+////				_cm.shutdownPool(); // shutdown cassandra pool
+//				System.exit(0);
+//			}
+//		});
 	}
 	
 	public static void main(String[] argv) throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
-//		PropertyConfigurator.configure(AstyanaxCassandraManipulator.class.getClassLoader().getResource("log4j.properties"));
+		PropertyConfigurator.configure(Topology.class.getClassLoader().getResource("log4j.properties"));
+		InitializeWCR intiWcr = new InitializeWCR();
+		intiWcr.getWiseCrowdRecConfigInfo();
+		intiWcr.cassandraInitial();
+		
 		Topology t = new Topology();
-		t.startTopology("movie");
+		
+		boolean isDynamicSearch = false;
+		t.startTopology(isDynamicSearch, "wcr_topology_back", "movie");
+		
+//		boolean isDynamicSearch = true;
+//		t.startTopology(isDynamicSearch, "wcr_topology_dyna", "movie");
 	}
 }

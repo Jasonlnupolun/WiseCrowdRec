@@ -1,7 +1,7 @@
 /**
  * reference: http://bl.ocks.org/mbostock
  */
-function socialgraph() {
+function test() {
    var width = 1500,
    height = 900;
 
@@ -18,7 +18,8 @@ function socialgraph() {
    	.attr("width", width)
    	.attr("height", height)
    	.on("mousemove", mousemove)
-   	.on("mousedown", mousedown);
+   	.on("mousedown", mousedown)
+   	.on("message", message);
 
    svg.append("rect")
    	.attr("width", width)
@@ -34,7 +35,15 @@ function socialgraph() {
    	.attr("transform", "translate(-100,-100)")
    	.attr("class", "cursor");
 
+   var source = new EventSource("/ServerSentEventsD3");
+  
    restart();
+   
+   function message() {
+	   source.onmessage = function(event) {
+	   n=nodes.push({x: Math.random()*width, y: Math.random()*height});
+	   }
+   }
 
    function mousemove() {
 	   cursor.attr("transform", "translate(" + d3.mouse(this) + ")");

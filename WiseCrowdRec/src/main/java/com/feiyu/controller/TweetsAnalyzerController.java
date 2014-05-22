@@ -17,6 +17,7 @@ import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +30,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.model.EntityInfo;
 import com.feiyu.model.EntityList;
 import com.feiyu.model.Person;
 import com.feiyu.service.PersonService;
 import com.feiyu.storm.streamingdatacollection.Topology;
 import com.feiyu.util.GlobalVariables;
+import com.feiyu.util.InitializeWCR;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.model.Rows;
@@ -63,6 +64,17 @@ public class TweetsAnalyzerController {
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		String formattedDate = dateFormat.format(date);
 		model.addAttribute("serverTime", formattedDate );
+		
+		PropertyConfigurator.configure(Topology.class.getClassLoader().getResource("log4j.properties"));
+		InitializeWCR intiWcr = new InitializeWCR();
+		intiWcr.getWiseCrowdRecConfigInfo();
+		intiWcr.cassandraInitial();
+		
+		Topology t = new Topology();
+		
+		boolean isDynamicSearch = false;
+		t.startTopology(isDynamicSearch, "wcr_topology_back", "movie");
+		
 		return "index";
 	}
 
@@ -71,7 +83,7 @@ public class TweetsAnalyzerController {
 	@RequestMapping("/restapi/person/random")
 	@ResponseBody
 	public Person randomPerson() {
-		Rows<String, String> rows = GlobalVariables.AST_CASSANDRA_MNPLT.queryAllRowsOneCF();
+		Rows<String, String> rows = GlobalVariables.AST_CASSANDRA_MNPLT.queryAllRowsOneCF(true);
 		for (Row<String, String> row : rows) {
 			Collection<String> columns = row.getColumns().getColumnNames();
 			String e = null, c = null, sCSS = null, ti = null, te = null;
@@ -151,7 +163,7 @@ public class TweetsAnalyzerController {
 			public void run () {
 				Topology t = new Topology();
 				try {
-					t.startTopology(searchPhrases);
+					t.startTopology(true,"wcr_topology_dyna", searchPhrases);
 				} catch (IOException | NoSuchFieldException | IllegalAccessException | InstantiationException | ClassNotFoundException | URISyntaxException | TException e) {
 					logger.error("IOException from startTopology(searchPhrases)");
 					e.printStackTrace();
@@ -174,7 +186,7 @@ public class TweetsAnalyzerController {
 				int i = 1;
 				while (!_shutdownThreadQueryDB && i > 0) {
 					i--;
-					Rows<String, String> rows = GlobalVariables.AST_CASSANDRA_MNPLT.queryAllRowsOneCF();
+					Rows<String, String> rows = GlobalVariables.AST_CASSANDRA_MNPLT.queryAllRowsOneCF(true);
 					for (Row<String, String> row : rows) {
 						Collection<String> columns = row.getColumns().getColumnNames();
 						String e = null, c = null, sCSS = null, ti = null, te = null;

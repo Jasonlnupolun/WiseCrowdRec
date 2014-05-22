@@ -14,7 +14,16 @@ WiseCrowdRec
 - [x] Spring MVC  
 - [ ] Ajax  
 - [x] Google Compute Engine  
+- [x] Google Web Toolkit (GWT)  
+
+To do list:  
+- [ ] Cassandra - asynchronous -> Astyanax feature      
+- [ ] D3 Force-Directed Graph  
+- [ ] Allow users access their twitter info (oauth)     
+    - since when multiple user search twitter, they should use their own oauth  
+- [ ] kill storm topology  
 - [ ] Log  
+
 
 --- 
 
@@ -38,7 +47,9 @@ Elasticsearch
     - run java code  
     - $ bin/cassandra-cli -h localhost  
         - [default@unknown] use wcrkeyspace;  
-        - [default@unknown] list tweets;  
+        - [default@unknown] DESCRIBE wcrkeyspace;   
+        - [default@unknown] list backgroundsearch;   
+        - [default@unknown] list dynamicsearch;   
 
 "[NOTE: Transactional topologies have been deprecated -- use the Trident framework instead.](https://github.com/nathanmarz/storm/wiki/Transactional-topologies)"  
 [Trident tutorial](https://github.com/nathanmarz/storm/wiki/Trident-tutorial)    

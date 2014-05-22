@@ -5,9 +5,9 @@ package com.feiyu.util;
 
 public interface SearchTweets {
 	
-	public void searchTweetsFromNowOn();
+	public void searchTweetsFromNowOn(boolean isDynamicSearch);
 	
-	public void searchTweetsRandomSample();
+	public void searchTweetsRandomSample(boolean isDynamicSearch);
 	
 	//public void searchTweetsGardenhouse();
 }
