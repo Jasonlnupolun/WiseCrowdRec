@@ -4032,6 +4032,12 @@ textarea.input-group-sm > .input-group-btn > .btn {
   display: block;
 }
 
+.nav > li > button {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+}
+
 .nav > li > a {
   position: relative;
   display: block;

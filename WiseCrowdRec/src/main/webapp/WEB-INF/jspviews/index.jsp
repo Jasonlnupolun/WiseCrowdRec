@@ -260,8 +260,15 @@
     			<span></span> <!-- head name -->
     			<nav>
     				<!-- http://tympanus.net/Blueprints/QuotesRotator/ -->
+    				<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
+					<script type="text/javascript" id="startbackgroundtopology">	
+						var backTopo = document.getElementById('startbackgroundtopology');
+						backTopo.onclick = function() {
+							$.get('${pageContext.request.contextPath}/startbackgroundtopology', function() {});
+						};
+					</script>
+					
     				<a href="#" class="icon-arrow-left" data-info="Posts">Posts</a>
-    				<a href="#" class="icon-drop" data-info="#">#</a>
     				
     			</nav>
     			<button id="showLeftPush" class="icon-drop" data-info="Show/Hide Left Push Menu">Show/Hide Left Push Menu</button>

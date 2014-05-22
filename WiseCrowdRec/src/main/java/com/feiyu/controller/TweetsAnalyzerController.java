@@ -57,13 +57,21 @@ public class TweetsAnalyzerController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String tweetsAnalyzer(HttpServletRequest req, HttpServletResponse resp,Locale locale, Model model) throws Exception {
+	public String home(HttpServletRequest req, HttpServletResponse resp,Locale locale, Model model) throws Exception {
 		logger.info("Welcome home! The client locale is {}.", locale);
 
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		String formattedDate = dateFormat.format(date);
 		model.addAttribute("serverTime", formattedDate );
+		
+		return "index";
+	}
+
+	@RequestMapping(value = "/startbackgroundtopology")
+	@ResponseBody
+	public void startBackgroundTopology() throws Exception { 
+		logger.info("Welcome -> startbackgroundtopology");
 		
 		PropertyConfigurator.configure(Topology.class.getClassLoader().getResource("log4j.properties"));
 		InitializeWCR intiWcr = new InitializeWCR();
@@ -74,10 +82,8 @@ public class TweetsAnalyzerController {
 		
 		boolean isDynamicSearch = false;
 		t.startTopology(isDynamicSearch, "wcr_topology_back", "movie");
-		
-		return "index";
 	}
-
+	
 	// Start: From example https://github.com/stevehanson/spring-mvc-ajax
 
 	@RequestMapping("/restapi/person/random")

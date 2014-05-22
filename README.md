@@ -23,6 +23,8 @@ To do list:
     - since when multiple user search twitter, they should use their own oauth  
 - [ ] kill storm topology  
 - [ ] Log  
+- [ ] Click "Start Background Topology", if cassandra doesn't open, show info  
+- [ ] Throw exception -> use Exception only        
 
 
 --- 
