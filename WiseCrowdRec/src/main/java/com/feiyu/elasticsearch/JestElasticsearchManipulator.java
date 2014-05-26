@@ -6,6 +6,7 @@ import java.util.List;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
+import com.feiyu.springmvc.model.Entity;
 import com.feiyu.util.ElasticsearchInit;
 
 import io.searchbox.client.JestResult;
@@ -55,8 +56,8 @@ public class JestElasticsearchManipulator {
 		System.out.println("->> One Record: time for create index --> " + (end - start) + " milliseconds"); 
 	}
 
-	public void builderIndex_Bulk(List<String> entityInfoList, boolean cleanBeforeInsert) {
-		int nRecords = entityInfoList.size();
+	public void builderIndex_Bulk(List<Entity> entityList, boolean cleanBeforeInsert) {
+		int nRecords = entityList.size();
 		long start = System.currentTimeMillis();
 		try {
 			if (cleanBeforeInsert) {
@@ -67,13 +68,15 @@ public class JestElasticsearchManipulator {
 				jestHttpClient.execute(new CreateIndex.Builder(_esIndexName).build());
 			}
 
+			
+			SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); 
 			Bulk.Builder bulkBuilder = new Bulk.Builder();
 			for (int i = 0; i < nRecords; i++) {
 				Index index = new Index
-						.Builder(entityInfoList.get(i))
+						.Builder(sb2json.serializeBeans2JSON_Entity(entityList.get(i)))
 				.index(_esIndexName)
 				.type(_esTypeName)
-				.id(Integer.toString(i))
+				.id(entityList.get(i).getEntityID())
 				.build();
 				bulkBuilder.addAction(index);
 			}

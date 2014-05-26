@@ -218,7 +218,10 @@ public class TweetsAnalyzerController {
 							}
 						}// for each column
 						entityInfo = new EntityInfo(e,c,s,sCSS,ti,te);
-						logger.info("-----------------------------------------------------------------------------------------------------------ROW: " + row.getKey() + " " + row.getColumns().size() + new EntityInfo(e,c,s,sCSS,ti,te).toString());
+						logger.info("--------------------------------------------------------"
+								+ "---------------------------------------------------"
+								+ "ROW: " + row.getKey() + " " + row.getColumns().size() 
+								+ new EntityInfo(e,c,s,sCSS,ti,te).toString());
 						if (entityInfo != null) {
 							entitiesInfo.add(entityInfo);
 						}

@@ -10,6 +10,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.feiyu.springmvc.model.Entity;
 import com.feiyu.springmvc.model.EntityInfo;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -21,26 +22,31 @@ public class TestJestElasticsearchManipulator {
 	public void a_TestbuilderIndex_OneRecord() throws JsonGenerationException, JsonMappingException, IOException {
 //		JestElasticsearchManipulator _jesm = new JestElasticsearchManipulator("wcresidx","dynamicsearchestype");
 		EntityInfo entityInfo = new EntityInfo("SF","city",3,"css","time","text the movie");
-		_jesm.builderIndex_OneRecord(new String(sb2json.serializeBeans2JSON_EntityInfo(entityInfo)), "2", false);
+		Entity entity = new Entity("102", 6, entityInfo);
+		_jesm.builderIndex_OneRecord(new String(sb2json.serializeBeans2JSON_Entity(entity)), entity.getEntityID(), true);
 	}
 	
 	@Test
 	public void b_TestbuilderIndex_Bulk() throws JsonGenerationException, JsonMappingException, IOException {
 //		JestElasticsearchManipulator _jesm = new JestElasticsearchManipulator("esidx","dynamicsearch");
-		List<String> entityInfoList = new ArrayList<String>();
+		List<Entity> entityList = new ArrayList<Entity>();
 		
-		entityInfoList.add(new String(sb2json.serializeBeans2JSON_EntityInfo(new EntityInfo("ann","people",2,"css1","time1","text1 movie"))));
-		entityInfoList.add(new String(sb2json.serializeBeans2JSON_EntityInfo(new EntityInfo("bob","people",3,"css2","time2","teeeeeeeeeext2 the"))));
-		_jesm.builderIndex_Bulk(entityInfoList, false);
+		entityList.add(
+				new Entity("100", 10, 
+						new EntityInfo("ann","people",2,"css1","time1","text1 movie")));
+		entityList.add(
+				new Entity("101", 16, 
+						new EntityInfo("bob","people",3,"css2","time2","teeeeeeeeeext2 the")));
+		_jesm.builderIndex_Bulk(entityList, false);
 	}
 	
 	@Test
 	public void c_TestQueryGetJson() throws IOException {
-		System.out.println("==> thirdTestQueryGetJson: "+_jesm.getJsonById("1"));
+		System.out.println("==> thirdTestQueryGetJson: "+_jesm.getJsonById("102"));
 	}
 	
 	@Test
 	public void d_TestSearchByKeywords() throws IOException {
-		_jesm.searchsByKeyword("text");
+		_jesm.searchsByKeyword("city");
 	}
 }

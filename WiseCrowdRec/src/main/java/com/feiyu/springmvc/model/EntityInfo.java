@@ -9,7 +9,8 @@ public class EntityInfo {
 	private String time;
 	private String text;
 
-	public EntityInfo(String entity, String category, int sentiment, String sentimentCSS, String time, String text) {
+	public EntityInfo(String entity, String category, int sentiment, 
+			String sentimentCSS, String time, String text) {
 		this.entity = entity;
 		this.category = category;
 		this.sentiment = sentiment;

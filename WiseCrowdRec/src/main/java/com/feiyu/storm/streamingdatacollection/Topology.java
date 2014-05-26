@@ -14,7 +14,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.thrift.TException;
 
 import com.feiyu.storm.streamingdatacollection.bolt.EntityCount2CassandraBackBolt;
-import com.feiyu.storm.streamingdatacollection.bolt.EntityCount2CassandraDynaBolt;
+import com.feiyu.storm.streamingdatacollection.bolt.EntityCount2ElasticsearchBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMetadataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.InfoFilterBolt;
 import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamBackSpout;
@@ -61,7 +61,7 @@ public class Topology {
 			b.setSpout("TwitterQuaryStreamDynaSpout", new TwitterQuaryStreamDynaSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
 			b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamDynaSpout");
 			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
-			b.setBolt("EntityCount2CassandraDynaBolt", new EntityCount2CassandraDynaBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
+			b.setBolt("EntityCount2ElasticsearchBolt", new EntityCount2ElasticsearchBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
 		}
 
 		final LocalCluster cluster = new LocalCluster();
@@ -83,6 +83,7 @@ public class Topology {
 		InitializeWCR intiWcr = new InitializeWCR();
 		intiWcr.getWiseCrowdRecConfigInfo();
 		intiWcr.cassandraInitial();
+		intiWcr.ElasticsearchInitial();
 		
 		Topology t = new Topology();
 		

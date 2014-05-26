@@ -15,12 +15,14 @@ import org.junit.Test;
 import com.feiyu.util.InitializeWCR;
 
 public class TestTopology {
+	static InitializeWCR initWcr = new InitializeWCR();
+	
 	@BeforeClass
 	//executed only once, before the first test
 	public static void setUpClass() throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
-		InitializeWCR initWcr = new InitializeWCR();
 		initWcr.getWiseCrowdRecConfigInfo();
 		initWcr.cassandraInitial();
+		initWcr.ElasticsearchInitial();
 		PropertyConfigurator.configure(Topology.class.getClassLoader().getResource("log4j.properties"));
 	}
 	

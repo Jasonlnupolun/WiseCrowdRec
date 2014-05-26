@@ -12,6 +12,7 @@ import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.thrift.TException;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
+import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 
 public class InitializeWCR {
 	public void getWiseCrowdRecConfigInfo () throws IOException {
@@ -27,4 +28,8 @@ public class InitializeWCR {
 		GlobalVariables.AST_CASSANDRA_MNPLT= new AstyanaxCassandraManipulator("wcrCluster","wcrkeyspace","wcrPool","localhost",9160);
 		GlobalVariables.AST_CASSANDRA_MNPLT.initialSetup();
 	}
+
+	public void ElasticsearchInitial() {
+		GlobalVariables.JEST_ES_MNPLT = new JestElasticsearchManipulator("wcresidx","dynamicsearchestype");
+	} 
 }

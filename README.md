@@ -37,8 +37,8 @@ To do list:
 Elasticsearch
 
 - $ ./bin/elasticsearch -d  
-- $ curl -XGET localhost:9200/wcrindex/_search?  
-- $ curl -XDELETE 'http://localhost:9200/wcrindex/'  
+- $ curl -XGET localhost:9200/wcresidx/_search?  
+- $ curl -XDELETE 'http://localhost:9200/wcresidx/'  
 - $ curl http://localhost:9200/_aliases  (list all indexes)    
 
 ---

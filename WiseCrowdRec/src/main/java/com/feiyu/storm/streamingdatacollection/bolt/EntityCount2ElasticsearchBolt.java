@@ -2,13 +2,18 @@ package com.feiyu.storm.streamingdatacollection.bolt;
 
 import static backtype.storm.utils.Utils.tuple;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.feiyu.elasticsearch.SerializeBeans2JSON;
+import com.feiyu.springmvc.model.Entity;
 import com.feiyu.springmvc.model.EntityInfo;
+import com.feiyu.util.GlobalVariables;
 
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
@@ -43,7 +48,25 @@ public class EntityCount2ElasticsearchBolt implements IBasicBolt {
         _logger.info("EntityCount:category<" + entity+":"+category+">, count:"+count);
         collector.emit(tuple(entity, count)); //? _counts or collector
        
+        Random rand = new Random();
+		Entity entityObj = new Entity(
+				Integer.toString(rand.nextInt(60)), // modify this later
+				count, 
+				entityInfo);
+
         // InsertData into ES 
+        SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); // ElasticSearch requires index data as JSON.
+        String entityObjJson = null;
+		try {
+			entityObjJson = sb2json.serializeBeans2JSON_Entity(entityObj);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		GlobalVariables.JEST_ES_MNPLT.builderIndex_OneRecord(entityObjJson, entityObj.getEntityID(), GlobalVariables.CLEAN_BEFORE_INSERT_ES);
+		if (GlobalVariables.CLEAN_BEFORE_INSERT_ES){
+			GlobalVariables.CLEAN_BEFORE_INSERT_ES = false;
+		}
     }
 
     @Override
