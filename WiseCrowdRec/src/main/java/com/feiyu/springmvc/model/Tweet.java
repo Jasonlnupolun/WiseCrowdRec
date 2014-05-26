@@ -1,7 +1,7 @@
 /**
  * @author feiyu
  */
-package com.feiyu.model;
+package com.feiyu.springmvc.model;
 
 import java.util.Date;
 import java.util.HashMap;

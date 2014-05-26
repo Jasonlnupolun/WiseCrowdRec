@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.feiyu.model.EntityInfo;
+import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.util.GlobalVariables;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 

@@ -1,4 +1,4 @@
-package com.feiyu.model;
+package com.feiyu.springmvc.model;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class EntityList {
         return entitiesInfo;
     }
     
+	@Override
     public String toString() {
 		return "EntityList:{"
 				+"keyword phrases:"+ keywordPhrases

@@ -15,10 +15,10 @@ WiseCrowdRec
 - [ ] Ajax  
 - [x] Google Compute Engine  
 - [x] Google Web Toolkit (GWT)  
+- [ ] D3 Force-Directed Graph  
 
 To do list:  
 - [ ] Cassandra - asynchronous -> Astyanax feature      
-- [ ] D3 Force-Directed Graph  
 - [ ] Allow users access their twitter info (oauth)     
     - since when multiple user search twitter, they should use their own oauth  
 - [ ] kill storm topology  
@@ -37,6 +37,9 @@ To do list:
 Elasticsearch
 
 - $ ./bin/elasticsearch -d  
+- $ curl -XGET localhost:9200/wcrindex/_search?  
+- $ curl -XDELETE 'http://localhost:9200/wcrindex/'  
+- $ curl http://localhost:9200/_aliases  (list all indexes)    
 
 ---
 

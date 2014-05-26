@@ -1,7 +1,7 @@
 /**
  * @author feiyu
  */
-package com.feiyu.util;
+package com.feiyu.springmvc.service;
 
 public interface SearchTweets {
 	

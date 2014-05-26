@@ -7,8 +7,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.feiyu.model.EntityInfo;
-import com.feiyu.model.Tweet;
+import com.feiyu.springmvc.model.EntityInfo;
+import com.feiyu.springmvc.model.Tweet;
 import com.feiyu.util.GlobalVariables;
 
 import backtype.storm.task.TopologyContext;

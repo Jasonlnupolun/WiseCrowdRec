@@ -8,7 +8,7 @@ package com.feiyu.nlp;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.feiyu.model.Tweet;
+import com.feiyu.springmvc.model.Tweet;
 
 import mx.bigdata.jcalais.CalaisClient;
 import mx.bigdata.jcalais.CalaisObject;

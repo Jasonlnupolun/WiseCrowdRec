@@ -1,6 +1,6 @@
-package com.feiyu.service;
+package com.feiyu.springmvc.service;
 
-import com.feiyu.model.Person;
+import com.feiyu.springmvc.model.Person;
 
 public interface PersonService {
 	public Person getRandom();

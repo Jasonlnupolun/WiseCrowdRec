@@ -1,4 +1,4 @@
-package com.feiyu.controller;
+package com.feiyu.springmvc.controller;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.feiyu.model.EntityInfo;
-import com.feiyu.model.EntityList;
-import com.feiyu.model.Person;
-import com.feiyu.service.PersonService;
+import com.feiyu.springmvc.model.EntityInfo;
+import com.feiyu.springmvc.model.EntityList;
+import com.feiyu.springmvc.model.Person;
+import com.feiyu.springmvc.service.PersonService;
 import com.feiyu.storm.streamingdatacollection.Topology;
 import com.feiyu.util.GlobalVariables;
 import com.feiyu.util.InitializeWCR;

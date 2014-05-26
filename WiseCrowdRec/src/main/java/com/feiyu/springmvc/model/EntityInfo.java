@@ -1,4 +1,5 @@
-package com.feiyu.model;
+package com.feiyu.springmvc.model;
+
 
 public class EntityInfo {
 	private String entity;

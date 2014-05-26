@@ -245,7 +245,18 @@
         <dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<version>1.1.1</version>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- Jest: ElasticSearch Java REST client - Apache HTTP Client package  -->
+		<dependency>
+			<groupId>io.searchbox</groupId>
+			<artifactId>jest</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		<dependency>
+ 		 	<groupId>org.apache.httpcomponents</groupId>
+  			<artifactId>httpclient</artifactId>
+  			<version>4.3.3</version>
 		</dependency>
 		<!-- Akka -->
 		<dependency>
@@ -397,5 +408,11 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <!-- for Jest a Java HTTP Rest client for ElasticSearch -->
+         <repository>
+   			<id>sonatype</id>
+   			<name>Sonatype Groups</name>
+   			<url>https://oss.sonatype.org/content/groups/public/</url>
+ 		</repository>
     </repositories>
 </project>

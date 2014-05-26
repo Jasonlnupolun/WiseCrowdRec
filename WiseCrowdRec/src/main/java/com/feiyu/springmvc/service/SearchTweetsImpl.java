@@ -1,9 +1,11 @@
 /**
  * @author feiyu
  */
-package com.feiyu.util;
+package com.feiyu.springmvc.service;
 
 import java.util.List;
+
+import com.feiyu.util.GlobalVariables;
 
 import twitter4j.FilterQuery;
 import twitter4j.Query;

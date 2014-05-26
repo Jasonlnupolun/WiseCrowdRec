@@ -2,7 +2,7 @@
  * referenc http://www.html5rocks.com/en/tutorials/eventsource/basics/
  * just for testing, not my own, need to change this later
  */
-package com.feiyu.controller;
+package com.feiyu.springmvc.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,8 +34,11 @@ public class ServerSentEventsD3 extends HttpServlet implements ActionListener  {
 		PrintWriter out = response.getWriter();
 
 		while (true) {
-			out.print("id: 500\n");
-			out.print("data: 300\n\n");
+//			out.print("id: 500\n"); //Math.random()*width, y: Math.random()*height
+//			out.print("data: 300\n\n");
+//			out.flush();
+			out.print("id: " + "EntityName" + "\n");
+			out.print("data: " + new Date().toString() + "\n\n");
 			out.flush();
 //			out.print("id: " + "ServerTime" + "\n");
 //			out.print("data: " + new Date().toString() + "\n\n");

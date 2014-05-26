@@ -19,9 +19,10 @@ import java.util.Map;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
-import com.feiyu.model.Tweet;
+
 import com.feiyu.nlp.EntityExtractionCalais;
 import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
+import com.feiyu.springmvc.model.Tweet;
 
 @SuppressWarnings("serial")
 public class GetMetadataBolt extends BaseRichBolt {

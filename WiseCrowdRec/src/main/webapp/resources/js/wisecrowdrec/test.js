@@ -1,7 +1,7 @@
 /**
  * reference: http://bl.ocks.org/mbostock
  */
-function test(source) {
+function test(eventSource) {
    var width = 1500,
    height = 900;
 
@@ -13,7 +13,7 @@ function test(source) {
    	.linkDistance(30)
    	.charge(-60)
    	.on("tick", tick);
-
+   
    var svg = d3.select("body").append("svg")
    	.attr("width", width)
    	.attr("height", height)
@@ -28,7 +28,18 @@ function test(source) {
    	links = force.links(),
    	node = svg.selectAll(".node"),
    	link = svg.selectAll(".link");
-
+   
+//   node.append("image")
+//      .attr("xlink:href", "https://github.com/favicon.ico")
+//      .attr("x", -8)
+//      .attr("y", -8)
+//      .attr("width", 16)
+//      .attr("height", 16);
+//   node.append("text")
+//      .attr("dx", 12)
+//      .attr("dy", ".35em")
+//      .text("test");
+  
    var cursor = svg.append("circle")
    	.attr("r", 30)
    	.attr("transform", "translate(-100,-100)")
@@ -38,8 +49,7 @@ function test(source) {
    message();
    
    function message() {
-	   source.onmessage = function(event) {
-//		   var node = {x: event.id, y: event.data};
+	   eventSource.onmessage = function(event) {
 //		   var node = {x: 500, y: 500};
 		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
 		   restart();
@@ -87,7 +97,7 @@ function test(source) {
 
 	   node.enter().insert("circle", ".cursor")
 	   .attr("class", "node")
-	   .attr("r", 5)
+	   .attr("r", 3+5*Math.random())
 	   .call(force.drag);
 
 	   force.start();

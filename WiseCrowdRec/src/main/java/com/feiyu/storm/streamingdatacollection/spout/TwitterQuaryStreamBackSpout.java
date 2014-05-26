@@ -31,7 +31,7 @@ import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 
-import com.feiyu.util.SearchTweetsImpl;
+import com.feiyu.springmvc.service.SearchTweetsImpl;
 
 @SuppressWarnings("serial")
 public class TwitterQuaryStreamBackSpout extends BaseRichSpout {

@@ -1,10 +1,10 @@
-package com.feiyu.service;
+package com.feiyu.springmvc.service;
 
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
-import com.feiyu.model.Person;
+import com.feiyu.springmvc.model.Person;
 
 @Service
 public class PersonServiceImpl implements PersonService {
