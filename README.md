@@ -16,6 +16,7 @@ WiseCrowdRec
 - [x] Google Compute Engine  
 - [x] Google Web Toolkit (GWT)  
 - [ ] D3 Force-Directed Graph  
+- [ ] Apache Spark 0.9.1  
 
 To do list:  
 - [ ] Cassandra - asynchronous -> Astyanax feature      
