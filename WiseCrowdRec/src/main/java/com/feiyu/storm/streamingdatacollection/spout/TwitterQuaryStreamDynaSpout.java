@@ -83,7 +83,6 @@ public class TwitterQuaryStreamDynaSpout extends BaseRichSpout {
 			public void onStallWarning(StallWarning warning) {
 
 			}
-
 		};
 		SearchTweetsImpl t = new SearchTweetsImpl(listener, _twitterStream, _keywordPhrase);
 		t.searchTweetsFromNowOn(true);
