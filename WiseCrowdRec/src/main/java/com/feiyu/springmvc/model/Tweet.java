@@ -6,7 +6,11 @@ package com.feiyu.springmvc.model;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Tweet {
+public class Tweet implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6159227444048700185L;
 	private Date _time;
 	private String _lang;
 	private HashMap<String, String> _entities;

@@ -1,49 +1,50 @@
 package com.feiyu.spark;
-/**
- * reference: http://ampcamp.berkeley.edu/3/exercises/realtime-processing-with-spark-streaming.html
- * https://github.com/amplab/training/blob/ampcamp4/streaming/java/Tutorial.java
- * https://github.com/apache/spark/blob/c852201ce95c7c982ff3794c114427eb33e92922/external/twitter/src/test/java/org/apache/spark/streaming/twitter/JavaTwitterStreamSuite.java
- * https://github.com/amplab/training/tree/ampcamp4/streaming
- * modified by feiyu
- */
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.*;
 
+import com.feiyu.nlp.EntityExtractionCalais;
+import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
+import com.feiyu.springmvc.model.Tweet;
+
 import twitter4j.Status;
+import twitter4j.auth.Authorization;
+import twitter4j.auth.OAuthAuthorization;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class SparkTwitterStreaming implements java.io.Serializable   {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1741488739982924186L;
 	private static Properties props;
 	private static JavaStreamingContext ssc;
-	
+	private Authorization auth;
+
 	public void twitter4jInit() throws IOException {
 		props = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
 		props.load(in);
 
-		System.setProperty("twitter4j.oauth.consumerKey", props.getProperty("oauth.consumerKey2"));
-		System.setProperty("twitter4j.oauth.consumerSecret", props.getProperty("oauth.consumerSecret2"));
-		System.setProperty("twitter4j.oauth.accessToken", props.getProperty("oauth.accessToken2"));
-		System.setProperty("twitter4j.oauth.accessTokenSecret", props.getProperty("oauth.accessTokenSecret2"));
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true)
+		.setOAuthConsumerKey(props.getProperty("oauth.consumerKey2"))
+		.setOAuthConsumerSecret(props.getProperty("oauth.consumerSecret2"))
+		.setOAuthAccessToken(props.getProperty("oauth.accessToken2"))
+		.setOAuthAccessTokenSecret(props.getProperty("oauth.accessTokenSecret2"));
+
+		auth = new OAuthAuthorization(cb.build());
 	}
-	
+
 	public void sparkInit() {
 		// Set spark streaming info
 		ssc = new JavaStreamingContext(
-				"local[2]", "JavaTwitterStreaming", 
+				"local[2]", "SparkTwitterStreamingJava", 
 				new Duration(1000), System.getenv("SPARK_HOME"), 
 				JavaStreamingContext.jarOfClass(SparkTwitterStreaming.class));
 
@@ -58,47 +59,48 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 		String checkpointDir = "file:///Users/feiyu/workspace/Hadoop/hdfs/namesecondary/checkpoint";
 		ssc.checkpoint(checkpointDir);
 	}
-	
-	public void startSpark() {
-		JavaDStream<Status> tweets = TwitterUtils.createStream(ssc);
-//		twitter4j.auth.Authorization
-		
-		JavaDStream<String> statuses = tweets.map(
-				new Function<Status, String>() {
+
+	public void startSpark(String searchPhrases) {
+		String[] keywords = searchPhrases.split(" ");
+
+		JavaDStream<Status> tweets = TwitterUtils.createStream(ssc, auth, keywords);
+
+		JavaDStream<Tweet> statuses = tweets.map(
+				new Function<Status, Tweet>() {
 					private static final long serialVersionUID = -1124355253292906965L;
-					public String call(Status status) { 
-						return status.getText(); }
+					public Tweet call(Status tweetStatus) throws IOException { 
+
+						Tweet _t = new Tweet();
+						EntityExtractionCalais entityExtract = new EntityExtractionCalais();
+						HashMap<String, String> hm = null;
+
+						// Get Metadata
+						String lang = tweetStatus.getIsoLanguageCode();
+						if (lang.equals("en")) {
+							_t.setLang(lang);
+							_t.setTime(tweetStatus.getCreatedAt());
+							_t.setText(tweetStatus.getText());
+
+							hm = entityExtract.getEntities(_t.getText());
+							_t.setEntities(hm);
+
+							SentimentAnalyzerCoreNLP sentiment = new SentimentAnalyzerCoreNLP();
+							_t.setSentiment(sentiment.getSentiment(tweetStatus.getText()));
+							return _t;
+						}
+						return null;
+					} 
 				}
 				);
 		statuses.print();
 
-		JavaDStream<String> words = statuses.flatMap(
-				new FlatMapFunction<String, String>() {
-					private static final long serialVersionUID = 3822311085213005330L;
-					public Iterable<String> call(String in) {
-						return Arrays.asList(in.split(" "));
-					}
-				}
-				);
-		words.print();
-		
-		JavaDStream<String> hashTags = words.filter(
-				new Function<String, Boolean>() {
-					private static final long serialVersionUID = -6539496769011825490L;
-					public Boolean call(String word) { 
-						return word.startsWith("#"); }
-				}
-				);
-		hashTags.print();
-
 		ssc.start();
 	}
-	
 
 	public static void main(String[] argv) throws IOException {
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();
 		sts.twitter4jInit();
 		sts.sparkInit();
-		sts.startSpark();
+		sts.startSpark("movie music");
 	}
 }
