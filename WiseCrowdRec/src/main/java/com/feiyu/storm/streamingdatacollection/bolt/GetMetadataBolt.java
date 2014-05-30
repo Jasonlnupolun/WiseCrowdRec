@@ -43,7 +43,8 @@ public class GetMetadataBolt extends BaseRichBolt {
 		HashMap<String, String> hm = null;
 		
 		// Get Metadata
-		_t.setLang(tweet.getLang());
+		// @@@@@@ modify this later tweet.getIsoLanguageCode()
+		_t.setLang(tweet.getIsoLanguageCode());
 		_t.setTime(tweet.getCreatedAt());
 		_t.setText(tweet.getText());
 		
