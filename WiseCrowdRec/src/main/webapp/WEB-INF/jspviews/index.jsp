@@ -274,7 +274,13 @@
 						};
 					</script>
 					
-    				<a href="#" class="icon-arrow-left" data-info="Posts">Posts</a>
+    				<button id="startdynamicsearch" class="icon-drop" data-info="Start Dynamic Search">Start Dynamic Search</button>
+					<script type="text/javascript" id="startdynamicsearch">	
+						var dynaSearch = document.getElementById('startdynamicsearch');
+						dynaSearch.onclick = function() {
+							$.get('${pageContext.request.contextPath}/startdynamicsearch', function() {});
+						};
+					</script>
     				
     			</nav>
     			<button id="showLeftPush" class="icon-drop" data-info="Show/Hide Left Push Menu">Show/Hide Left Push Menu</button>

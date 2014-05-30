@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,12 @@ import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.streaming.Duration;
+import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.twitter.TwitterUtils;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +38,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import twitter4j.Status;
+
+import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.model.EntityList;
 import com.feiyu.springmvc.model.Person;
@@ -50,7 +61,7 @@ public class TweetsAnalyzerController {
 	private List<EntityInfo> entitiesInfo = new ArrayList<>();
 	private EntityList _entityList = new EntityList(); 
 	private volatile boolean _shutdownThreadQueryDB = false;
-
+	
 	@Autowired
 	public TweetsAnalyzerController(PersonService personService) {
 		this.personService = personService;
@@ -82,6 +93,18 @@ public class TweetsAnalyzerController {
 		
 		boolean isDynamicSearch = false;
 		t.startTopology(isDynamicSearch, "wcr_topology_back", "movie");
+	}
+	
+	@RequestMapping(value = "/startdynamicsearch")
+	@ResponseBody
+	public void startDynamicSearch() throws Exception { 
+		logger.info("Welcome -> start dynamic search");
+		
+		SparkTwitterStreaming sts = new SparkTwitterStreaming();
+		sts.twitter4jInit();
+		sts.sparkInit();
+		sts.startSpark();
+		
 	}
 	
 	// Start: From example https://github.com/stevehanson/spring-mvc-ajax

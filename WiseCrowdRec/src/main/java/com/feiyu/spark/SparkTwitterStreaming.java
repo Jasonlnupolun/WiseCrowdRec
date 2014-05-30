@@ -21,10 +21,15 @@ import org.apache.spark.streaming.twitter.*;
 
 import twitter4j.Status;
 
-public class SparkTwitterStreaming {
+public class SparkTwitterStreaming implements java.io.Serializable   {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1741488739982924186L;
 	private static Properties props;
-
-	public static void main(String[] argv) throws IOException {
+	private static JavaStreamingContext ssc;
+	
+	public void twitter4jInit() throws IOException {
 		props = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
 		props.load(in);
@@ -33,9 +38,11 @@ public class SparkTwitterStreaming {
 		System.setProperty("twitter4j.oauth.consumerSecret", props.getProperty("oauth.consumerSecret2"));
 		System.setProperty("twitter4j.oauth.accessToken", props.getProperty("oauth.accessToken2"));
 		System.setProperty("twitter4j.oauth.accessTokenSecret", props.getProperty("oauth.accessTokenSecret2"));
-
+	}
+	
+	public void sparkInit() {
 		// Set spark streaming info
-		JavaStreamingContext ssc = new JavaStreamingContext(
+		ssc = new JavaStreamingContext(
 				"local[2]", "JavaTwitterStreaming", 
 				new Duration(1000), System.getenv("SPARK_HOME"), 
 				JavaStreamingContext.jarOfClass(SparkTwitterStreaming.class));
@@ -50,7 +57,9 @@ public class SparkTwitterStreaming {
 
 		String checkpointDir = "file:///Users/feiyu/workspace/Hadoop/hdfs/namesecondary/checkpoint";
 		ssc.checkpoint(checkpointDir);
-
+	}
+	
+	public void startSpark() {
 		JavaDStream<Status> tweets = TwitterUtils.createStream(ssc);
 //		twitter4j.auth.Authorization
 		
@@ -83,5 +92,13 @@ public class SparkTwitterStreaming {
 		hashTags.print();
 
 		ssc.start();
+	}
+	
+
+	public static void main(String[] argv) throws IOException {
+		SparkTwitterStreaming sts = new SparkTwitterStreaming();
+		sts.twitter4jInit();
+		sts.sparkInit();
+		sts.startSpark();
 	}
 }
