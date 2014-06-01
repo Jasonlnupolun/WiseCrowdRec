@@ -75,6 +75,7 @@ public class Tweet implements java.io.Serializable {
 				+"time:"+_time
 				+",lang:"+_lang
 				+",sentiment:"+_sentiment
+				+",entities:"+ _entities
 				+",text:"+_text
 				+"}";
 	}

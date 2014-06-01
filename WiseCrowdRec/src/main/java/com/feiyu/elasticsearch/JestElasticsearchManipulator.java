@@ -30,6 +30,30 @@ public class JestElasticsearchManipulator {
 		_esIndexName = idxName;
 		_esTypeName = typeName;
 	}
+	
+	public void builderIndex_OneRecord(String json, boolean cleanBeforeInsert) {
+		long start = System.currentTimeMillis();
+		try {
+			if (cleanBeforeInsert) {
+				jestHttpClient.execute(new DeleteIndex(new DeleteIndex.Builder(_esIndexName)));
+			}
+			JestResult jestResult = jestHttpClient.execute(new IndicesExists.Builder(_esIndexName).build());
+			if (!jestResult.isSucceeded()) {
+				jestHttpClient.execute(new CreateIndex.Builder(_esIndexName).build());
+			}
+
+			Index index = new Index.Builder(json)
+			.index(_esIndexName)
+			.type(_esTypeName)
+			.build();
+			jestHttpClient.execute(index);
+			//            jestHttpClient.shutdownClient();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		long end = System.currentTimeMillis();
+		System.out.println("->> One Record(default id): time for create index --> " + (end - start) + " milliseconds"); 
+	}
 
 	public void builderIndex_OneRecord(String json, String esID, boolean cleanBeforeInsert) {
 		long start = System.currentTimeMillis();

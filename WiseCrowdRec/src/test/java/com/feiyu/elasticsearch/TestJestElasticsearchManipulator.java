@@ -22,7 +22,10 @@ public class TestJestElasticsearchManipulator {
 	public void a_TestbuilderIndex_OneRecord() throws JsonGenerationException, JsonMappingException, IOException {
 //		JestElasticsearchManipulator _jesm = new JestElasticsearchManipulator("wcresidx","dynamicsearchestype");
 		EntityInfo entityInfo = new EntityInfo("SF","city",3,"css","time","text the movie");
-		Entity entity = new Entity("102", 6, entityInfo);
+		Entity entity = new Entity();
+		entity.setEntityID("102");
+		entity.setCount(6);
+		entity.setEntityInfo(entityInfo);
 		_jesm.builderIndex_OneRecord(new String(sb2json.serializeBeans2JSON_Entity(entity)), entity.getEntityID(), true);
 	}
 	
@@ -30,13 +33,21 @@ public class TestJestElasticsearchManipulator {
 	public void b_TestbuilderIndex_Bulk() throws JsonGenerationException, JsonMappingException, IOException {
 //		JestElasticsearchManipulator _jesm = new JestElasticsearchManipulator("esidx","dynamicsearch");
 		List<Entity> entityList = new ArrayList<Entity>();
+
+		Entity entity1 = new Entity();
+		entity1.setEntityID("100");
+		entity1.setCount(10);
+		entity1.setEntityInfo(new EntityInfo("ann","people",2,"css1","time1","text1 movie"));
+
+		entityList.add(entity1);
+				
+		Entity entity2 = new Entity();
+		entity1.setEntityID("101");
+		entity1.setCount(16);
+		entity1.setEntityInfo(new EntityInfo("bob","people",3,"css2","time2","teeeeeeeeeext2 the"));
+
+		entityList.add(entity2);
 		
-		entityList.add(
-				new Entity("100", 10, 
-						new EntityInfo("ann","people",2,"css1","time1","text1 movie")));
-		entityList.add(
-				new Entity("101", 16, 
-						new EntityInfo("bob","people",3,"css2","time2","teeeeeeeeeext2 the")));
 		_jesm.builderIndex_Bulk(entityList, false);
 	}
 	

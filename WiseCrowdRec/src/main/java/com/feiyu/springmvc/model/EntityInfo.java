@@ -1,7 +1,8 @@
 package com.feiyu.springmvc.model;
 
 
-public class EntityInfo {
+public class EntityInfo implements java.io.Serializable {
+	private static final long serialVersionUID = 255025607516525468L;
 	private String entity;
 	private String category;
 	private int sentiment;

@@ -22,7 +22,7 @@ public class TestTopology {
 	public static void setUpClass() throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
 		initWcr.getWiseCrowdRecConfigInfo();
 		initWcr.cassandraInitial();
-		initWcr.ElasticsearchInitial();
+		initWcr.elasticsearchInitial();
 		PropertyConfigurator.configure(Topology.class.getClassLoader().getResource("log4j.properties"));
 	}
 	

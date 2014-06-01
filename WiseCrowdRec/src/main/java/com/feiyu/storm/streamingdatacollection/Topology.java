@@ -83,7 +83,7 @@ public class Topology {
 		InitializeWCR intiWcr = new InitializeWCR();
 		intiWcr.getWiseCrowdRecConfigInfo();
 		intiWcr.cassandraInitial();
-		intiWcr.ElasticsearchInitial();
+		intiWcr.elasticsearchInitial();
 		
 		Topology t = new Topology();
 		

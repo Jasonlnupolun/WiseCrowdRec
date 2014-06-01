@@ -49,10 +49,10 @@ public class EntityCount2ElasticsearchBolt implements IBasicBolt {
         collector.emit(tuple(entity, count)); //? _counts or collector
        
         Random rand = new Random();
-		Entity entityObj = new Entity(
-				Integer.toString(rand.nextInt(60)), // modify this later
-				count, 
-				entityInfo);
+        Entity entityObj = new Entity();
+        entityObj.setEntityID(Integer.toString(rand.nextInt(60))); // modify this later
+        entityObj.setCount(count);
+        entityObj.setEntityInfo(entityInfo);
 
         // InsertData into ES 
         SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); // ElasticSearch requires index data as JSON.

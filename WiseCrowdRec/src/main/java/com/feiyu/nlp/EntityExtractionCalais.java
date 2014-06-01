@@ -2,6 +2,10 @@
  * @author feiyu
  * https://code.google.com/p/j-calais/
  * http://www.opencalais.com/APIkey
+ * Bottleneck: 
+ *    1) Server returned HTTP response code: 403 for URL: http://api.opencalais.com/enlighten/rest/ 
+ *    2) Calais continues to expand its list of supported languages, but does not yet support your submitted content.
+ * -> use stanford corenlp instead
  */
 package com.feiyu.nlp;
 
@@ -9,26 +13,25 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.feiyu.springmvc.model.Tweet;
+import com.feiyu.util.GlobalVariables;
 
-import mx.bigdata.jcalais.CalaisClient;
 import mx.bigdata.jcalais.CalaisObject;
 import mx.bigdata.jcalais.CalaisResponse;
-import mx.bigdata.jcalais.rest.CalaisRestClient;
 
 public class EntityExtractionCalais {
 	private Tweet _t = new Tweet();
 	private HashMap<String, String> _hm = new HashMap<String, String>(); 
 	
 	private void getCleanedText(String text) {
-		_t.setText(text.replaceAll("[^a-zA-Z0-9]", " "));
+		_t.setText(text.replaceAll("(?:^|\\s)[a-zA-Z0-9]+(?=\\s|$)"," "));//("[^a-zA-Z0-9]", " "));
 		// This will match all words containing the letters A-Z.
 		// (?:^|\s)[a-zA-Z]+(?=\s|$)
 	}
 	
 	public HashMap<String, String> getEntities(String text) throws IOException {
-		CalaisClient client = new CalaisRestClient("vtxfm9syum9mhxn4yj8x5fck");
+//		CalaisClient client = new CalaisRestClient(GlobalVariables.WCR_PROPS.getProperty("CalaisApiKey"));
 		this.getCleanedText(text);
-		CalaisResponse response = client.analyze(_t.getText());
+		CalaisResponse response = GlobalVariables.CALAIS_CLIENT.analyze(_t.getText());
 		for (CalaisObject entity : response.getEntities()) {
 			if (entity.getField("_type").equals("Person")
 					|| entity.getField("_type").equals("Organization")

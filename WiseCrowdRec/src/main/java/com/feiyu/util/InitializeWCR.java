@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
+import mx.bigdata.jcalais.rest.CalaisRestClient;
+
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
@@ -13,6 +15,8 @@ import org.apache.thrift.TException;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
+
+import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 public class InitializeWCR {
 	public void getWiseCrowdRecConfigInfo () throws IOException {
@@ -29,7 +33,17 @@ public class InitializeWCR {
 		GlobalVariables.AST_CASSANDRA_MNPLT.initialSetup();
 	}
 
-	public void ElasticsearchInitial() {
+	public void elasticsearchInitial() {
 		GlobalVariables.JEST_ES_MNPLT = new JestElasticsearchManipulator("wcresidx","dynamicsearchestype");
 	} 
+	
+	public void calaisNLPInitial() {
+		GlobalVariables.CALAIS_CLIENT = new CalaisRestClient(GlobalVariables.WCR_PROPS.getProperty("CalaisApiKey"));
+	}
+	
+	public void coreNLPInitial() { 
+		Properties props = new Properties();
+		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, sentiment");
+		GlobalVariables.CORENLP_PIPELINE = new StanfordCoreNLP(props);
+	}
 }

@@ -39,8 +39,8 @@ public class GetMetadataBolt extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {
 		Status tweet = (Status) input.getValueByField("tweet");
-		EntityExtractionCalais entityExtract = new EntityExtractionCalais();
-		HashMap<String, String> hm = null;
+//		EntityExtractionCalais entityExtract = new EntityExtractionCalais();
+		HashMap<String, String> hm = new HashMap<String, String>();
 		
 		// Get Metadata
 		// @@@@@@ modify this later tweet.getIsoLanguageCode()
@@ -48,16 +48,21 @@ public class GetMetadataBolt extends BaseRichBolt {
 		_t.setTime(tweet.getCreatedAt());
 		_t.setText(tweet.getText());
 		
-		try {
-			hm = entityExtract.getEntities(_t.getText());
-		} catch (IOException e) {
+		hm.put("ann", "people");
+		hm.put("bob", "people");
+		hm.put("NY", "city");
+		hm.put("ERROR", "null");
+		hm.put("SF", "city");
+//		try {
+//			hm = entityExtract.getEntities(_t.getText());
+//		} catch (IOException e) {
 			//e.printStackTrace();
 			//_logger.info("No entities have been extracted from this tweet!");
-		}
+//		}
 		_t.setEntities(hm);
 		
 		SentimentAnalyzerCoreNLP sentiment = new SentimentAnalyzerCoreNLP();
-		_t.setSentiment(sentiment.getSentiment(tweet.getText()));
+		_t.setSentiment(3); // @@ modify this later
 		
 //		_logger.info(_t.toString());
 		_collector.emit(new Values(_t));
