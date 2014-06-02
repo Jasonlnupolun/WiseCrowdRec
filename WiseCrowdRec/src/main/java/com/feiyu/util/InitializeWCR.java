@@ -15,6 +15,8 @@ import org.apache.thrift.TException;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
+import com.omertron.themoviedbapi.MovieDbException;
+import com.omertron.themoviedbapi.TheMovieDbApi;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
@@ -45,5 +47,9 @@ public class InitializeWCR {
 		Properties props = new Properties();
 		props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, sentiment");
 		GlobalVariables.CORENLP_PIPELINE = new StanfordCoreNLP(props);
+	}
+	
+	public void themoviedbOrgInitial() throws MovieDbException {
+		GlobalVariables.TMDB = new TheMovieDbApi(GlobalVariables.WCR_PROPS.getProperty("themoviedbApiKey"));
 	}
 }

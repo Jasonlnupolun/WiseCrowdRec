@@ -20,6 +20,7 @@ import com.feiyu.storm.streamingdatacollection.bolt.InfoFilterBolt;
 import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamBackSpout;
 import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamDynaSpout;
 import com.feiyu.util.InitializeWCR;
+import com.omertron.themoviedbapi.MovieDbException;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
@@ -55,12 +56,12 @@ public class Topology {
 		if (!isDynamicSearch) {
 			b.setSpout("TwitterQuaryStreamBackSpout", new TwitterQuaryStreamBackSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
 			b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamBackSpout");
-			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
-			b.setBolt("EntityCount2CassandraBackBolt", new EntityCount2CassandraBackBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
+//			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("movie"));
+//			b.setBolt("EntityCount2CassandraBackBolt", new EntityCount2CassandraBackBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("movie"));
 		} else {
 			b.setSpout("TwitterQuaryStreamDynaSpout", new TwitterQuaryStreamDynaSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
 			b.setBolt("GetMetadataBolt", new GetMetadataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamDynaSpout");
-			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("tweetMetadata"));
+			b.setBolt("InfoFilterBolt", new InfoFilterBolt() , IF_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMetadataBolt", new Fields("movie"));
 			b.setBolt("EntityCount2ElasticsearchBolt", new EntityCount2ElasticsearchBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("InfoFilterBolt", new Fields("entityInfo"));
 		}
 
@@ -78,17 +79,19 @@ public class Topology {
 //		});
 	}
 	
-	public static void main(String[] argv) throws IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, TException {
+	public static void main(String[] argv) throws Exception {
 		PropertyConfigurator.configure(Topology.class.getClassLoader().getResource("log4j.properties"));
-		InitializeWCR intiWcr = new InitializeWCR();
-		intiWcr.getWiseCrowdRecConfigInfo();
-		intiWcr.cassandraInitial();
-		intiWcr.elasticsearchInitial();
+		InitializeWCR initWcr = new InitializeWCR();
+		initWcr.getWiseCrowdRecConfigInfo();
+		initWcr.cassandraInitial();
+		initWcr.elasticsearchInitial();
+		initWcr.coreNLPInitial();
+		initWcr.themoviedbOrgInitial();
 		
 		Topology t = new Topology();
 		
 		boolean isDynamicSearch = false;
-		t.startTopology(isDynamicSearch, "wcr_topology_back", "movie");
+		t.startTopology(isDynamicSearch, "wcr_topology_back", "I rated #IMDb");
 		
 //		boolean isDynamicSearch = true;
 //		t.startTopology(isDynamicSearch, "wcr_topology_dyna", "movie");

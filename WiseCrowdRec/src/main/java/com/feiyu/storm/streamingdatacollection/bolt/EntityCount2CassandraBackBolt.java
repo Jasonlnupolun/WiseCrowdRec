@@ -36,6 +36,8 @@ public class EntityCount2CassandraBackBolt implements IBasicBolt {
 	public void execute(Tuple input, BasicOutputCollector collector) {
     	// Later sliding window save hourly data into database 
     	EntityInfo entityInfo = (EntityInfo) input.getValueByField("entityInfo");
+    	
+    	
         String entity = entityInfo.getEntity();
         String category= entityInfo.getCategory(); 
     	int count = 0;

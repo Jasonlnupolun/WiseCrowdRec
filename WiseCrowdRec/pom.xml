@@ -320,7 +320,12 @@
   			<artifactId>httpclient</artifactId>
   			<version>4.3.3</version>
 		</dependency>
-
+		<!-- IMDb -->
+		<dependency>
+			<groupId>com.omertron</groupId>
+			<artifactId>themoviedbapi</artifactId>
+			<version>3.9</version>
+		</dependency>
     </dependencies>
 
     <prerequisites>

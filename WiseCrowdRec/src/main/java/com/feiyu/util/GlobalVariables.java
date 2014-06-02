@@ -6,6 +6,7 @@ import mx.bigdata.jcalais.CalaisClient;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
+import com.omertron.themoviedbapi.TheMovieDbApi;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
@@ -17,5 +18,5 @@ public class GlobalVariables {
 	public static final String SENTI_CSS = "alert alert-success"; // change later
 	public static Properties WCR_PROPS;
 	public static boolean CLEAN_BEFORE_INSERT_ES = true;
-
+	public static TheMovieDbApi TMDB;
 }

@@ -48,10 +48,10 @@ public class SearchTweetsImpl implements SearchTweets {
 		_twitterConfBuilder_dyna= new ConfigurationBuilder();
 		//twitterConf.setIncludeEntitiesEnabled(true);
 		_twitterConfBuilder_dyna.setDebugEnabled(Boolean.valueOf(GlobalVariables.WCR_PROPS.getProperty("debug")))
-			.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey2"))
-			.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret2"))
-			.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken2"))
-			.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret2"));
+			.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey3"))
+			.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret3"))
+			.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken3"))
+			.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret3"));
 	}
 	
 	private void openListener(boolean isDynamicSearch) {
