@@ -19,6 +19,7 @@ WiseCrowdRec
 - [ ] Apache Spark 0.9.1  
 
 To do list:  
+- [ ] java.lang.OutOfMemoryError: PermGen space  
 - [ ] Cassandra - asynchronous -> Astyanax feature      
 - [ ] Allow users access their twitter info (oauth)     
     - since when multiple user search twitter, they should use their own oauth  
