@@ -13,6 +13,8 @@ import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.thrift.TException;
 
+import twitter4j.conf.ConfigurationBuilder;
+
 import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.omertron.themoviedbapi.MovieDbException;
@@ -25,6 +27,28 @@ public class InitializeWCR {
 		GlobalVariables.WCR_PROPS = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
         GlobalVariables.WCR_PROPS.load(in);
+	}
+	
+	public void twitterInitBack() {
+        // Set Twitter app oauth infor
+		GlobalVariables.TWT_CONF_BUILDER_BACK = new ConfigurationBuilder();
+		//twitterConf.setIncludeEntitiesEnabled(true);
+		GlobalVariables.TWT_CONF_BUILDER_BACK.setDebugEnabled(Boolean.valueOf(GlobalVariables.WCR_PROPS.getProperty("debug")))
+			.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey1"))
+			.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret1"))
+			.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken1"))
+			.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret1"));
+	}
+	
+	public void twitterInitDyna() {
+        // Set Twitter app oauth infor
+		GlobalVariables.TWT_CONF_BUILDER_DYNA = new ConfigurationBuilder();
+		//twitterConf.setIncludeEntitiesEnabled(true);
+		GlobalVariables.TWT_CONF_BUILDER_DYNA.setDebugEnabled(Boolean.valueOf(GlobalVariables.WCR_PROPS.getProperty("debug")))
+			.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey2"))
+			.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret2"))
+			.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken2"))
+			.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret2"));
 	}
 	
 	public void cassandraInitial() 

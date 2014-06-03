@@ -5,14 +5,13 @@ package com.feiyu.spark;
  */
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
@@ -35,35 +34,18 @@ import scala.Tuple2;
 import twitter4j.Status;
 import twitter4j.auth.Authorization;
 import twitter4j.auth.OAuthAuthorization;
-import twitter4j.conf.ConfigurationBuilder;
 
 public class SparkTwitterStreaming implements java.io.Serializable   {
 	private static final long serialVersionUID = -1741488739982924186L;
-	private static Properties props;
 	private static JavaStreamingContext ssc;
-	private Authorization auth;
 	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
 
-	public void twitter4jInit() throws IOException {
-		props = new Properties();
-		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
-		props.load(in);
-
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true)
-		.setOAuthConsumerKey(props.getProperty("oauth.consumerKey2"))
-		.setOAuthConsumerSecret(props.getProperty("oauth.consumerSecret2"))
-		.setOAuthAccessToken(props.getProperty("oauth.accessToken2"))
-		.setOAuthAccessTokenSecret(props.getProperty("oauth.accessTokenSecret2"));
-
-		auth = new OAuthAuthorization(cb.build());
-	}
-
 	public void sparkInit() {
-//		note: import org.apache.log4j.Logger;
-//		note: import org.apache.log4j.Level;
-//		Logger.getLogger("org").setLevel(Level.WARN);
-//		Logger.getLogger("akka").setLevel(Level.WARN);
+		PropertyConfigurator.configure(SparkTwitterStreaming.class.getClassLoader().getResource("log4j.properties"));
+		//		note: import org.apache.log4j.Logger;
+		//		note: import org.apache.log4j.Level;
+		//		Logger.getLogger("org").setLevel(Level.WARN);
+		//		Logger.getLogger("akka").setLevel(Level.WARN);
 		// Set spark streaming info
 		ssc = new JavaStreamingContext(
 				"local[2]", "SparkTwitterStreamingJava", 
@@ -85,10 +67,11 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 	public void startSpark(String searchPhrases) {
 		String[] keywords = searchPhrases.split(" ");
 
+		Authorization auth = new OAuthAuthorization(GlobalVariables.TWT_CONF_BUILDER_DYNA.build());
 		JavaDStream<Status> tweets = TwitterUtils.createStream(ssc, auth, keywords);
 
 		log.debug("<Debug>------start spark");
-	    log.info("<Info>------start spark");
+		log.info("<Info>------start spark");
 		JavaDStream<Tweet> tweetsInfo = tweets.map(
 				new Function<Status, Tweet>() {
 					private static final long serialVersionUID = -1124355253292906965L;
@@ -110,9 +93,9 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 							SentimentAnalyzerCoreNLP sacn = new SentimentAnalyzerCoreNLP();
 							EntityWithSentiment ews = sacn.getEntitiesWithSentiment(_t.getText());
 							_t.setEntities(ews.getEntityWithCategory());
-							
+
 							_t.setSentiment(ews.getSentiment());
-							
+
 							log.debug("_t---------->"+_t.toString());
 							return _t;
 						}
@@ -120,7 +103,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					} 
 				}
 				);
-//		tweetsInfo.print();
+		//		tweetsInfo.print();
 
 		JavaDStream<EntityInfo> entities = tweetsInfo.map(
 				new Function<Tweet, EntityInfo>() {
@@ -150,9 +133,9 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					}
 				}
 				);
-		
-//		entities.print();
-		
+
+		//		entities.print();
+
 		JavaDStream<EntityInfo> filteredEntitiesN2ES = entities.filter(
 				new Function<EntityInfo, Boolean>() {
 					private static final long serialVersionUID = 4606758552085228337L;
@@ -163,19 +146,19 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 							return false;
 						}
 						log.info("entityInfo---------->"+entityInfo.toString());
-						
-				        // Insert entityInfo into ES 
-				        SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); // ElasticSearch requires index data as JSON.
-				        String entityInfoJson = null;
+
+						// Insert entityInfo into ES 
+						SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); // ElasticSearch requires index data as JSON.
+						String entityInfoJson = null;
 						try {
 							entityInfoJson = sb2json.serializeBeans2JSON_EntityInfo(entityInfo);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						
+
 						GlobalVariables.JEST_ES_MNPLT.builderIndex_OneRecord(
 								entityInfoJson,
-//								id, //modify this later
+								//								id, //modify this later
 								GlobalVariables.CLEAN_BEFORE_INSERT_ES);
 						if (GlobalVariables.CLEAN_BEFORE_INSERT_ES){
 							GlobalVariables.CLEAN_BEFORE_INSERT_ES = false;
@@ -184,9 +167,9 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					}
 				}
 				);
-		
-//		filteredEntitiesN2ES.print();
-		
+
+		//		filteredEntitiesN2ES.print();
+
 		JavaDStream<String> entitiesWithEntityInfo = filteredEntitiesN2ES.map(
 				new Function<EntityInfo, String>() {
 					private static final long serialVersionUID = -7600117219392603005L;
@@ -196,8 +179,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 						return entityInfo.getEntity();
 					}
 				});
-//		entitiesWithEntityInfo.print();
-		
+		//		entitiesWithEntityInfo.print();
+
 		JavaPairDStream<String, Integer> entityTuples = entitiesWithEntityInfo.map(
 				new PairFunction<String, String, Integer>() {
 					private static final long serialVersionUID = 1L;
@@ -208,8 +191,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					}
 				}
 				);
-//		entityTuples.print();
-		
+		//		entityTuples.print();
+
 		JavaPairDStream<String, Integer> entityCount = entityTuples.reduceByKeyAndWindow(
 				new Function2<Integer, Integer, Integer> () {
 					private static final long serialVersionUID = 1L;
@@ -220,8 +203,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					}
 				},
 				new Duration(5*1000*60)); // 5 mins
-//		entityCount.print();
-		
+		//		entityCount.print();
+
 		JavaPairDStream<Integer, String> swappedCounts = entityCount.map(
 				new PairFunction<Tuple2<String, Integer>, Integer, String>() {
 					private static final long serialVersionUID = -4651464169440876349L;
@@ -255,22 +238,19 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					}
 				}
 				);
-		
+
 		ssc.start();
 	}
 
 	public static void main(String[] argv) throws IOException {
-		GlobalVariables.WCR_PROPS = new Properties();
-		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
-        GlobalVariables.WCR_PROPS.load(in);
-        
-		InitializeWCR intiWcr = new InitializeWCR();
-		intiWcr.elasticsearchInitial();
-		intiWcr.calaisNLPInitial();
-		intiWcr.coreNLPInitial();
-		
+
+		InitializeWCR initWcr = new InitializeWCR();
+		initWcr.getWiseCrowdRecConfigInfo();
+		initWcr.twitterInitDyna();
+		initWcr.elasticsearchInitial();
+		initWcr.coreNLPInitial();
+
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();
-		sts.twitter4jInit();
 		sts.sparkInit();
 		sts.startSpark("movie");
 	}

@@ -170,6 +170,38 @@ public class AstyanaxCassandraManipulator {
 		@SuppressWarnings("unused")
 		OperationResult<Void> result = future.get();
 	}
+	
+	public void insertMovieDataToDB_asynchronous(String rowKey, String movieName, String hybridRating, String count) 
+			throws ConnectionException, InterruptedException, ExecutionException {
+
+		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
+		ColumnFamily<String, String> CF_AST = CF_AST_BACK;
+
+		mb.withRow(CF_AST, rowKey)
+		.putColumn("movieName", movieName)
+		.putColumn("hybridRating", hybridRating)
+		.putColumn("count", count);
+
+		// asynchronous feature
+		ListenableFuture<OperationResult<Void>> future = mb.executeAsync();
+		@SuppressWarnings("unused")
+		OperationResult<Void> result = future.get();
+	}
+	
+	public String queryWithRowKeyGetRating(String rowKey) throws ConnectionException {
+		String rating = null;
+		ColumnFamily<String, String> CF_AST = CF_AST_BACK;
+		ColumnList<String> columns = KS_AST.prepareQuery(CF_AST)
+				.getKey(rowKey)
+				.execute()
+				.getResult();
+		for (Column<String> column : columns) {
+			if (column.getName().equals("hybridRating")) {
+				return column.getValue(StringSerializer.get());
+			}
+		}
+		return rating;
+	}
 
 	public void queryWithRowkey(String rowKey, boolean isDynamicSearch) throws ConnectionException, InterruptedException, ExecutionException {
 		ColumnFamily<String, String> CF_AST;

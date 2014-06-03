@@ -75,4 +75,10 @@ public class TestAstyanaxCassandraManipulator {
 //		_acm.insertDataToDB("6", "Ann", "Person", "1","time","text", "2", "info...", true);
 //		_acm.queryWithRowkey("6",true);
 //	}
+	
+	@Test
+	public void testQueryWithRowKeyGetRating() throws ConnectionException, InterruptedException, ExecutionException {
+		_acm.insertMovieDataToDB_asynchronous("tt1877832", "X-Men: Days of Future Past", "9", "1");
+		System.out.println("testQueryWithRowKeyGetRating-------> "+_acm.queryWithRowKeyGetRating("tt1877832"));
+	}
 }

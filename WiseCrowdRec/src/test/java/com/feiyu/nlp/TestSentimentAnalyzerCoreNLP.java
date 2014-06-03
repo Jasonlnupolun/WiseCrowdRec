@@ -19,8 +19,9 @@ public class TestSentimentAnalyzerCoreNLP {
 		initWcr.coreNLPInitial();
 
 		SentimentAnalyzerCoreNLP sacn = new SentimentAnalyzerCoreNLP();
-
-		String text = "Nicholas Cage in San Francisco, this is great! Jack Bauer in Los Angeles, this is bad!";
+		
+		String text = "Back on form. That ending = awesome! - I rated X-Men: Days of Future Past 7/10  #IMDb http://www.imdb.com/title/tt1877832";
+//		String text = "Nicholas Cage in San Francisco, this is great! Jack Bauer in Los Angeles, this is bad!";
 		EntityWithSentiment ews = sacn.getEntitiesWithSentiment(text);
 		log.info(ews.toString());
 		Iterator<Entry<String, String>> it = ews.getEntityWithCategory().entrySet().iterator();

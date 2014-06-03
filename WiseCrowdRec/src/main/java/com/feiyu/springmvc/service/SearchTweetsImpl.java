@@ -17,50 +17,26 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
-import twitter4j.conf.ConfigurationBuilder;
 
 public class SearchTweetsImpl implements SearchTweets {
 	private static StatusListener _listener;
 	private static TwitterStream _twitterStream;
 	private static String _keywordPhrases;
-	public ConfigurationBuilder _twitterConfBuilder_back;
-	public ConfigurationBuilder _twitterConfBuilder_dyna;
 	
+	public SearchTweetsImpl() {
+	}
+
 	public SearchTweetsImpl(StatusListener listener, TwitterStream twitterStream, String keywordPhrases) {
 		_listener = listener;
 		_twitterStream = twitterStream;
 		_keywordPhrases = keywordPhrases;
 	}
 	
-	public void twitterInitBack() {
-        // Set Twitter app oauth infor
-		_twitterConfBuilder_back = new ConfigurationBuilder();
-		//twitterConf.setIncludeEntitiesEnabled(true);
-		_twitterConfBuilder_back.setDebugEnabled(Boolean.valueOf(GlobalVariables.WCR_PROPS.getProperty("debug")))
-			.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey1"))
-			.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret1"))
-			.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken1"))
-			.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret1"));
-	}
-	
-	public void twitterInitDyna() {
-        // Set Twitter app oauth infor
-		_twitterConfBuilder_dyna= new ConfigurationBuilder();
-		//twitterConf.setIncludeEntitiesEnabled(true);
-		_twitterConfBuilder_dyna.setDebugEnabled(Boolean.valueOf(GlobalVariables.WCR_PROPS.getProperty("debug")))
-			.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey3"))
-			.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret3"))
-			.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken3"))
-			.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret3"));
-	}
-	
 	private void openListener(boolean isDynamicSearch) {
 		if (!isDynamicSearch) {
-			twitterInitBack();
-			_twitterStream = new TwitterStreamFactory(_twitterConfBuilder_back.build()).getInstance();
+			_twitterStream = new TwitterStreamFactory(GlobalVariables.TWT_CONF_BUILDER_BACK.build()).getInstance();
 		} else {
-			twitterInitDyna();
-			_twitterStream = new TwitterStreamFactory(_twitterConfBuilder_dyna.build()).getInstance();
+			_twitterStream = new TwitterStreamFactory(GlobalVariables.TWT_CONF_BUILDER_DYNA.build()).getInstance();
 		}
 		_twitterStream.addListener(_listener);
 	}

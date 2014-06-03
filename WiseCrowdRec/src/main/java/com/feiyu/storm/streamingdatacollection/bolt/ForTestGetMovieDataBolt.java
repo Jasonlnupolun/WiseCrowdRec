@@ -10,8 +10,6 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import twitter4j.Status;
-import twitter4j.URLEntity;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,19 +20,15 @@ import org.apache.log4j.Logger;
 
 import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
 import com.feiyu.semanticweb.IMDbInfoQuery;
-import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.model.EntityWithSentiment;
 import com.feiyu.springmvc.model.Movie;
-import com.feiyu.springmvc.model.Tweet;
-import com.feiyu.util.GlobalVariables;
 import com.omertron.themoviedbapi.MovieDbException;
 
 @SuppressWarnings("serial")
-public class GetMetadataBolt extends BaseRichBolt {
-//	private static final Logger _logger = LoggerFactory.getLogger(GetMetadataBolt.class);
-	private static Tweet _t = new Tweet();
+public class ForTestGetMovieDataBolt extends BaseRichBolt {
+	private static Logger log = Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
 	private OutputCollector _collector;
-	private static Logger log = Logger.getLogger(GetMetadataBolt.class.getName());
+	private boolean tvShows = false; 
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -44,34 +38,40 @@ public class GetMetadataBolt extends BaseRichBolt {
 
 	@Override
 	public void execute(Tuple input) {
-		Status tweet = (Status) input.getValueByField("tweet");
-		Movie movie = new Movie();
+		String tweet_fake = (String) input.getValueByField("tweet");
 		
-		String lang = tweet.getIsoLanguageCode();
+		Movie movie = new Movie();
+		EntityWithSentiment ews;
+		int rating = -1;
+		String lang = "en";
+
 		if (lang.equals("en")) {
 			
-			URLEntity[] urls = tweet.getURLEntities();
-			String[] ary = urls[urls.length-1].toString().replace("'","").split("/");
+			// Get Movie ID
+			String[] ary = tweet_fake.split("/");
 			String IMDbID = ary[ary.length-1];
-			log.info("========== " + IMDbID);
 			movie.setIMDbID(IMDbID);
 			
+			// Get Moive Name
 			SentimentAnalyzerCoreNLP sacn = new SentimentAnalyzerCoreNLP();
-			EntityWithSentiment ews = sacn.getEntitiesWithSentiment(_t.getText());
+			ews = sacn.getEntitiesWithSentiment(tweet_fake);
 			IMDbInfoQuery imdbIQ = new IMDbInfoQuery();	
 			String movieName = "";
 			try {
 				movieName = imdbIQ.getMoiveName(IMDbID);
+				movie.setMovieName(movieName);
+				tvShows = false;
 			} catch (MovieDbException e) {
-//				e.printStackTrace();
-				log.error("themoviedb api: can not get movie name");
+				//e.printStackTrace();
+				movie.setMovieName("TV Shows"); 
+				tvShows = true;
+				// v4.0 of api-themoviedb support TV shows' information ->  https://github.com/Omertron/api-themoviedb
 			}
-			movie.setMovieName(movieName);
 			
+			// Get the rating of this movie
 			HashMap<String, String> hm = ews.getEntityWithCategory();
 			String entity = "", category = "";
 			if (hm != null) {
-				int rating = -1;
 				Iterator<Entry<String, String>> it = hm.entrySet().iterator();
 				while (it.hasNext()) {
 					Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
@@ -88,12 +88,12 @@ public class GetMetadataBolt extends BaseRichBolt {
 			} else {
 				movie.setRating(-1);
 			}
-
-			log.info("========== " + ews.getEntityWithCategory());
-			log.info("========== " + movie.toString());
 		}
 		
-		_collector.emit(new Values(movie));
+		if (!tvShows || rating>10 || rating<0) {
+			log.debug("===== " + movie.toString());
+			_collector.emit(new Values(movie));
+		}
 	}
 
 	@Override
