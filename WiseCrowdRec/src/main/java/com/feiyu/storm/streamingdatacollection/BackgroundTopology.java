@@ -27,7 +27,6 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 
 public class BackgroundTopology {
-
     private String TOPOLOGY_NAME;
     private final int MESSAGE_TIMEOUT_SECS = 120;
 	private final int TWITTER_SPOUT_PARALLELISM_HINT = 1;

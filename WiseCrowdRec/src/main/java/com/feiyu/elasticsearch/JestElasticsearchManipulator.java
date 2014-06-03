@@ -3,6 +3,7 @@ package com.feiyu.elasticsearch;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
@@ -22,6 +23,7 @@ import io.searchbox.indices.IndicesExists;
 
 
 public class JestElasticsearchManipulator {
+	private static Logger LOG = Logger.getLogger(JestElasticsearchManipulator.class.getName());
 	private static JestHttpClient jestHttpClient = ElasticsearchInit.getClient();
 	private static String _esIndexName; 
 	private static String _esTypeName; 
@@ -52,7 +54,7 @@ public class JestElasticsearchManipulator {
 			e.printStackTrace();
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("->> One Record(default id): time for create index --> " + (end - start) + " milliseconds"); 
+		LOG.info("->> One Record(default id): time for create index --> " + (end - start) + " milliseconds"); 
 	}
 
 	public void builderIndex_OneRecord(String json, String esID, boolean cleanBeforeInsert) {
@@ -77,7 +79,7 @@ public class JestElasticsearchManipulator {
 			e.printStackTrace();
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("->> One Record: time for create index --> " + (end - start) + " milliseconds"); 
+		LOG.info("->> One Record: time for create index --> " + (end - start) + " milliseconds"); 
 	}
 
 	public void builderIndex_Bulk(List<Entity> entityList, boolean cleanBeforeInsert) {
@@ -109,7 +111,7 @@ public class JestElasticsearchManipulator {
 			e.printStackTrace();
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("->> Bulk: total time for create index --> " + (end - start) + " milliseconds, # of records: " + nRecords); 
+		LOG.info("->> Bulk: total time for create index --> " + (end - start) + " milliseconds, # of records: " + nRecords); 
 	}
 
 	public String getJsonById(String id) throws IOException {
@@ -125,7 +127,7 @@ public class JestElasticsearchManipulator {
 			e.printStackTrace();
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("->> GetJsonByID: search time --> " + (end - start) + " milliseconds");
+		LOG.info("->> GetJsonByID: search time --> " + (end - start) + " milliseconds");
 		return result.getJsonString();
 	}
 
@@ -138,7 +140,7 @@ public class JestElasticsearchManipulator {
 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder.query(QueryBuilders.queryString(keyword));
-		System.out.println("searchSourceBuilder.toString():"+searchSourceBuilder.toString());
+		LOG.info("searchSourceBuilder.toString():"+searchSourceBuilder.toString());
 
 		Search search = new Search.Builder(searchSourceBuilder.toString())
 		.addIndex(_esIndexName)
@@ -148,11 +150,11 @@ public class JestElasticsearchManipulator {
 		JestResult result = null;
 		try {
 			result = jestHttpClient.execute(search);
-			System.out.println("----->"+result.getJsonString());
+			LOG.info("----->"+result.getJsonString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("->> SearchByKeyword: search time --> " + (end - start) + " milliseconds");
+		LOG.info("->> SearchByKeyword: search time --> " + (end - start) + " milliseconds");
 	}
 }

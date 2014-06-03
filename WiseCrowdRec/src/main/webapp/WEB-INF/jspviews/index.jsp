@@ -80,10 +80,10 @@
  </script>
  <!-- end sse -->
     <!-- AJAX json begin -->
-    			
+    
     	<br><br><br>
 	<div class="container">
-	
+	<!--  From https://github.com/stevehanson/spring-mvc-ajax -->
 		Spring MVC AJAX Json<br><br>		
 		-- Random Person Generator: 
 		<br>
@@ -157,7 +157,7 @@
 			});
 			
 		});
-		
+	
 		function validatePersonId(personId) {
 			console.log(personId);
 			if(personId === undefined || personId < 0 || personId > 3) {

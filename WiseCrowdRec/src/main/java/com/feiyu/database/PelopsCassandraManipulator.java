@@ -18,16 +18,15 @@ import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
+import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.scale7.cassandra.pelops.Cluster;
 import org.scale7.cassandra.pelops.Mutator;
 import org.scale7.cassandra.pelops.Pelops;
 import org.scale7.cassandra.pelops.Selector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PelopsCassandraManipulator {
-	private static final Logger _logger = LoggerFactory.getLogger(PelopsCassandraManipulator.class);
+	private static Logger LOG = Logger.getLogger(PelopsCassandraManipulator.class.getName());
 	private final String _pool;
 	private final String _keyspace;
 	private final String _colFamily;
@@ -87,7 +86,7 @@ public class PelopsCassandraManipulator {
 		Selector selector = Pelops.createSelector(_pool);
 		List<Column> columns = selector.getColumnsFromRow(_colFamily, rowKey, false, ConsistencyLevel.ONE);
 
-		_logger.info("Entity: " + Selector.getColumnStringValue(columns, "entity"));
-		_logger.info("Category: " + Selector.getColumnStringValue(columns, "category"));
+		LOG.info("Entity: " + Selector.getColumnStringValue(columns, "entity"));
+		LOG.info("Category: " + Selector.getColumnStringValue(columns, "category"));
 	}
 }

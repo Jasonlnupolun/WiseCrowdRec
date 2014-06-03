@@ -19,7 +19,7 @@ import backtype.storm.tuple.Tuple;
 
 @SuppressWarnings("serial")
 public class MovieCount2CassandraBackBolt implements IBasicBolt {
-	private static Logger log = Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
+	private static Logger log = Logger.getLogger(MovieCount2CassandraBackBolt.class.getName());
     Map<String, Integer> _counts;
 
     @SuppressWarnings("rawtypes")

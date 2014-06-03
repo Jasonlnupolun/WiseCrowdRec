@@ -26,7 +26,7 @@ import com.omertron.themoviedbapi.MovieDbException;
 
 @SuppressWarnings("serial")
 public class ForTestGetMovieDataBolt extends BaseRichBolt {
-	private static Logger log = Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
+	private static Logger log= Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
 	private OutputCollector _collector;
 	private boolean tvShows = false; 
 

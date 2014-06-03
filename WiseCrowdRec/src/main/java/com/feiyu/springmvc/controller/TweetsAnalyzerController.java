@@ -17,9 +17,8 @@ import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
+import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +43,7 @@ import com.netflix.astyanax.serializers.StringSerializer;
 
 @Controller
 public class TweetsAnalyzerController {
-	private static final Logger logger = LoggerFactory.getLogger(TweetsAnalyzerController.class);
+	private static Logger logger = Logger.getLogger(TweetsAnalyzerController.class.getName());
 	private PersonService personService;
 	private EntityInfo entityInfo;
 	private List<EntityInfo> entitiesInfo = new ArrayList<>();
@@ -59,7 +58,7 @@ public class TweetsAnalyzerController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest req, HttpServletResponse resp,Locale locale, Model model) throws Exception {
-		logger.info("Welcome home! The client locale is {}.", locale);
+		logger.info("Welcome home! The client locale is "+locale.toString()+"." );
 
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);

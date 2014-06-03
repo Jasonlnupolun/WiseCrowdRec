@@ -2,6 +2,8 @@ package com.feiyu.semanticweb;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import com.feiyu.util.GlobalVariables;
 import com.feiyu.util.InitializeWCR;
 import com.omertron.themoviedbapi.MovieDbException;
@@ -19,6 +21,7 @@ import com.omertron.themoviedbapi.model.MovieDb;
  */
 
 public class IMDbInfoQuery {
+	private static Logger LOG = Logger.getLogger(IMDbInfoQuery.class.getName());
 	
 	public String getMoiveName(String IMDbID) throws MovieDbException {
 		MovieDb result = GlobalVariables.TMDB.getMovieInfoImdb(IMDbID,"en-US"); // WiseCrowdRec only analyze english tweets
@@ -31,6 +34,6 @@ public class IMDbInfoQuery {
 		initWcr.themoviedbOrgInitial();
 		
 		IMDbInfoQuery imdbIQ = new IMDbInfoQuery();	
-		System.out.println(imdbIQ.getMoiveName("tt0109830"));
+		LOG.info(imdbIQ.getMoiveName("tt0109830"));
 	}
 }

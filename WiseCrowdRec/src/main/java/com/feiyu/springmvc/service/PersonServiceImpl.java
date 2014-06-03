@@ -1,4 +1,7 @@
 package com.feiyu.springmvc.service;
+/**
+ * from From https://github.com/stevehanson/spring-mvc-ajax
+ */
 
 import java.util.Random;
 
@@ -8,7 +11,6 @@ import com.feiyu.springmvc.model.Person;
 
 @Service
 public class PersonServiceImpl implements PersonService {
-
 	String[] names = {"Nikolaus Otto", "Robert Ford", "Gottlieb Daimler", "Lt. General Masaharu Homma"};
 
 	@Override
@@ -41,5 +43,4 @@ public class PersonServiceImpl implements PersonService {
 		Random random = new Random();
 		return names[random.nextInt(names.length)];
 	}
-
 }

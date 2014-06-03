@@ -16,9 +16,8 @@ import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.cassandra.thrift.NotFoundException;
 import org.apache.cassandra.thrift.TimedOutException;
 import org.apache.cassandra.thrift.UnavailableException;
+import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -41,7 +40,7 @@ import com.netflix.astyanax.thrift.ThriftFamilyFactory;
 import com.netflix.astyanax.util.RangeBuilder;
 
 public class AstyanaxCassandraManipulator {
-	private static final Logger LOG = LoggerFactory.getLogger(AstyanaxCassandraManipulator.class);
+	private static Logger LOG = Logger.getLogger(AstyanaxCassandraManipulator.class.getName());
 	private static final String SQL_FILE_PATH = "cassandra/schemaCassandra.txt";
 	private final String _cluster;
 	private final String _keyspaceName;

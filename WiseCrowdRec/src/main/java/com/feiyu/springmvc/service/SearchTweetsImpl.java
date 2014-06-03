@@ -5,6 +5,8 @@ package com.feiyu.springmvc.service;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.feiyu.util.GlobalVariables;
 
 import twitter4j.FilterQuery;
@@ -19,6 +21,7 @@ import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 
 public class SearchTweetsImpl implements SearchTweets {
+	private static Logger LOG = Logger.getLogger(SearchTweetsImpl.class.getName());
 	private static StatusListener _listener;
 	private static TwitterStream _twitterStream;
 	private static String _keywordPhrases;
@@ -73,13 +76,13 @@ public class SearchTweetsImpl implements SearchTweets {
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				for (Status tweet : tweets) {
-					System.out.println("=>"+ tweet.getCreatedAt()+"@" + tweet.getUser().getScreenName() + " - " + tweet.getText());
+					LOG.info("=>"+ tweet.getCreatedAt()+"@" + tweet.getUser().getScreenName() + " - " + tweet.getText());
 				}
 			} while ((query = result.nextQuery()) != null);
 			System.exit(0);
 		} catch (TwitterException te) {
 			te.printStackTrace();
-			System.out.println("Failed to search tweets: " + te.getMessage());
+			LOG.info("Failed to search tweets: " + te.getMessage());
 			System.exit(-1);
 		}
 	}
