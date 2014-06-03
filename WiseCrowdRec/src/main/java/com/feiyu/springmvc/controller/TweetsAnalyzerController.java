@@ -50,6 +50,7 @@ public class TweetsAnalyzerController {
 	private List<EntityInfo> entitiesInfo = new ArrayList<>();
 	private EntityList _entityList = new EntityList(); 
 	private	InitializeWCR initWcr = new InitializeWCR();
+	private SparkTwitterStreaming sts = new SparkTwitterStreaming();
 
 	@Autowired
 	public TweetsAnalyzerController(PersonService personService) {
@@ -78,6 +79,10 @@ public class TweetsAnalyzerController {
 		initWcr.cassandraInitial();
 		initWcr.coreNLPInitial();
 		initWcr.themoviedbOrgInitial();
+		
+//		initWcr.twitterInitDyna();
+//		initWcr.elasticsearchInitial();
+//		sts.sparkInit();
 
 		BackgroundTopology t = new BackgroundTopology();
 
@@ -90,12 +95,11 @@ public class TweetsAnalyzerController {
 	public void startDynamicSearch() throws Exception { 
 		logger.info("Welcome -> start dynamic search");
 
-//		initWcr.getWiseCrowdRecConfigInfo();
+		initWcr.getWiseCrowdRecConfigInfo();//@
+		initWcr.coreNLPInitial();//@
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
-//		initWcr.coreNLPInitial();
 
-		SparkTwitterStreaming sts = new SparkTwitterStreaming();
 		sts.sparkInit();
 		sts.startSpark("movie");
 	}
