@@ -32,4 +32,10 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+    	<servlet-name>StartBackgroundTopologyAutomatically</servlet-name>
+    	<servlet-class>com.feiyu.storm.streamingdatacollection.stormmsg2websockets.StartBackgroundTopologyAutomatically</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+	</servlet>
+	
 </web-app>

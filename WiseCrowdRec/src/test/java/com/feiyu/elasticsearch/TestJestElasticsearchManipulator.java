@@ -26,7 +26,7 @@ public class TestJestElasticsearchManipulator {
 		entity.setEntityID("102");
 		entity.setCount(6);
 		entity.setEntityInfo(entityInfo);
-		_jesm.builderIndex_OneRecord(new String(sb2json.serializeBeans2JSON_Entity(entity)), entity.getEntityID(), true);
+		_jesm.builderIndex_OneRecord(new String(sb2json.serializeBeans2JSON(entity)), entity.getEntityID(), true);
 	}
 	
 	@Test

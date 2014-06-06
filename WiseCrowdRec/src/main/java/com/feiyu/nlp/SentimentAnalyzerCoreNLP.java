@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.feiyu.springmvc.model.EntityWithSentiment;
-import com.feiyu.util.GlobalVariables;
+import com.feiyu.utils.GlobalVariables;
 
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;

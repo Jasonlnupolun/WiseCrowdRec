@@ -11,8 +11,8 @@ import java.util.Map.Entry;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.feiyu.util.GlobalVariables;
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.utils.GlobalVariables;
+import com.feiyu.utils.InitializeWCR;
 
 public class TestEntityExtractionCalais {
 	@Before

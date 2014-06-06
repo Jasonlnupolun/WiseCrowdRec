@@ -2,7 +2,7 @@ package com.feiyu.springmvc.Dao;
 
 import org.junit.Test;
 
-import com.feiyu.util.ElasticsearchInit;
+import com.feiyu.utils.ElasticsearchInit;
 
 import io.searchbox.client.http.JestHttpClient;
 

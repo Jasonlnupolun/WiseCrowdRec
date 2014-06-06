@@ -1,4 +1,4 @@
-package com.feiyu.util;
+package com.feiyu.utils;
 
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;

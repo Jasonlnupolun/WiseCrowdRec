@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.feiyu.springmvc.model.Movie;
+import com.feiyu.springmvc.model.MovieWithCount;
 
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
@@ -13,11 +14,13 @@ import backtype.storm.topology.IBasicBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
 
 @SuppressWarnings("serial")
 public class ForTestMovieCountBolt implements IBasicBolt {
 	private static Logger log = Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
     Map<String, Integer> _counts;
+	Movie movie;
 
     @SuppressWarnings("rawtypes")
     @Override
@@ -28,7 +31,7 @@ public class ForTestMovieCountBolt implements IBasicBolt {
     @Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
     	// Later sliding window save hourly data into database 
-    	Movie movie = (Movie) input.getValueByField("movie");
+     movie = (Movie) input.getValueByField("movie");
     	
         String movieIMDbID = movie.getIMDbID();
 
@@ -40,7 +43,11 @@ public class ForTestMovieCountBolt implements IBasicBolt {
 
         _counts.put(movieIMDbID, count);
         log.info("Count:"+count + "-> " + movie.toString());
-//        collector.emit(tuple(movieIMDbID, count)); //? _counts or collector
+        
+        MovieWithCount movieWithCount = new MovieWithCount();
+        movieWithCount.setCount(count);
+        movieWithCount.setMovie(movie);
+        collector.emit(new Values(movieWithCount)); //? _counts or collector
        
         // InsertData into Cassandra
     }
@@ -51,12 +58,11 @@ public class ForTestMovieCountBolt implements IBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("entity", "count"));
+        declarer.declare(new Fields("movieWithCount"));
     }
 
     @Override
     public Map<String, Object> getComponentConfiguration() {
         return null;
     }
-
 }

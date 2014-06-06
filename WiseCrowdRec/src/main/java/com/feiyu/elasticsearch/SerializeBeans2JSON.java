@@ -6,25 +6,17 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.feiyu.springmvc.model.Entity;
-import com.feiyu.springmvc.model.EntityInfo;
+public class SerializeBeans2JSON implements java.io.Serializable {
+	private static final long serialVersionUID = -6687319108174378090L;
 
-public class SerializeBeans2JSON {
 	/*
 	 * there are four ways of generating JSON files
 	 * http://www.elasticsearch.org/guide/en/elasticsearch/client/java-api/current/index_.html
 	 */
-	public String serializeBeans2JSON_EntityInfo(EntityInfo entityInfo) 
+	public String serializeBeans2JSON(Object object) 
 			throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(entityInfo);
-		return json;
-	}
-	
-	public String serializeBeans2JSON_Entity(Entity entity) 
-			throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(entity);
+		String json = mapper.writeValueAsString(object);
 		return json;
 	}
 }

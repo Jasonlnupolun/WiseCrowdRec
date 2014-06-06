@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.feiyu.springmvc.model.Tweet;
-import com.feiyu.util.GlobalVariables;
+import com.feiyu.utils.GlobalVariables;
 
 import mx.bigdata.jcalais.CalaisObject;
 import mx.bigdata.jcalais.CalaisResponse;

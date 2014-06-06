@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.log4j.Logger;
 
 import com.feiyu.springmvc.model.Movie;
-import com.feiyu.util.GlobalVariables;
+import com.feiyu.utils.GlobalVariables;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 import backtype.storm.task.TopologyContext;
@@ -86,5 +86,4 @@ public class MovieCount2CassandraBackBolt implements IBasicBolt {
     public Map<String, Object> getComponentConfiguration() {
         return null;
     }
-
 }

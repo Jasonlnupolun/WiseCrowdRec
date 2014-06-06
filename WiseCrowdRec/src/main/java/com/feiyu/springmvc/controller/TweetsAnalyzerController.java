@@ -34,8 +34,8 @@ import com.feiyu.springmvc.model.EntityList;
 import com.feiyu.springmvc.model.Person;
 import com.feiyu.springmvc.service.PersonService;
 import com.feiyu.storm.streamingdatacollection.BackgroundTopology;
-import com.feiyu.util.GlobalVariables;
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.utils.GlobalVariables;
+import com.feiyu.utils.InitializeWCR;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.model.Rows;
@@ -85,7 +85,7 @@ public class TweetsAnalyzerController {
 
 		BackgroundTopology t = new BackgroundTopology();
 
-		boolean isFakeTopologyForTest = false;
+		boolean isFakeTopologyForTest = true;
 		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
 	}
 
@@ -94,8 +94,8 @@ public class TweetsAnalyzerController {
 	public void startDynamicSearch() throws Exception { 
 		logger.info("Welcome -> start dynamic search");
 
-		initWcr.getWiseCrowdRecConfigInfo();//@
-		initWcr.coreNLPInitial();//@
+//		initWcr.getWiseCrowdRecConfigInfo();//@
+//		initWcr.coreNLPInitial();//@
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
 

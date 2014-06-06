@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.utils.InitializeWCR;
 
 public class TestSparkTwitterStreaming implements java.io.Serializable {
 	private static final long serialVersionUID = 4530749294942204573L;

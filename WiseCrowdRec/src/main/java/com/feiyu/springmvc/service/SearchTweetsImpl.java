@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.feiyu.util.GlobalVariables;
+import com.feiyu.utils.GlobalVariables;
 
 import twitter4j.FilterQuery;
 import twitter4j.Query;

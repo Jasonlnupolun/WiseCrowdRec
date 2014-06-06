@@ -15,11 +15,12 @@ import org.apache.thrift.TException;
 
 import com.feiyu.storm.streamingdatacollection.bolt.ForTestGetMovieDataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.ForTestMovieCountBolt;
+import com.feiyu.storm.streamingdatacollection.bolt.ForTestStormJmsBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMoviedataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.MovieCount2CassandraBackBolt;
 import com.feiyu.storm.streamingdatacollection.spout.ForTestFakeSpout;
-import com.feiyu.storm.streamingdatacollection.spout.TwitterQuaryStreamBackSpout;
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.storm.streamingdatacollection.spout.TwitterQueryStreamBackSpout;
+import com.feiyu.utils.InitializeWCR;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
@@ -48,6 +49,8 @@ public class BackgroundTopology {
 		 * Some spouts implementations will then replay the message at a later time."
 		 * Config.TOPOLOGY_MESSAGE_TIMEOUT_SECS default is 30 seconds
 		 */
+		
+		ForTestStormJmsBolt forTestStormJmsBolt = new ForTestStormJmsBolt(); // Storm java message services
 
 		TopologyBuilder b = new TopologyBuilder();
         
@@ -55,11 +58,14 @@ public class BackgroundTopology {
 			b.setSpout("ForTestFakeSpout", new ForTestFakeSpout(), TWITTER_SPOUT_PARALLELISM_HINT);
 			b.setBolt("ForTestGetMovieDataBolt", new ForTestGetMovieDataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("ForTestFakeSpout");
 			b.setBolt("ForTestMovieCountBolt", new ForTestMovieCountBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("ForTestGetMovieDataBolt", new Fields("movie"));
+			b.setBolt("ForTestStormJmsBolt", forTestStormJmsBolt.jmsBolt()).fieldsGrouping("ForTestMovieCountBolt",new Fields("movieWithCount"));
 		} else {
-			b.setSpout("TwitterQuaryStreamBackSpout", new TwitterQuaryStreamBackSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
-			b.setBolt("GetMoviedataBolt", new GetMoviedataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQuaryStreamBackSpout");
+			b.setSpout("TwitterQueryStreamBackSpout", new TwitterQueryStreamBackSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
+			b.setBolt("GetMoviedataBolt", new GetMoviedataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQueryStreamBackSpout");
 			b.setBolt("MovieCount2CassandraBackBolt", new MovieCount2CassandraBackBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMoviedataBolt", new Fields("movie"));
 		}
+		
+		// @@@ modify this later, Submit topology locally or to the cluster
 
 		final LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology(TOPOLOGY_NAME, config, b.createTopology());
@@ -85,7 +91,7 @@ public class BackgroundTopology {
 		
 		BackgroundTopology t = new BackgroundTopology();
 		
-		boolean isFakeTopologyForTest = false;
+		boolean isFakeTopologyForTest = true;
 		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
 	}
 }

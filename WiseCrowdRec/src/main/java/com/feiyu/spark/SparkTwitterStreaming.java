@@ -27,8 +27,8 @@ import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
 import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.model.EntityWithSentiment;
 import com.feiyu.springmvc.model.Tweet;
-import com.feiyu.util.GlobalVariables;
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.utils.GlobalVariables;
+import com.feiyu.utils.InitializeWCR;
 
 import scala.Tuple2;
 import twitter4j.Status;
@@ -151,7 +151,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 						SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); // ElasticSearch requires index data as JSON.
 						String entityInfoJson = null;
 						try {
-							entityInfoJson = sb2json.serializeBeans2JSON_EntityInfo(entityInfo);
+							entityInfoJson = sb2json.serializeBeans2JSON(entityInfo);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

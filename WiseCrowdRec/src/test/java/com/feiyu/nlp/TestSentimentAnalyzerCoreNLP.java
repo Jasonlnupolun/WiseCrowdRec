@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.feiyu.springmvc.model.EntityWithSentiment;
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.utils.InitializeWCR;
 
 public class TestSentimentAnalyzerCoreNLP {
 	private static Logger log = Logger.getLogger(TestSentimentAnalyzerCoreNLP.class.getName());

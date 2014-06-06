@@ -8,7 +8,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import com.feiyu.springmvc.model.Entity;
-import com.feiyu.util.ElasticsearchInit;
+import com.feiyu.utils.ElasticsearchInit;
 
 import io.searchbox.client.JestResult;
 import io.searchbox.client.http.JestHttpClient;
@@ -99,7 +99,7 @@ public class JestElasticsearchManipulator {
 			Bulk.Builder bulkBuilder = new Bulk.Builder();
 			for (int i = 0; i < nRecords; i++) {
 				Index index = new Index
-						.Builder(sb2json.serializeBeans2JSON_Entity(entityList.get(i)))
+						.Builder(sb2json.serializeBeans2JSON(entityList.get(i)))
 				.index(_esIndexName)
 				.type(_esTypeName)
 				.id(entityList.get(i).getEntityID())

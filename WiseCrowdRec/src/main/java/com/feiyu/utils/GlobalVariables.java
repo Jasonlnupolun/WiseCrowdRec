@@ -1,4 +1,4 @@
-package com.feiyu.util;
+package com.feiyu.utils;
 
 import java.util.Properties;
 

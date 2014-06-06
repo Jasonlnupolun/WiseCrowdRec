@@ -44,16 +44,19 @@
 	
 	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
 
+	<!--  "${pageContext.request.contextPath}/ServerSentEventsD3 -->
+	<!-- var socket = new WebSocket(host); -->
+	<!-- var source = new EventSource("ws://localhost:9292/wcrstorm"); -->
 	<script type="text/javascript">
-		if (typeof (EventSource) !== "undefined") {
-   			var source = new EventSource("${pageContext.request.contextPath}/ServerSentEventsD3");
+/* 		if (typeof (EventSource) !== "undefined") {
+   			var socket = new WebSocket("ws://localhost:9292/wcrstorm");
  	 	} else {
  	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
-  		}
+  		} */
 		
 		function start() {
 			menuNav();
-			test(source);
+			test(/* socket */);
 			validatePersonId(personId);
 		}
      </script>

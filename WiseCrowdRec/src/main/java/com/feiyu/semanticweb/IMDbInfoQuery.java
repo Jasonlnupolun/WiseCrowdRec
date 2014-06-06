@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-import com.feiyu.util.GlobalVariables;
-import com.feiyu.util.InitializeWCR;
+import com.feiyu.utils.GlobalVariables;
+import com.feiyu.utils.InitializeWCR;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.model.MovieDb;
 

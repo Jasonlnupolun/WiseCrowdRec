@@ -34,13 +34,13 @@ import twitter4j.StatusListener;
 import com.feiyu.springmvc.service.SearchTweetsImpl;
 
 @SuppressWarnings("serial")
-public class TwitterQuaryStreamBackSpout extends BaseRichSpout {
+public class TwitterQueryStreamBackSpout extends BaseRichSpout {
 	private SpoutOutputCollector _collector;
 	private LinkedBlockingQueue<Status> _queue = null;
 	private TwitterStream _twitterStream;
 	private String _keywordPhrase;
 	
-	public TwitterQuaryStreamBackSpout (String keywordPhrase) {
+	public TwitterQueryStreamBackSpout (String keywordPhrase) {
 		_keywordPhrase = keywordPhrase;
 	}
 
