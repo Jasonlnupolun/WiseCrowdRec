@@ -21,15 +21,15 @@ import mx.bigdata.jcalais.CalaisResponse;
 public class EntityExtractionCalais {
 	private Tweet _t = new Tweet();
 	private HashMap<String, String> _hm = new HashMap<String, String>(); 
-	
+
 	private void getCleanedText(String text) {
 		_t.setText(text.replaceAll("(?:^|\\s)[a-zA-Z0-9]+(?=\\s|$)"," "));//("[^a-zA-Z0-9]", " "));
 		// This will match all words containing the letters A-Z.
 		// (?:^|\s)[a-zA-Z]+(?=\s|$)
 	}
-	
+
 	public HashMap<String, String> getEntities(String text) throws IOException {
-//		CalaisClient client = new CalaisRestClient(GlobalVariables.WCR_PROPS.getProperty("CalaisApiKey"));
+		//		CalaisClient client = new CalaisRestClient(GlobalVariables.WCR_PROPS.getProperty("CalaisApiKey"));
 		this.getCleanedText(text);
 		CalaisResponse response = GlobalVariables.CALAIS_CLIENT.analyze(_t.getText());
 		for (CalaisObject entity : response.getEntities()) {
@@ -40,7 +40,7 @@ public class EntityExtractionCalais {
 					|| entity.getField("_type").equals("City")
 					|| entity.getField("_type").equals("categoryName")) {
 				_hm.put(entity.getField("name"), entity.getField("_type"));
-				}
+			}
 		}
 		return _hm;
 	}

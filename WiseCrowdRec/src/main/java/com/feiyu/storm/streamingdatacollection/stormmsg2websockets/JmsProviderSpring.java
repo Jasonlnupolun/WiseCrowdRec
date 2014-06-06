@@ -8,8 +8,8 @@ import backtype.storm.contrib.jms.JmsProvider;
 public class JmsProviderSpring implements JmsProvider {
 	private static final long serialVersionUID = 7643754177565597421L;
 	private ConnectionFactory _connectionFactory;
-    private Destination _destination;
-    
+	private Destination _destination;
+
 	public JmsProviderSpring (ConnectionFactory connectionFactory, Destination destination) {
 		_connectionFactory = connectionFactory;
 		_destination = destination;

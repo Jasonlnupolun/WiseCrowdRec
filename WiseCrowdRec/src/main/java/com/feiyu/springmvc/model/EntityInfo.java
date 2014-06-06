@@ -31,7 +31,7 @@ public class EntityInfo implements java.io.Serializable {
 	public int getSentitment() {
 		return sentiment;
 	}
-	
+
 	public String getSentitmentCSS() {
 		return sentimentCSS;
 	}

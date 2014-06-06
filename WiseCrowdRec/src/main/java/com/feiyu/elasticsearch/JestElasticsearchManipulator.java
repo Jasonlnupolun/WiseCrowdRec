@@ -1,4 +1,7 @@
 package com.feiyu.elasticsearch;
+/**
+ * @author feiyu
+ */
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +35,7 @@ public class JestElasticsearchManipulator {
 		_esIndexName = idxName;
 		_esTypeName = typeName;
 	}
-	
+
 	public void builderIndex_OneRecord(String json, boolean cleanBeforeInsert) {
 		long start = System.currentTimeMillis();
 		try {
@@ -94,7 +97,7 @@ public class JestElasticsearchManipulator {
 				jestHttpClient.execute(new CreateIndex.Builder(_esIndexName).build());
 			}
 
-			
+
 			SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); 
 			Bulk.Builder bulkBuilder = new Bulk.Builder();
 			for (int i = 0; i < nRecords; i++) {

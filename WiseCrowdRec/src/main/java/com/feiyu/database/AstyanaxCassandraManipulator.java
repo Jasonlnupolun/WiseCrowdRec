@@ -55,14 +55,14 @@ public class AstyanaxCassandraManipulator {
 	private static ColumnFamily<String, String> CF_AST_DYNA;
 
 	public AstyanaxCassandraManipulator(String cluster, String keyspaceName, 
-			 String pool, String host, Integer port) {
+			String pool, String host, Integer port) {
 		_cluster = cluster;
 		_keyspaceName = keyspaceName;
 		_pool = pool;
 		_host = host;
 		_port = port;
 	}
-	
+
 	/*
 	 * Run initialSetup() only once
 	 */
@@ -77,20 +77,20 @@ public class AstyanaxCassandraManipulator {
 
 		context.start();
 		KS_AST = context.getClient();
-		
+
 		CF_AST_BACK = ColumnFamily
 				.newColumnFamily(_columnFamilyNameBack,
 						StringSerializer.get(),  // Key Serializer
 						StringSerializer.get()) ;  // Column Serializer 
-		
+
 		CF_AST_DYNA = ColumnFamily
 				.newColumnFamily(_columnFamilyNameDyna,
 						StringSerializer.get(),  // Key Serializer
 						StringSerializer.get()) ;  // Column Serializer
-		
+
 		this.cliSchema();
 	}
-	
+
 	private void cliSchema() throws URISyntaxException, IOException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ClassNotFoundException, TimedOutException {
 		CliMain.connect(_host, _port);
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(SQL_FILE_PATH);
@@ -102,24 +102,24 @@ public class AstyanaxCassandraManipulator {
 		br.close();
 		CliMain.disconnect();
 	}
-	
-//	public void addDynaColumnFamily(String newCF) throws CharacterCodingException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
-//		_columnFamilyNameDyna = newCF;
-//		CF_AST_DYNA = ColumnFamily
-//				.newColumnFamily(_columnFamilyNameDyna,
-//						StringSerializer.get(),  // Key Serializer
-//						StringSerializer.get()) ;  // Column Serializer
-//		
-//		CliMain.connect(_host, _port);
-//		CliMain.processStatement("use wcrkeyspace;");
-//		CliMain.processStatement("create column family "+_columnFamilyNameDyna+" with"
-//				+ " column_type = 'Standard' and comparator = 'UTF8Type' and default_validation_class "
-//				+ "= 'UTF8Type' and key_validation_class = 'UTF8Type'; ");		
-//		CliMain.disconnect();
-//	}
+
+	//	public void addDynaColumnFamily(String newCF) throws CharacterCodingException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException {
+	//		_columnFamilyNameDyna = newCF;
+	//		CF_AST_DYNA = ColumnFamily
+	//				.newColumnFamily(_columnFamilyNameDyna,
+	//						StringSerializer.get(),  // Key Serializer
+	//						StringSerializer.get()) ;  // Column Serializer
+	//		
+	//		CliMain.connect(_host, _port);
+	//		CliMain.processStatement("use wcrkeyspace;");
+	//		CliMain.processStatement("create column family "+_columnFamilyNameDyna+" with"
+	//				+ " column_type = 'Standard' and comparator = 'UTF8Type' and default_validation_class "
+	//				+ "= 'UTF8Type' and key_validation_class = 'UTF8Type'; ");		
+	//		CliMain.disconnect();
+	//	}
 
 	public void insertDataToDB(String rowKey, String entity, String category, 
-			 String sentiment, String time, String text, String count, String entityInfo, boolean isDynamicSearch) throws ConnectionException, InterruptedException, ExecutionException {
+			String sentiment, String time, String text, String count, String entityInfo, boolean isDynamicSearch) throws ConnectionException, InterruptedException, ExecutionException {
 
 		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
 		ColumnFamily<String, String> CF_AST;
@@ -128,7 +128,7 @@ public class AstyanaxCassandraManipulator {
 		} else {
 			CF_AST = CF_AST_BACK;
 		}
-		
+
 		mb.withRow(CF_AST, rowKey)
 		.putColumn("entity", entity)
 		.putColumn("category", category)
@@ -144,8 +144,8 @@ public class AstyanaxCassandraManipulator {
 	}
 
 	public void insertDataToDB_asynchronous(String rowKey, String entity, String category, 
-			 String sentiment, String time, String text, String count, String entityInfo, boolean isDynamicSearch) 
-					 throws ConnectionException, InterruptedException, ExecutionException {
+			String sentiment, String time, String text, String count, String entityInfo, boolean isDynamicSearch) 
+					throws ConnectionException, InterruptedException, ExecutionException {
 
 		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
 		ColumnFamily<String, String> CF_AST;
@@ -154,7 +154,7 @@ public class AstyanaxCassandraManipulator {
 		} else {
 			CF_AST = CF_AST_BACK;
 		}
-		
+
 		mb.withRow(CF_AST, rowKey)
 		.putColumn("entity", entity)
 		.putColumn("category", category)
@@ -169,7 +169,7 @@ public class AstyanaxCassandraManipulator {
 		@SuppressWarnings("unused")
 		OperationResult<Void> result = future.get();
 	}
-	
+
 	public void insertMovieDataToDB_asynchronous(String rowKey, String movieName, String hybridRating, String count) 
 			throws ConnectionException, InterruptedException, ExecutionException {
 
@@ -186,7 +186,7 @@ public class AstyanaxCassandraManipulator {
 		@SuppressWarnings("unused")
 		OperationResult<Void> result = future.get();
 	}
-	
+
 	public String queryWithRowKeyGetRating(String rowKey) throws ConnectionException {
 		String rating = null;
 		ColumnFamily<String, String> CF_AST = CF_AST_BACK;
@@ -229,7 +229,7 @@ public class AstyanaxCassandraManipulator {
 		} else {
 			CF_AST = CF_AST_BACK;
 		}
-		
+
 		// asynchronous feature
 		final ListenableFuture<OperationResult<ColumnList<String>>> listenableFuture = KS_AST
 				.prepareQuery(CF_AST)
@@ -268,7 +268,7 @@ public class AstyanaxCassandraManipulator {
 		} else {
 			CF_AST = CF_AST_BACK;
 		}
-		
+
 		/*
 		 * reference: https://github.com/Netflix/astyanax/wiki/Reading-Data
 		 */

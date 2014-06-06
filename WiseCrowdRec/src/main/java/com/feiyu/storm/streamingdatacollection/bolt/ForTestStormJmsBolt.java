@@ -30,7 +30,7 @@ public class ForTestStormJmsBolt implements java.io.Serializable {
 	private static final long serialVersionUID = 8795229050766399663L;
 	SerializeBeans2JSON sb2json = new SerializeBeans2JSON();
 	MovieWithCount movieWithCount = new MovieWithCount();
-	
+
 	public JmsBolt jmsBolt() {
 		JmsBolt jmsBolt = new JmsBolt();
 
@@ -58,7 +58,7 @@ public class ForTestStormJmsBolt implements java.io.Serializable {
 			}
 		};
 		jmsBolt.setJmsMessageProducer(jmsMessageProducer);
-		
+
 		return jmsBolt;
 	}
 }

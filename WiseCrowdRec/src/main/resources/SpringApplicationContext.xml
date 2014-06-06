@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- From https://github.com/ptgoetz/storm-jms/wiki/Spring -->
+<!-- Reference https://github.com/ptgoetz/storm-jms/wiki/Spring and https://github.com/P7h/StormTweetsSentimentD3Viz/blob/acacec61e7baa7a0ce37ef648e02fcdb9b342355/src/main/resources/applicationContext.xml-->
 <beans 
   xmlns="http://www.springframework.org/schema/beans" 
   xmlns:amq="http://activemq.apache.org/schema/core"
@@ -19,8 +19,7 @@
     <!-- amq:connectionFactory id="jmsConnectionFactory" brokerURL="tcp://localhost:61616" / this one need to open activemq first-->
     <amq:connectionFactory id="jmsConnectionFactory" brokerURL="vm://vmBrokerURL"/>
     
-    
-    <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent" depends-on="broker">
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent" depends-on="broker">
         <property name="brokerURL" value="vm://vmBrokerURL?create=false&amp;waitForStart=5000"/>
     </bean>
 
@@ -28,6 +27,6 @@
         <amq:transportConnectors>
             <amq:transportConnector name="vm" uri="vm://vmBrokerURL"/>
         </amq:transportConnectors>
-    </amq:broker>
+    </amq:broker>  
 
 </beans>

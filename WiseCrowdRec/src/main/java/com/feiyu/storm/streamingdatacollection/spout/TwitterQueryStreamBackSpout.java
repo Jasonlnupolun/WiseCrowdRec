@@ -39,7 +39,7 @@ public class TwitterQueryStreamBackSpout extends BaseRichSpout {
 	private LinkedBlockingQueue<Status> _queue = null;
 	private TwitterStream _twitterStream;
 	private String _keywordPhrase;
-	
+
 	public TwitterQueryStreamBackSpout (String keywordPhrase) {
 		_keywordPhrase = keywordPhrase;
 	}

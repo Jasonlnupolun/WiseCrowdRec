@@ -19,11 +19,11 @@ public class TestEntityExtractionCalais {
 	public void init() throws IOException {
 		GlobalVariables.WCR_PROPS = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
-        GlobalVariables.WCR_PROPS.load(in);
-        InitializeWCR initWCR = new InitializeWCR();
-        initWCR.calaisNLPInitial();
+		GlobalVariables.WCR_PROPS.load(in);
+		InitializeWCR initWCR = new InitializeWCR();
+		initWCR.calaisNLPInitial();
 	}
-	
+
 	@Test
 	public void testGetEntities() throws IOException {
 		EntityExtractionCalais entityExtract = new EntityExtractionCalais();

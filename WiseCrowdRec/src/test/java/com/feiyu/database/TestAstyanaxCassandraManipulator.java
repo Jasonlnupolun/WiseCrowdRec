@@ -52,30 +52,30 @@ public class TestAstyanaxCassandraManipulator {
 		_acm.queryDB_asynchronous("6",false);
 		_acm.queryWithRowkey("2",false);
 	}
-	
+
 	@Test
 	public void testQueryAllRowsOneCF_back() {
 		Rows<String, String> rows = _acm.queryAllRowsOneCF(false);
 		for (Row<String, String> row : rows) {
-		    System.out.println("ROW: " + row.getKey() + " " + row.getColumns().size());
+			System.out.println("ROW: " + row.getKey() + " " + row.getColumns().size());
 		}
 		// can not show the row inserted by _acm.insertDataToDB_asynchronous(...)
 	}
-	
-//	@Test
-//	public void testAddOneCF_DYNA() throws CharacterCodingException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ConnectionException, InterruptedException, ExecutionException {
-//		_acm.addDynaColumnFamily("movie");
-//		_acm.insertDataToDB("3", "Bob", "Person","3","time","text","6","Bob...", true);
-//		_acm.queryWithRowkey("3",true);
-//	}
-//	
-//	@Test
-//	public void testAddNewCF_DYNA() throws CharacterCodingException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ConnectionException, InterruptedException, ExecutionException {
-//		_acm.addDynaColumnFamily("music");
-//		_acm.insertDataToDB("6", "Ann", "Person", "1","time","text", "2", "info...", true);
-//		_acm.queryWithRowkey("6",true);
-//	}
-	
+
+	//	@Test
+	//	public void testAddOneCF_DYNA() throws CharacterCodingException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ConnectionException, InterruptedException, ExecutionException {
+	//		_acm.addDynaColumnFamily("movie");
+	//		_acm.insertDataToDB("3", "Bob", "Person","3","time","text","6","Bob...", true);
+	//		_acm.queryWithRowkey("3",true);
+	//	}
+	//	
+	//	@Test
+	//	public void testAddNewCF_DYNA() throws CharacterCodingException, NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, TException, ConnectionException, InterruptedException, ExecutionException {
+	//		_acm.addDynaColumnFamily("music");
+	//		_acm.insertDataToDB("6", "Ann", "Person", "1","time","text", "2", "info...", true);
+	//		_acm.queryWithRowkey("6",true);
+	//	}
+
 	@Test
 	public void testQueryWithRowKeyGetRating() throws ConnectionException, InterruptedException, ExecutionException {
 		_acm.insertMovieDataToDB_asynchronous("tt1877832", "X-Men: Days of Future Past", "9", "1");

@@ -18,7 +18,7 @@ public class TestSparkTwitterStreaming implements java.io.Serializable {
 		initWcr.elasticsearchInitial();
 		initWcr.coreNLPInitial();
 	}
-	
+
 	@Test
 	public void testSpark() throws IOException {
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();

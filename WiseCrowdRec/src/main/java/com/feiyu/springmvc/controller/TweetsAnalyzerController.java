@@ -78,10 +78,10 @@ public class TweetsAnalyzerController {
 		initWcr.cassandraInitial();
 		initWcr.coreNLPInitial();
 		initWcr.themoviedbOrgInitial();
-		
-//		initWcr.twitterInitDyna();
-//		initWcr.elasticsearchInitial();
-//		sts.sparkInit();
+
+		//		initWcr.twitterInitDyna();
+		//		initWcr.elasticsearchInitial();
+		//		sts.sparkInit();
 
 		BackgroundTopology t = new BackgroundTopology();
 
@@ -94,8 +94,8 @@ public class TweetsAnalyzerController {
 	public void startDynamicSearch() throws Exception { 
 		logger.info("Welcome -> start dynamic search");
 
-//		initWcr.getWiseCrowdRecConfigInfo();//@
-//		initWcr.coreNLPInitial();//@
+		//		initWcr.getWiseCrowdRecConfigInfo();//@
+		//		initWcr.coreNLPInitial();//@
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
 

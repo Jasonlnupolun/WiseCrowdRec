@@ -3,28 +3,28 @@ package com.feiyu.springmvc.model;
 import java.util.List;
 
 public class EntityList {
-    private String keywordPhrases;
-    private List<EntityInfo> entitiesInfo;
-    
-    public EntityList() {
-    	
-    }
+	private String keywordPhrases;
+	private List<EntityInfo> entitiesInfo;
 
-    public EntityList(String keywordPhrases, List<EntityInfo> entitiesInfo) {
-        this.keywordPhrases = keywordPhrases;
-        this.entitiesInfo = entitiesInfo;
-    }
+	public EntityList() {
 
-    public String getKeywordPhrases() {
-        return keywordPhrases;
-    }
+	}
 
-    public List<EntityInfo> getEntitiesInfo() {
-        return entitiesInfo;
-    }
-    
+	public EntityList(String keywordPhrases, List<EntityInfo> entitiesInfo) {
+		this.keywordPhrases = keywordPhrases;
+		this.entitiesInfo = entitiesInfo;
+	}
+
+	public String getKeywordPhrases() {
+		return keywordPhrases;
+	}
+
+	public List<EntityInfo> getEntitiesInfo() {
+		return entitiesInfo;
+	}
+
 	@Override
-    public String toString() {
+	public String toString() {
 		return "EntityList:{"
 				+"keyword phrases:"+ keywordPhrases
 				+",# of entitiesInfo:" + entitiesInfo.size()

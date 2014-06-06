@@ -16,7 +16,7 @@ public class Tweet implements java.io.Serializable {
 	private HashMap<String, String> _entities;
 	private int _sentiment;
 	private String _text;
-	
+
 	public Tweet() {
 	}
 

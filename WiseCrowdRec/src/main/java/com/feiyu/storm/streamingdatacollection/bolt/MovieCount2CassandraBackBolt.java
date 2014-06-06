@@ -1,4 +1,7 @@
 package com.feiyu.storm.streamingdatacollection.bolt;
+/**
+ * @author feiyu
+ */
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,70 +23,70 @@ import backtype.storm.tuple.Tuple;
 @SuppressWarnings("serial")
 public class MovieCount2CassandraBackBolt implements IBasicBolt {
 	private static Logger log = Logger.getLogger(MovieCount2CassandraBackBolt.class.getName());
-    Map<String, Integer> _counts;
+	Map<String, Integer> _counts;
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public void prepare(Map stormConf, TopologyContext context) {
-        _counts = new HashMap<String, Integer>();
-    }
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void prepare(Map stormConf, TopologyContext context) {
+		_counts = new HashMap<String, Integer>();
+	}
 
-    @Override
+	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
-    	// Later sliding window save hourly data into database -> note need to update both count and rating
-    	Movie movie = (Movie) input.getValueByField("movie");
-        String movieIMDbID = movie.getIMDbID();
-        String ratingPrev = null;
-        int hybridRatingFromOneTweet = movie.getRating(), hybridRating = 0;
-        
-        // count how many times this movie rated by people in a sliding window
-    	int count = 0;
-        if (_counts.containsKey(movieIMDbID)) {
-            count = _counts.get(movieIMDbID);
-        }
-        count++;
-        _counts.put(movieIMDbID, count);
-        // collector.emit(tuple(movieIMDbID, count)); //? _counts or collector
-       
-        // InsertData into Cassandra
-        try {
-        	ratingPrev = GlobalVariables.AST_CASSANDRA_MNPLT.queryWithRowKeyGetRating(movieIMDbID);
+		// Later sliding window save hourly data into database -> note need to update both count and rating
+		Movie movie = (Movie) input.getValueByField("movie");
+		String movieIMDbID = movie.getIMDbID();
+		String ratingPrev = null;
+		int hybridRatingFromOneTweet = movie.getRating(), hybridRating = 0;
+
+		// count how many times this movie rated by people in a sliding window
+		int count = 0;
+		if (_counts.containsKey(movieIMDbID)) {
+			count = _counts.get(movieIMDbID);
+		}
+		count++;
+		_counts.put(movieIMDbID, count);
+		// collector.emit(tuple(movieIMDbID, count)); //? _counts or collector
+
+		// InsertData into Cassandra
+		try {
+			ratingPrev = GlobalVariables.AST_CASSANDRA_MNPLT.queryWithRowKeyGetRating(movieIMDbID);
 		} catch (ConnectionException e) {
-//			e.printStackTrace();
+			//			e.printStackTrace();
 			log.warn("Can not get hybridRating info from Cassandra");
 		} 
-        
-        if (ratingPrev!= null) {
-        	hybridRating = Integer.valueOf(ratingPrev) + hybridRatingFromOneTweet;
-        } else {
-        	hybridRating = hybridRatingFromOneTweet; 
-        }
-        
-        try {
+
+		if (ratingPrev!= null) {
+			hybridRating = Integer.valueOf(ratingPrev) + hybridRatingFromOneTweet;
+		} else {
+			hybridRating = hybridRatingFromOneTweet; 
+		}
+
+		try {
 			GlobalVariables.AST_CASSANDRA_MNPLT.insertMovieDataToDB_asynchronous(
 					movieIMDbID, 
 					movie.getMovieName(), 
 					Integer.toString(hybridRating), 
 					Integer.toString(count));
 		} catch (ConnectionException | InterruptedException | ExecutionException e1) {
-//			e1.printStackTrace();
+			//			e1.printStackTrace();
 			log.info("Run Cassandra first, please");
 		}
-        
-        log.info("Count:"+count + "-> " + movie.toString());
-    }
 
-    @Override
-    public void cleanup() {
-    }
+		log.info("Count:"+count + "-> " + movie.toString());
+	}
 
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("entity", "count"));
-    }
+	@Override
+	public void cleanup() {
+	}
 
-    @Override
-    public Map<String, Object> getComponentConfiguration() {
-        return null;
-    }
+	@Override
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields("entity", "count"));
+	}
+
+	@Override
+	public Map<String, Object> getComponentConfiguration() {
+		return null;
+	}
 }

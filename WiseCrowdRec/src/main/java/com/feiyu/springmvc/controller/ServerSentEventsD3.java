@@ -34,15 +34,15 @@ public class ServerSentEventsD3 extends HttpServlet implements ActionListener  {
 		PrintWriter out = response.getWriter();
 
 		while (true) {
-//			out.print("id: 500\n"); //Math.random()*width, y: Math.random()*height
-//			out.print("data: 300\n\n");
-//			out.flush();
+			//			out.print("id: 500\n"); //Math.random()*width, y: Math.random()*height
+			//			out.print("data: 300\n\n");
+			//			out.flush();
 			out.print("id: " + "EntityName" + "\n");
 			out.print("data: " + new Date().toString() + "\n\n");
 			out.flush();
-//			out.print("id: " + "ServerTime" + "\n");
-//			out.print("data: " + new Date().toString() + "\n\n");
-//			out.flush();
+			//			out.print("id: " + "ServerTime" + "\n");
+			//			out.print("data: " + new Date().toString() + "\n\n");
+			//			out.flush();
 			// out.close(); //Do not close the writer!
 			try {
 				Thread.currentThread();
@@ -55,7 +55,7 @@ public class ServerSentEventsD3 extends HttpServlet implements ActionListener  {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 	}
 
 }

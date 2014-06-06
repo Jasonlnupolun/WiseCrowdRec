@@ -13,7 +13,7 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 public class GlobalVariables {
 	public static Properties WCR_PROPS;
-	
+
 	public static ConfigurationBuilder TWT_CONF_BUILDER_BACK; 
 	public static ConfigurationBuilder TWT_CONF_BUILDER_DYNA; 
 

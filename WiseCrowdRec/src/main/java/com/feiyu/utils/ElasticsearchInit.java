@@ -16,8 +16,8 @@ public class ElasticsearchInit {
 			JestClientFactory factory = new JestClientFactory();
 			factory.setHttpClientConfig(new HttpClientConfig
 					.Builder("http://localhost:9200")
-					.multiThreaded(true)
-					.build());
+			.multiThreaded(true)
+			.build());
 			client = (JestHttpClient) factory.getObject();
 		}
 		return client;

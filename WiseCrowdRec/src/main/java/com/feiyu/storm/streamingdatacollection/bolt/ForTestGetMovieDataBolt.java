@@ -39,19 +39,19 @@ public class ForTestGetMovieDataBolt extends BaseRichBolt {
 	@Override
 	public void execute(Tuple input) {
 		String tweet_fake = (String) input.getValueByField("tweet");
-		
+
 		Movie movie = new Movie();
 		EntityWithSentiment ews;
 		int rating = -1;
 		String lang = "en";
 
 		if (lang.equals("en")) {
-			
+
 			// Get Movie ID
 			String[] ary = tweet_fake.split("/");
 			String IMDbID = ary[ary.length-1];
 			movie.setIMDbID(IMDbID);
-			
+
 			// Get Moive Name
 			SentimentAnalyzerCoreNLP sacn = new SentimentAnalyzerCoreNLP();
 			ews = sacn.getEntitiesWithSentiment(tweet_fake);
@@ -67,7 +67,7 @@ public class ForTestGetMovieDataBolt extends BaseRichBolt {
 				tvShows = true;
 				// v4.0 of api-themoviedb support TV shows' information ->  https://github.com/Omertron/api-themoviedb
 			}
-			
+
 			// Get the rating of this movie
 			HashMap<String, String> hm = ews.getEntityWithCategory();
 			String entity = "", category = "";
@@ -77,7 +77,7 @@ public class ForTestGetMovieDataBolt extends BaseRichBolt {
 					Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
 					entity = (String) pairs.getKey();
 					category = (String) pairs.getValue();
-					
+
 					if (category.equals("NUMBER")) {
 						String[] list = entity.split("/");
 						rating = Integer.valueOf(list[0]);
@@ -89,7 +89,7 @@ public class ForTestGetMovieDataBolt extends BaseRichBolt {
 				movie.setRating(-1);
 			}
 		}
-		
+
 		if (!tvShows || rating>10 || rating<0) {
 			log.debug("===== " + movie.toString());
 			_collector.emit(new Values(movie));

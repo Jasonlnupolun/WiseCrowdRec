@@ -5,7 +5,7 @@ public class Person {
 
 	private String name;
 	private Integer age;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -13,7 +13,7 @@ public class Person {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Integer getAge() {
 		return age;
 	}
@@ -26,6 +26,5 @@ public class Person {
 	public String toString() {
 		return "Person [name=" + name + ", age=" + age + "]";
 	}
-	
-	
+
 }

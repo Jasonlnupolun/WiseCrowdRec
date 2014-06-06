@@ -4,9 +4,9 @@ public class MovieWithCount implements java.io.Serializable {
 	private static final long serialVersionUID = -7011806344559558554L;
 	private Movie movie;
 	private int count;
-	
+
 	public MovieWithCount() {
-		
+
 	}
 
 	public Movie getMovie() {
@@ -24,9 +24,9 @@ public class MovieWithCount implements java.io.Serializable {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
+
 	@Override
-    public String toString() {
+	public String toString() {
 		return "MovieWithCount:{"
 				+",count:" + this.count
 				+"Movie:"+ this.movie.toString()

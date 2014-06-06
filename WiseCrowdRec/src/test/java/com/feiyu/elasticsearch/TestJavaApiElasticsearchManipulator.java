@@ -17,14 +17,14 @@ public class TestJavaApiElasticsearchManipulator {
 	String _idxName = "wcrindex";
 	String _typeName = "wcrtype";
 	SerializeBeans2JSON serBean2Json;
-	
+
 	@Before
 	public void init() throws IOException {
 		esm = new JavaApiElasticsearchManipulator(_idxName,_typeName);
 		esm.initSetting();
 		serBean2Json = new SerializeBeans2JSON();
 	}
-	
+
 	@Test
 	public void testIndexAJsonFile() throws JsonGenerationException, JsonMappingException, IOException {
 		EntityInfo entityInfo = new EntityInfo("Ann", "People", 1, "alert alert-success", "time","text");
@@ -41,7 +41,7 @@ public class TestJavaApiElasticsearchManipulator {
 		System.out.println("--> docId: " + docId);
 		assertEquals(version, 1);
 	}
-	
+
 	@Test
 	public void testIndexAJsonFileWithDocId() throws JsonGenerationException, JsonMappingException, IOException {
 		EntityInfo entityInfo = new EntityInfo("Bob", "People", 3, "alert alert-success", "time","text");

@@ -28,12 +28,12 @@ public class PersonServiceImpl implements PersonService {
 		person.setAge(50);
 		return person;
 	}
-	
+
 	@Override
 	public void save(Person person) {
 		// Save person to database ...
 	}
-	
+
 	private Integer randomAge() {
 		Random random = new Random();
 		return 10 + random.nextInt(100);

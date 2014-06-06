@@ -25,7 +25,7 @@ public class SearchTweetsImpl implements SearchTweets {
 	private static StatusListener _listener;
 	private static TwitterStream _twitterStream;
 	private static String _keywordPhrases;
-	
+
 	public SearchTweetsImpl() {
 	}
 
@@ -34,7 +34,7 @@ public class SearchTweetsImpl implements SearchTweets {
 		_twitterStream = twitterStream;
 		_keywordPhrases = keywordPhrases;
 	}
-	
+
 	private void openListener(boolean isDynamicSearch) {
 		if (!isDynamicSearch) {
 			_twitterStream = new TwitterStreamFactory(GlobalVariables.TWT_CONF_BUILDER_BACK.build()).getInstance();
@@ -55,7 +55,7 @@ public class SearchTweetsImpl implements SearchTweets {
 		fq.track(keywords);
 		_twitterStream.filter(fq);
 	}
-	
+
 	/**
 	 * Starts listening on random sample, about 1% of firehouse tweets, of all public statuses.
 	 * Not "Gardenhose" access level -> about 10% of firehouse tweets, need to email api-research@twitter.com later
@@ -66,7 +66,7 @@ public class SearchTweetsImpl implements SearchTweets {
 		this.openListener(isDynamicSearch);
 		_twitterStream.sample();
 	}
-	
+
 	public void searchDailyTweets() {
 		Twitter twitter = new TwitterFactory().getInstance();
 		try {

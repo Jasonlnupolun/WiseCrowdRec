@@ -1,6 +1,5 @@
 /**
  * reference:
- * 
  * http://camel.apache.org/twitter-websocket-example.html
  * 
  * http://blog.avisi.nl/2013/07/01/tools-for-building-a-real-time-analytics-platform/
@@ -17,7 +16,7 @@ public class StormActiveMQ2WebSocketsRoute extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		from("activemq:backtype.storm.contrib.example.queue").to("websocket://localhost:9292/wcrstorm?sendToAll=true");//websocket://localhost:9292/wcrStorm?sendToAll=true
+		from("activemq:backtype.storm.contrib.example.queue").to("websocket:wcrstorm?sendToAll=true");//websocket://localhost:9292/wcrStorm?sendToAll=true
 		// StreamCaching is not in use. If using streams then its recommended to enable stream caching. 
 		// See more details at http://camel.apache.org/stream-caching.html
 	}

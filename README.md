@@ -39,6 +39,7 @@ To do list:
 
 
 --- 
+[inspect WebSocket messages](http://www.websocket.org/echo.html)-> ws://0.0.0.0:9292/wcrstorm     
 
 [Shapeshifter](https://github.com/turn/shapeshifter): Protocol Buffers -> JSON    
 [JSON -> JavaScript](http://www.mkyong.com/javascript/how-to-access-json-object-in-javascript/)  

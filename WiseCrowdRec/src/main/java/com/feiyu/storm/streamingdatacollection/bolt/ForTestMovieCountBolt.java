@@ -1,4 +1,7 @@
 package com.feiyu.storm.streamingdatacollection.bolt;
+/**
+ * @author feiyu
+ */
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,50 +22,50 @@ import backtype.storm.tuple.Values;
 @SuppressWarnings("serial")
 public class ForTestMovieCountBolt implements IBasicBolt {
 	private static Logger log = Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
-    Map<String, Integer> _counts;
+	Map<String, Integer> _counts;
 	Movie movie;
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public void prepare(Map stormConf, TopologyContext context) {
-        _counts = new HashMap<String, Integer>();
-    }
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void prepare(Map stormConf, TopologyContext context) {
+		_counts = new HashMap<String, Integer>();
+	}
 
-    @Override
+	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
-    	// Later sliding window save hourly data into database 
-     movie = (Movie) input.getValueByField("movie");
-    	
-        String movieIMDbID = movie.getIMDbID();
+		// Later sliding window save hourly data into database 
+		movie = (Movie) input.getValueByField("movie");
 
-    	int count = 0;
-        if (_counts.containsKey(movieIMDbID)) {
-            count = _counts.get(movieIMDbID);
-        }
-        count++;
+		String movieIMDbID = movie.getIMDbID();
 
-        _counts.put(movieIMDbID, count);
-        log.info("Count:"+count + "-> " + movie.toString());
-        
-        MovieWithCount movieWithCount = new MovieWithCount();
-        movieWithCount.setCount(count);
-        movieWithCount.setMovie(movie);
-        collector.emit(new Values(movieWithCount)); //? _counts or collector
-       
-        // InsertData into Cassandra
-    }
+		int count = 0;
+		if (_counts.containsKey(movieIMDbID)) {
+			count = _counts.get(movieIMDbID);
+		}
+		count++;
 
-    @Override
-    public void cleanup() {
-    }
+		_counts.put(movieIMDbID, count);
+		log.info("Count:"+count + "-> " + movie.toString());
 
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("movieWithCount"));
-    }
+		MovieWithCount movieWithCount = new MovieWithCount();
+		movieWithCount.setCount(count);
+		movieWithCount.setMovie(movie);
+		collector.emit(new Values(movieWithCount)); //? _counts or collector
 
-    @Override
-    public Map<String, Object> getComponentConfiguration() {
-        return null;
-    }
+		// InsertData into Cassandra
+	}
+
+	@Override
+	public void cleanup() {
+	}
+
+	@Override
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields("movieWithCount"));
+	}
+
+	@Override
+	public Map<String, Object> getComponentConfiguration() {
+		return null;
+	}
 }

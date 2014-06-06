@@ -88,12 +88,25 @@ function test(/*eventSourceSocket*/) {
 //        connect();
 
            function message() {
-        	   var socket = new WebSocket("ws://localhost:9292/wcrstorm");
-        	   socket.onmessage = function(event) {
+        	   var ws = new WebSocket("ws://0.0.0.0:9292/wcrstorm");
+        	   alert(".....->"+ws.toString());
+        	   ws.onopen = function()
+        	     {
+        	        // Web Socket is connected, send data using send()
+        	        ws.send("Message to send");
+        	        alert("Message is sent...");
+        	     };
+        	   ws.onmessage = function(event) {
+        		   console.log('client: received a message!');
         //		   var node = {x: 500, y: 500};
         		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
         		   restart();
         	   };
+        	   ws.onclose = function()
+        	     { 
+        	        // websocket is closed.
+        	        alert("Connection is closed..."); 
+        	     };
            }
 
 //           socket.onopen = function(){
