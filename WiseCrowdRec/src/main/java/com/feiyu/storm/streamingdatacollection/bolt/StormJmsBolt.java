@@ -25,7 +25,7 @@ import backtype.storm.contrib.jms.JmsProvider;
 import backtype.storm.contrib.jms.bolt.JmsBolt;
 import backtype.storm.tuple.Tuple;
 
-public class ForTestStormJmsBolt implements java.io.Serializable {
+public class StormJmsBolt implements java.io.Serializable {
 	private static Logger log= Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
 	private static final long serialVersionUID = 8795229050766399663L;
 	SerializeBeans2JSON sb2json = new SerializeBeans2JSON();

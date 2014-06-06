@@ -118,9 +118,9 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 							if (hm != null) {
 								Iterator<Entry<String, String>> it = hm.entrySet().iterator();
 								while (it.hasNext()) {
-									Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
-									entity = (String) pairs.getKey();
-									category = (String) pairs.getValue();
+									Map.Entry<String, String> pairs = it.next();
+									entity =  pairs.getKey();
+									category =  pairs.getValue();
 									EntityInfo eInfo = new EntityInfo(entity, category, 
 											tweet.getSentiment(), GlobalVariables.SENTI_CSS, 
 											tweet.getTime().toString(), tweet.getText());

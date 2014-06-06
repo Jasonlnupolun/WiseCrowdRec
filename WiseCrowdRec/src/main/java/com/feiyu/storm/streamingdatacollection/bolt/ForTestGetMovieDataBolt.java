@@ -74,9 +74,9 @@ public class ForTestGetMovieDataBolt extends BaseRichBolt {
 			if (hm != null) {
 				Iterator<Entry<String, String>> it = hm.entrySet().iterator();
 				while (it.hasNext()) {
-					Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
-					entity = (String) pairs.getKey();
-					category = (String) pairs.getValue();
+					Map.Entry<String, String> pairs = it.next();
+					entity = pairs.getKey();
+					category = pairs.getValue();
 
 					if (category.equals("NUMBER")) {
 						String[] list = entity.split("/");

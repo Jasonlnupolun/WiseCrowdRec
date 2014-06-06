@@ -34,7 +34,7 @@
 
 	<servlet>
     	<servlet-name>StartBackgroundTopologyAutomatically</servlet-name>
-    	<servlet-class>com.feiyu.storm.streamingdatacollection.stormmsg2websockets.StartBackgroundTopologyAutomatically</servlet-class>
+    	<servlet-class>com.feiyu.storm.streamingdatacollection.StartBackgroundTopologyAutomatically</servlet-class>
     	<load-on-startup>1</load-on-startup>    	
 	</servlet> 	
 </web-app>

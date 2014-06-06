@@ -1,4 +1,4 @@
-package com.feiyu.storm.streamingdatacollection.stormmsg2websockets;
+package com.feiyu.storm.streamingdatacollection;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.thrift.TException;
 
-import com.feiyu.storm.streamingdatacollection.BackgroundTopology;
 import com.feiyu.utils.InitializeWCR;
 import com.omertron.themoviedbapi.MovieDbException;
 
@@ -18,7 +17,7 @@ public class StartBackgroundTopologyAutomatically extends HttpServlet {
 	public void init() throws ServletException {
 		InitializeWCR initWcr = new InitializeWCR();
 		BackgroundTopology t = new BackgroundTopology();
-		boolean isFakeTopologyForTest = true;
+		boolean isFakeTopologyForTest = false;
 
 		try {
 			initWcr.getWiseCrowdRecConfigInfo();

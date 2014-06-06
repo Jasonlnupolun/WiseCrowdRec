@@ -15,9 +15,9 @@ import org.apache.thrift.TException;
 
 import com.feiyu.storm.streamingdatacollection.bolt.ForTestGetMovieDataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.ForTestMovieCountBolt;
-import com.feiyu.storm.streamingdatacollection.bolt.ForTestStormJmsBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.GetMoviedataBolt;
 import com.feiyu.storm.streamingdatacollection.bolt.MovieCount2CassandraBackBolt;
+import com.feiyu.storm.streamingdatacollection.bolt.StormJmsBolt;
 import com.feiyu.storm.streamingdatacollection.spout.ForTestFakeSpout;
 import com.feiyu.storm.streamingdatacollection.spout.TwitterQueryStreamBackSpout;
 import com.feiyu.utils.InitializeWCR;
@@ -50,7 +50,7 @@ public class BackgroundTopology {
 		 * Config.TOPOLOGY_MESSAGE_TIMEOUT_SECS default is 30 seconds
 		 */
 
-		ForTestStormJmsBolt forTestStormJmsBolt = new ForTestStormJmsBolt(); // Storm java message services
+		StormJmsBolt stormJmsBolt = new StormJmsBolt(); // Storm java message services
 
 		TopologyBuilder b = new TopologyBuilder();
 
@@ -58,11 +58,12 @@ public class BackgroundTopology {
 			b.setSpout("ForTestFakeSpout", new ForTestFakeSpout(), TWITTER_SPOUT_PARALLELISM_HINT);
 			b.setBolt("ForTestGetMovieDataBolt", new ForTestGetMovieDataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("ForTestFakeSpout");
 			b.setBolt("ForTestMovieCountBolt", new ForTestMovieCountBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("ForTestGetMovieDataBolt", new Fields("movie"));
-			b.setBolt("ForTestStormJmsBolt", forTestStormJmsBolt.jmsBolt()).fieldsGrouping("ForTestMovieCountBolt",new Fields("movieWithCount"));
+			b.setBolt("StormJmsBolt", stormJmsBolt.jmsBolt()).fieldsGrouping("ForTestMovieCountBolt",new Fields("movieWithCount"));
 		} else {
 			b.setSpout("TwitterQueryStreamBackSpout", new TwitterQueryStreamBackSpout(keywordPhrases), TWITTER_SPOUT_PARALLELISM_HINT);
 			b.setBolt("GetMoviedataBolt", new GetMoviedataBolt() , GMD_BOLT_PARALLELISM_HINT).shuffleGrouping("TwitterQueryStreamBackSpout");
 			b.setBolt("MovieCount2CassandraBackBolt", new MovieCount2CassandraBackBolt() , EC_BOLT_PARALLELISM_HINT).fieldsGrouping("GetMoviedataBolt", new Fields("movie"));
+			b.setBolt("StormJmsBolt", stormJmsBolt.jmsBolt()).fieldsGrouping("MovieCount2CassandraBackBolt",new Fields("movieWithCount"));
 		}
 
 		// @@@ modify this later, Submit topology locally or to the cluster

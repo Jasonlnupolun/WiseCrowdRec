@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.log4j.Logger;
 
 import com.feiyu.springmvc.model.Movie;
+import com.feiyu.springmvc.model.MovieWithCount;
 import com.feiyu.utils.GlobalVariables;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
@@ -19,6 +20,7 @@ import backtype.storm.topology.IBasicBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
 
 @SuppressWarnings("serial")
 public class MovieCount2CassandraBackBolt implements IBasicBolt {
@@ -46,6 +48,11 @@ public class MovieCount2CassandraBackBolt implements IBasicBolt {
 		}
 		count++;
 		_counts.put(movieIMDbID, count);
+		
+		MovieWithCount movieWithCount = new MovieWithCount();
+		movieWithCount.setCount(count);
+		movieWithCount.setMovie(movie);
+		collector.emit(new Values(movieWithCount)); //? _counts or collector
 		// collector.emit(tuple(movieIMDbID, count)); //? _counts or collector
 
 		// InsertData into Cassandra
@@ -82,7 +89,7 @@ public class MovieCount2CassandraBackBolt implements IBasicBolt {
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("entity", "count"));
+		declarer.declare(new Fields("movieWithCount"));
 	}
 
 	@Override
