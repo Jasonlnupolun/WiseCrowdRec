@@ -17,7 +17,8 @@ public class StartBackgroundTopologyAutomatically extends HttpServlet {
 	public void init() throws ServletException {
 		InitializeWCR initWcr = new InitializeWCR();
 		BackgroundTopology t = new BackgroundTopology();
-		boolean isFakeTopologyForTest = false;
+//		boolean isFakeTopologyForTest = false;
+		boolean isFakeTopologyForTest = true;
 
 		try {
 			initWcr.getWiseCrowdRecConfigInfo();

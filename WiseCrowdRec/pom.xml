@@ -94,11 +94,11 @@
                 </exclusion>
             </exclusions>
         </dependency>  
-<!--         <dependency>
+        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
-        </dependency> -->
+        </dependency>
         <!-- commons-collections -->
         <dependency>
             <groupId>commons-collections</groupId>
@@ -423,7 +423,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+<!--             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
@@ -436,7 +436,7 @@
                     <downloadSources>true</downloadSources>
                     <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
-            </plugin>
+            </plugin> -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -469,77 +469,191 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.3</version>
             </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.16</version>
-            </plugin>
             <!-- To compile Scala code -->
-<!--             <plugin>
+            <!-- http://stuq.nl/weblog/2008-11-26/4-steps-to-add-scala-to-your-maven-java-projects -->
+            <!--reference: http://ted-gao.blogspot.com/2011/09/mixing-scala-and-java-in-project.html -->
+            <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.2</version>
                 <executions>
+                    <!-- Run scala compiler in the process-resources phase, so that dependencies on 
+                    scala classes can be resolved later in the (Java) compile phase -->
                     <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>                        
                         <goals>
                             <goal>compile</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- Run scala compiler in the process-test-resources phase, so that dependencies on
+                    scala classes can be resolved later in the (Java) test-compile phase -->                    
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <!-- Add src/main/scala to source path of Eclipse -->
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/scala</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+
+                    <!-- Add src/test/scala to test source path of Eclipse -->
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/scala</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- to generate Eclipse artifacts for projects mixing Scala and Java -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
                 <configuration>
-          			<scalaVersion>${scala.version}</scalaVersion>
-        		</configuration>
-            </plugin> -->
-        </plugins>
-    </build>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                    <projectnatures>
+                        <projectnature>org.scala-ide.sdt.core.scalanature</projectnature>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                    </projectnatures>
+                    <buildcommands>
+                        <buildcommand>org.scala-ide.sdt.core.scalabuilder</buildcommand>
+                    </buildcommands>
+                    <classpathContainers>
+                        <classpathContainer>org.scala-ide.sdt.launching.SCALA_CONTAINER</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                    <excludes>
+                        <!-- in Eclipse, use scala-library, scala-compiler from the SCALA_CONTAINER rather than POM <dependency> -->
+                            <exclude>org.scala-lang:scala-library</exclude>
+                            <exclude>org.scala-lang:scala-compiler</exclude>
+                        </excludes>
+                        <sourceIncludes>
+                            <sourceInclude>**/*.scala</sourceInclude>
+                            <sourceInclude>**/*.java</sourceInclude>
+                        </sourceIncludes>
+                    <additionalProjectnatures>
+                        <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+                    </additionalProjectnatures>
+                    <additionalBuildcommands>
+                        <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+                    </additionalBuildcommands>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                    </configuration>
+                </plugin>
 
+                <!-- When run tests in the test phase, include .java and .scala source files -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.16</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*.java</include>
+                            <include>**/*.scala</include>
+                        </includes>
+                    </configuration>
+                </plugin> 
+            </plugins>
+        </build>
 
-    <repositories>
-        <repository>
-            <id>twitter4j.org</id>
-            <name>twitter4j.org Repository</name>
-            <url>http://twitter4j.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!-- pelops: A Java library for accessing the Cassandra database-->
-        <repository>
-            <id>central</id>
-            <name>Maven Central Repo</name>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-        <repository>
-            <id>riptano</id>
-            <name>riptano</name>
-            <url>http://mvn.riptano.com/content/repositories/public</url>
-        </repository>
-        <repository>
-            <id>maven.scale7.org</id>
-            <name>Scale7 Maven Repo</name>
-            <url>https://github.com/s7/mvnrepo/raw/master</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!-- for Jest a Java HTTP Rest client for ElasticSearch -->
-        <repository>
-            <id>sonatype</id>
-            <name>Sonatype Groups</name>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>Akka repository</id>
-            <url>http://repo.akka.io/releases</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>scala-tools.org</id>
-            <name>Scala-tools Maven2 Repository</name>
-            <url>http://scala-tools.org/repo-releases</url>
-        </pluginRepository>
-    </pluginRepositories>
-</project>
+        <repositories>
+            <repository>
+                <id>twitter4j.org</id>
+                <name>twitter4j.org Repository</name>
+                <url>http://twitter4j.org/maven2</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+            <!-- pelops: A Java library for accessing the Cassandra database-->
+            <repository>
+                <id>central</id>
+                <name>Maven Central Repo</name>
+                <url>http://repo1.maven.org/maven2</url>
+            </repository>
+            <repository>
+                <id>riptano</id>
+                <name>riptano</name>
+                <url>http://mvn.riptano.com/content/repositories/public</url>
+            </repository>
+            <repository>
+                <id>maven.scale7.org</id>
+                <name>Scale7 Maven Repo</name>
+                <url>https://github.com/s7/mvnrepo/raw/master</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+            <!-- for Jest a Java HTTP Rest client for ElasticSearch -->
+            <repository>
+                <id>sonatype</id>
+                <name>Sonatype Groups</name>
+                <url>https://oss.sonatype.org/content/groups/public/</url>
+            </repository>
+            <repository>
+                <id>Akka repository</id>
+                <url>http://repo.akka.io/releases</url>
+            </repository>
+<!--             <repository>
+                <id>scala</id>
+                <name>Scala Tools</name>
+                <url>http://scala-tools.org/repo-releases/</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+            </repository> -->
+        </repositories>
+
+<!--         <pluginRepositories>
+            <pluginRepository>:59
+            
+                <id>scala</id>
+                <name>Scala Tools</name>
+                <url>http://scala-tools.org/repo-releases/</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+            </pluginRepository>
+        </pluginRepositories> -->
+    </project>

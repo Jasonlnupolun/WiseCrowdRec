@@ -94,8 +94,8 @@ public class TweetsAnalyzerController {
 	public void startDynamicSearch() throws Exception { 
 		logger.info("Welcome -> start dynamic search");
 
-		//		initWcr.getWiseCrowdRecConfigInfo();//@
-		//		initWcr.coreNLPInitial();//@
+		initWcr.getWiseCrowdRecConfigInfo();//@
+		initWcr.coreNLPInitial();//@
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
 

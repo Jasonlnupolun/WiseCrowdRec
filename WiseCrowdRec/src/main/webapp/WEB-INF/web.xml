@@ -32,9 +32,9 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
+<!-- 	<servlet>
     	<servlet-name>StartBackgroundTopologyAutomatically</servlet-name>
     	<servlet-class>com.feiyu.storm.streamingdatacollection.StartBackgroundTopologyAutomatically</servlet-class>
     	<load-on-startup>1</load-on-startup>    	
-	</servlet> 	
+	</servlet> 	 -->
 </web-app>

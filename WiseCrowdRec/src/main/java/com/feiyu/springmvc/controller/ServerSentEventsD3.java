@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
-@WebServlet("/ServerSentEventsD3")
+//@WebServlet("/ServerSentEventsD3")
 public class ServerSentEventsD3 extends HttpServlet implements ActionListener  {
 
 	protected void doGet(HttpServletRequest request,

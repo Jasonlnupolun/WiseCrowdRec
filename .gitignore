@@ -6,6 +6,7 @@
 *.classpath
 *.project
 *.pydevproject
+*.cache
 *target/
 *test-output
 *config.properties

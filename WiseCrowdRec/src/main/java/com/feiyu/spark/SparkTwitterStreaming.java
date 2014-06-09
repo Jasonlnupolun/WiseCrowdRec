@@ -85,7 +85,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 						if (lang.equals("en")) {
 							_t.setLang(lang);
 							_t.setTime(tweetStatus.getCreatedAt());
-							_t.setText(tweetStatus.getText().replaceAll("[^a-zA-Z0-9]"," "));
+							_t.setText(tweetStatus.getText().replaceAll("[^a-zA-Z0-9]"," ").toLowerCase());
 							// [^a-zA-Z0-9]
 							// (?:^|\s)[a-zA-Z]+(?=\s|$)
 							log.debug("text=============="+tweetStatus.getText());
@@ -229,8 +229,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					private static final long serialVersionUID = 4754852556443175871L;
 
 					public Void call(JavaPairRDD<Integer, String> rdd) {
-						String out = "\nTop 10 entities:\n";
-						for (Tuple2<Integer, String> t: rdd.take(10)) {
+						String out = "\nTop 20 entities:\n";
+						for (Tuple2<Integer, String> t: rdd.take(20)) {
 							out = out + t.toString() + "\n";
 						}
 						log.info("\n-------------------\n-------------------"+out);

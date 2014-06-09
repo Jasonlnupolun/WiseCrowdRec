@@ -26,7 +26,7 @@ public class TestSentimentAnalyzerCoreNLP {
 		log.info(ews.toString());
 		Iterator<Entry<String, String>> it = ews.getEntityWithCategory().entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
+			Map.Entry<String, String> pairs = it.next();
 			log.info(pairs.getKey() + " -> " + pairs.getValue());
 			it.remove(); // avoids a ConcurrentModificationException
 		}

@@ -31,9 +31,9 @@ public class TestEntityExtractionCalais {
 		hm = entityExtract.getEntities("Nicholas Cage is great!");
 		Iterator<Entry<String, String>> it = hm.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
-			String entity = (String) pairs.getKey();
-			String category = (String) pairs.getValue();
+			Map.Entry<String, String> pairs = it.next();
+			String entity =  pairs.getKey();
+			String category =  pairs.getValue();
 			it.remove(); // avoids a ConcurrentModificationException
 			System.out.println("Entity:"+entity+", Category:"+category);
 		}

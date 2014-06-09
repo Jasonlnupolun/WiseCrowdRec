@@ -38,6 +38,7 @@
 	
 	<!-- start social graph from http://bl.ocks.org/mbostock/929623  modified by feiyu-->
     <link href="resources/css/social-graph.css" rel="stylesheet" type="text/css">
+    <!-- link href="resources/css/ftest.css" rel="stylesheet" type="text/css"-->
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="resources/js/wisecrowdrec/test.js"></script>
 	<!-- end http://bl.ocks.org/mbostock/929623  -->
