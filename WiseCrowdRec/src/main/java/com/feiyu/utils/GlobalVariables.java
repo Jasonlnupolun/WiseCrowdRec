@@ -7,14 +7,18 @@ import mx.bigdata.jcalais.CalaisClient;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
+import com.feiyu.spark.SparkTwitterStreaming;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
 public class GlobalVariables {
 	public static Properties WCR_PROPS;
+	
+	public static SparkTwitterStreaming SPARK_TWT_STREAMING = new SparkTwitterStreaming();
 
 	public static ConfigurationBuilder TWT_CONF_BUILDER_BACK; 
 	public static ConfigurationBuilder TWT_CONF_BUILDER_DYNA; 

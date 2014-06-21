@@ -68,21 +68,6 @@
     		<h3>Left Menu</h3>
     		<a href="${pageContext.request.contextPath}">Back to home</a>
     		
-<!-- sse -->
-
-<!-- <div id="ServerTime"></div>
-	 <script>
-  		if (typeof (EventSource) !== "undefined") {
-   			var source = new EventSource("${pageContext.request.contextPath}/ServerSentEventsD3");
-   			source.onmessage = function(event) {
-   			 document.getElementById("ServerTime").innerHTML += event.data
-     		 + "<br><br>";
- 		  };
- 	 	} else {
- 	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
-  		}
- </script>   -->
- <!-- end sse -->
     <!-- AJAX json begin -->
     
     	<br><br><br>

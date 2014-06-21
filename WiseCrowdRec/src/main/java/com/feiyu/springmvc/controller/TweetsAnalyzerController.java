@@ -47,8 +47,8 @@ public class TweetsAnalyzerController {
 	private EntityInfo entityInfo;
 	private List<EntityInfo> entitiesInfo = new ArrayList<>();
 	private EntityList _entityList = new EntityList(); 
-	private	InitializeWCR initWcr = new InitializeWCR();
-	private SparkTwitterStreaming sts = new SparkTwitterStreaming();
+//	private	InitializeWCR initWcr = new InitializeWCR();
+//	private SparkTwitterStreaming sts = new SparkTwitterStreaming();
 
 	@Autowired
 	public TweetsAnalyzerController(PersonService personService) {
@@ -98,14 +98,13 @@ public class TweetsAnalyzerController {
 	public void startDynamicSearch() throws Exception { 
 		logger.info("Welcome -> start dynamic search");
 
-		initWcr.getWiseCrowdRecConfigInfo();//@
-		initWcr.coreNLPInitial();//@
-		initWcr.twitterInitDyna();
-		initWcr.elasticsearchInitial();
-		initWcr.rabbitmqInit();
+//		initWcr.getWiseCrowdRecConfigInfo();//@
+//		initWcr.coreNLPInitial();//@
+//		initWcr.twitterInitDyna();
+//		initWcr.elasticsearchInitial();
+//		initWcr.rabbitmqInit();
 
-		sts.sparkInit();
-		sts.startSpark("movie");
+		GlobalVariables.SPARK_TWT_STREAMING.startSpark("movie");
 		//		sts.closeRabbitmq();
 	}
 
