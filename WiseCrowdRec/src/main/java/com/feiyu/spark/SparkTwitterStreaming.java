@@ -1,6 +1,7 @@
 package com.feiyu.spark;
 /**
  * reference: http://ampcamp.berkeley.edu/3/exercises/realtime-processing-with-spark-streaming.html
+ * https://github.com/rabbitmq/rabbitmq-tutorials/tree/master/java
  * @author feiyu
  */
 
@@ -228,12 +229,18 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 
 					private static final long serialVersionUID = 4754852556443175871L;
 
-					public Void call(JavaPairRDD<Integer, String> rdd) {
+					public Void call(JavaPairRDD<Integer, String> rdd) throws IOException {
 						String out = "\nTop 20 entities:\n";
 						for (Tuple2<Integer, String> t: rdd.take(20)) {
 							out = out + t.toString() + "\n";
 						}
 						log.info("\n-------------------\n-------------------"+out);
+
+						// send message to the RabbitMQ queue
+						String message = out;
+						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME, null, message.getBytes());
+						System.out.println(" [x] Message Sent to queue buffer.");
+
 						return null;
 					}
 				}
@@ -242,6 +249,11 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 		ssc.start();
 	}
 
+	//	public void closeRabbitmq() throws IOException {
+	//		channel.close();
+	//	    connection.close();
+	//	}
+
 	public static void main(String[] argv) throws IOException {
 
 		InitializeWCR initWcr = new InitializeWCR();
@@ -249,9 +261,12 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
 		initWcr.coreNLPInitial();
+		initWcr.rabbitmqInit();
 
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();
 		sts.sparkInit();
 		sts.startSpark("movie");
+
+		//		sts.closeRabbitmq();
 	}
 }

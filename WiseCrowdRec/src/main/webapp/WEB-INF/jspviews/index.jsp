@@ -48,16 +48,16 @@
 	<!--  "${pageContext.request.contextPath}/ServerSentEventsD3 -->
 	<!-- var socket = new WebSocket(host); -->
 	<!-- var source = new EventSource("ws://localhost:9292/wcrstorm"); -->
-	<script type="text/javascript">
-/* 		if (typeof (EventSource) !== "undefined") {
-   			var socket = new WebSocket("ws://localhost:9292/wcrstorm");
+	<script type="text/javascript" id="sparkSSE2D3">
+   		if (typeof (EventSource) !== "undefined") {
+   			var source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
  	 	} else {
  	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
-  		} */
+  		} 
 		
 		function start() {
 			menuNav();
-			test(/* socket */);
+			test(source);
 			validatePersonId(personId);
 		}
      </script>
@@ -70,7 +70,7 @@
     		
 <!-- sse -->
 
- 	<div id="ServerTime"></div>
+<!-- <div id="ServerTime"></div>
 	 <script>
   		if (typeof (EventSource) !== "undefined") {
    			var source = new EventSource("${pageContext.request.contextPath}/ServerSentEventsD3");
@@ -81,7 +81,7 @@
  	 	} else {
  	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
   		}
- </script>
+ </script>   -->
  <!-- end sse -->
     <!-- AJAX json begin -->
     

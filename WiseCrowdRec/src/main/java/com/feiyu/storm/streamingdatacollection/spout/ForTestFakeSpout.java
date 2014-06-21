@@ -29,7 +29,7 @@ public class ForTestFakeSpout extends BaseRichSpout {
 
 	@Override
 	public void nextTuple() {
-		Utils.sleep(200);
+		Utils.sleep(5000);
 		String[] tweets = new String[]{ 
 				"I rated X-Men: Days of Future Past 8/10  #IMDb http://www.imdb.com/title/tt1877832",
 				"I rated Game of Thrones 10/10  #IMDb http://www.imdb.com/title/tt0944947",

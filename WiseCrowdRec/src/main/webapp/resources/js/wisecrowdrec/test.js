@@ -1,4 +1,3 @@
-
 /**
  * reference: http://bl.ocks.org/mbostock
  * https://groups.google.com/forum/#!topic/storm-user/yOBVVxFW8mo
@@ -7,7 +6,7 @@
  * http://jsfiddle.net/DEeNB/36/
  */
 
-function test(/*eventSourceSocket*/) {
+function test(eventSourceSocket) {
 
     if (!window.WebSocket) {
         console.log("WebSocket is not supported by this browser!!!");
@@ -82,9 +81,11 @@ function test(/*eventSourceSocket*/) {
         .attr("class", "cursor");
 
     restart();
-    message();
+    stormMessage();
+    sparkSSEmessage();
+//    sparkMsg();
 
-    function message() {
+    function stormMessage() {
         var ws = new WebSocket("ws://0.0.0.0:9292/wcrstorm");
         ws.onopen = function() {
 //            ws.send("Message to send");
@@ -103,6 +104,32 @@ function test(/*eventSourceSocket*/) {
         ws.onclose = function() { 
             alert("Websocket is closed..."); 
         };
+    }
+
+    function sparkSSEmessage() {
+    	eventSourceSocket.onmessage = function(event) {
+// 		   var node = {x: event.id, y: event.data};
+// 		   var node = {x: 500, y: 500};
+ 		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
+    	   console.log('spark-------' + event);
+ 		   restart();
+ 	   };
+    }
+    
+    function sparkMsg() {
+    	// https://github.com/webbit/webbit
+//    	var ws = new WebSocket('ws://' + document.location.host + '/hellowebsocket');
+    	var ws = new WebSocket('ws://localhost:9876/hellowebsocket');
+        console.log('Connecting...');
+        ws.onopen = function() { 
+        	console.log('Connected!'); 
+        	};
+        ws.onclose = function() { 
+        	console.log('Lost connection'); 
+        	};
+        ws.onmessage = function(msg) { 
+        	console.log(msg.data); 
+        	};
     }
 
     function mousemove() {
@@ -151,7 +178,7 @@ function test(/*eventSourceSocket*/) {
         node.enter().insert("circle", ".cursor")
             .attr("class", "node")
             .attr("r", 3+5*Math.random())
-            .style("fill", function(d) { return color(d.movieRating); })
+//            .style("fill", function(d) { return color(d.movieRating); })
             .call(force.drag);
         
         

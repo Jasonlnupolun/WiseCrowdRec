@@ -19,10 +19,13 @@ import com.feiyu.database.AstyanaxCassandraManipulator;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
+import com.rabbitmq.client.ConnectionFactory;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
-public class InitializeWCR {
+public class InitializeWCR implements java.io.Serializable{
+	private static final long serialVersionUID = 8908925050404621467L;
+
 	public void getWiseCrowdRecConfigInfo () throws IOException {
 		GlobalVariables.WCR_PROPS = new Properties();
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
@@ -75,5 +78,14 @@ public class InitializeWCR {
 
 	public void themoviedbOrgInitial() throws MovieDbException {
 		GlobalVariables.TMDB = new TheMovieDbApi(GlobalVariables.WCR_PROPS.getProperty("themoviedbApiKey"));
+	}
+	
+	public void rabbitmqInit() throws IOException  {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost("localhost");
+		GlobalVariables.RABBITMQ_CNCT = factory.newConnection();
+		GlobalVariables.RABBITMQ_CHANNEL = GlobalVariables.RABBITMQ_CNCT.createChannel();
+
+		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME, false, false, false, null);
 	}
 }

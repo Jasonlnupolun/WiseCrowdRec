@@ -10,6 +10,8 @@ import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 
 public class GlobalVariables {
 	public static Properties WCR_PROPS;
@@ -26,4 +28,8 @@ public class GlobalVariables {
 
 	public static TheMovieDbApi TMDB;
 	public static final String SENTI_CSS = "alert alert-success"; // change later
+
+	public static final String RABBITMQ_QUEUE_NAME = "WCR_SPARK_RABBITMQ";
+	public static Connection RABBITMQ_CNCT;
+	public static Channel RABBITMQ_CHANNEL;
 }

@@ -33,7 +33,6 @@ import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.model.EntityList;
 import com.feiyu.springmvc.model.Person;
 import com.feiyu.springmvc.service.PersonService;
-import com.feiyu.storm.streamingdatacollection.BackgroundTopology;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
@@ -71,22 +70,27 @@ public class TweetsAnalyzerController {
 	@RequestMapping(value = "/startbackgroundtopology")
 	@ResponseBody
 	public void startBackgroundTopology() throws Exception { 
-		logger.info("Welcome -> startbackgroundtopology");
+		//        WebServer webServer = WebServers.createWebServer(9876)
+		//                .add("/hellowebsocket", new WS())
+		//                .add(new StaticFileHandler("/web"));
+		//        webServer.start();
+		//        System.out.println("Server running at " + webServer.getUri());
 
-		initWcr.getWiseCrowdRecConfigInfo();
-		initWcr.twitterInitBack();
-		initWcr.cassandraInitial();
-		initWcr.coreNLPInitial();
-		initWcr.themoviedbOrgInitial();
+		logger.info("Welcome -> startbackgroundtopology");
+		//		initWcr.getWiseCrowdRecConfigInfo();
+		//		initWcr.twitterInitBack();
+		//		initWcr.cassandraInitial();
+		//		initWcr.coreNLPInitial();
+		//		initWcr.themoviedbOrgInitial();
 
 		//		initWcr.twitterInitDyna();
 		//		initWcr.elasticsearchInitial();
 		//		sts.sparkInit();
 
-		BackgroundTopology t = new BackgroundTopology();
-
-		boolean isFakeTopologyForTest = false;
-		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
+		//		BackgroundTopology t = new BackgroundTopology();
+		//
+		//		boolean isFakeTopologyForTest = false;
+		//		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
 	}
 
 	@RequestMapping(value = "/startdynamicsearch")
@@ -98,9 +102,11 @@ public class TweetsAnalyzerController {
 		initWcr.coreNLPInitial();//@
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
+		initWcr.rabbitmqInit();
 
 		sts.sparkInit();
 		sts.startSpark("movie");
+		//		sts.closeRabbitmq();
 	}
 
 	// Start: From example https://github.com/stevehanson/spring-mvc-ajax

@@ -22,6 +22,11 @@
     </properties>
 
     <dependencies>
+		<dependency>
+			<groupId>eu.piotrbuda</groupId>
+			<artifactId>scalawebsocket_2.10</artifactId>
+			<version>0.1.0</version>
+		</dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -237,7 +242,12 @@
             <version>${org.springframework.version}</version>
             <scope>test</scope>
         </dependency>
-
+		<!-- webbit: A Java event based WebSocket and HTTP server -->
+		<dependency>
+			<groupId>org.webbitserver</groupId>
+			<artifactId>webbit</artifactId>
+			<version>0.4.15</version>
+		</dependency>
         <!-- camel -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -300,6 +310,13 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency> 
+        
+        <!-- AMQP:rabbitmq  -->
+        <dependency>
+  			<groupId>com.rabbitmq</groupId>
+  			<artifactId>amqp-client</artifactId>
+  			<version>3.3.3</version>
+		</dependency>
 
         <!-- test -->
         <dependency>
