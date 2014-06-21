@@ -48,11 +48,11 @@
 	<!--  "${pageContext.request.contextPath}/ServerSentEventsD3 -->
 	<!-- var socket = new WebSocket(host); -->
 	<!-- var source = new EventSource("ws://localhost:9292/wcrstorm"); -->
-	<script type="text/javascript" id="sparkSSE2D3">
+	<script type="text/javascript">
    		if (typeof (EventSource) !== "undefined") {
    			var source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
  	 	} else {
- 	  		document.getElementById("ServerTime").innerHTML = "Sorry, your browser does not support server-sent events...";
+ 	  		document.getElementById("sparkSSE2D3").innerHTML = "Your browser does not support server-sent events, use other browsers like Chrome instead please.";
   		} 
 		
 		function start() {
@@ -182,6 +182,21 @@
 			<img src="resources/images/loader.gif" alt="Please wait.." />
 		</div>
 		
+		<!-- sse -->
+ 		<div id="sparkSSE2D3"></div>
+	 	<script>
+  		if (typeof (EventSource) !== "undefined") {
+   			var s = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
+   			s.onmessage = function(event) {
+   			 document.getElementById("sparkSSE2D3").innerHTML += "msg from spark --> " + event.data
+     		 + "<br><br>";
+ 		  };
+ 	 	} else {
+ 	  		document.getElementById("sparkSSE2D3").innerHTML = "Your browser does not support server-sent events, use other browsers like Chrome instead please.";
+  		}
+ 		</script>
+ 		<!-- end sse -->
+		
 		<c:if test="${not empty serverTime}">
 		<div class="textarea">
 		${serverTime}
@@ -191,9 +206,10 @@
 		<div id="Default" class="contentHolder">
       		<div id="result" class="row"></div>
     	</div>
+    	
 	
 	</div>
-    
+	
 	<script type="text/template" id="searchResult">
 	<div class="col-md-12" id="{{keywordPhrases}}">
 		<ul class="unstyled">

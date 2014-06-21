@@ -62,10 +62,10 @@ public class SparkServerSentEvents2D3 extends HttpServlet implements ActionListe
 				e.printStackTrace();
 			}
 			String message = new String(delivery.getBody());
-			System.out.println(" [...x...] Received '" + message + "'");
+			System.out.println(" [...x...] Received '" + message.replaceAll("\\s+","") + "'");
 
 			out.print("id: " + "sparkSSE2D3" + "\n");
-			out.print("data: " + message + "\n\n");
+			out.print("data: " + message.replaceAll("\\s+","") + "\n\n");
 			out.flush();
 			// out.close(); 
 			//			try {

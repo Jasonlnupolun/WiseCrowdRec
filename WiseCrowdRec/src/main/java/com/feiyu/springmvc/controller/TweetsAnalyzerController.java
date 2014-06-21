@@ -1,24 +1,16 @@
 package com.feiyu.springmvc.controller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.cassandra.thrift.InvalidRequestException;
-import org.apache.cassandra.thrift.NotFoundException;
-import org.apache.cassandra.thrift.TimedOutException;
-import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.log4j.Logger;
-import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,14 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.EntityInfo;
-import com.feiyu.springmvc.model.EntityList;
 import com.feiyu.springmvc.model.Person;
 import com.feiyu.springmvc.service.PersonService;
 import com.feiyu.utils.GlobalVariables;
-import com.feiyu.utils.InitializeWCR;
-import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.model.Rows;
 import com.netflix.astyanax.serializers.StringSerializer;
@@ -45,10 +33,8 @@ public class TweetsAnalyzerController {
 	private static Logger logger = Logger.getLogger(TweetsAnalyzerController.class.getName());
 	private PersonService personService;
 	private EntityInfo entityInfo;
-	private List<EntityInfo> entitiesInfo = new ArrayList<>();
-	private EntityList _entityList = new EntityList(); 
-//	private	InitializeWCR initWcr = new InitializeWCR();
-//	private SparkTwitterStreaming sts = new SparkTwitterStreaming();
+//	private List<EntityInfo> entitiesInfo = new ArrayList<>();
+//	private EntityList _entityList = new EntityList(); 
 
 	@Autowired
 	public TweetsAnalyzerController(PersonService personService) {
@@ -105,7 +91,6 @@ public class TweetsAnalyzerController {
 //		initWcr.rabbitmqInit();
 
 		GlobalVariables.SPARK_TWT_STREAMING.startSpark("movie");
-		//		sts.closeRabbitmq();
 	}
 
 	// Start: From example https://github.com/stevehanson/spring-mvc-ajax
@@ -179,56 +164,11 @@ public class TweetsAnalyzerController {
 
 	@RequestMapping(value = "restapi/searchPhrases", method = RequestMethod.GET)
 	@ResponseBody
-	public EntityList searchPhrases(@RequestParam("searchPhrases") final String searchPhrases) throws NotFoundException, InvalidRequestException, NoSuchFieldException, UnavailableException, IllegalAccessException, InstantiationException, ClassNotFoundException, TimedOutException, URISyntaxException, IOException, TException, ConnectionException, InterruptedException, ExecutionException {
-		if (searchPhrases == null) {
-			return _entityList;
-		}
-
-		// onUpdata listener
-		int i = 1;
-		while (i > 0) {
-			i--;
-			Rows<String, String> rows = GlobalVariables.AST_CASSANDRA_MNPLT.queryAllRowsOneCF(true);
-			for (Row<String, String> row : rows) {
-				Collection<String> columns = row.getColumns().getColumnNames();
-				String e = null, c = null, sCSS = null, ti = null, te = null;
-				int s = 0;
-				for (String column : columns) {
-					if (column.equals("count") || column.equals("entityInfo")) {
-						continue;
-					} else if (column.equals("entity")) {
-						e = row.getColumns().getValue(column, StringSerializer.get(), null); 
-						//default value = null
-					} else if (column.equals("category")) {
-						c = row.getColumns().getValue(column, StringSerializer.get(), null); 
-					} else if (column.equals("sentiment")) {
-						s = Integer.parseInt(row.getColumns().getValue(column, StringSerializer.get(), null));
-						sCSS = GlobalVariables.SENTI_CSS; // int to css do this later
-					} else if (column.equals("time")) {
-						//http://stackoverflow.com/questions/4216745/java-string-to-date-conversion
-						//							DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-						//Thu May 08 22:21:38 PDT 2014
-						ti = row.getColumns().getValue(column, StringSerializer.get(), null).toString();
-					} else if (column.equals("text")) {
-						te = row.getColumns().getValue(column, StringSerializer.get(), null); 
-					}
-				}// for each column
-				entityInfo = new EntityInfo(e,c,s,sCSS,ti,te);
-				logger.info("--------------------------------------------------------"
-						+ "---------------------------------------------------"
-						+ "ROW: " + row.getKey() + " " + row.getColumns().size() 
-						+ new EntityInfo(e,c,s,sCSS,ti,te).toString());
-				if (entityInfo != null) {
-					entitiesInfo.add(entityInfo);
-				}
-				_entityList = new EntityList(searchPhrases, entitiesInfo);
-			}//for eachrow
-		}
-
-		logger.info("size--" + Integer.toString(_entityList.getEntitiesInfo().size()));
-		for (EntityInfo item:_entityList.getEntitiesInfo()) {
-			logger.info(_entityList.getKeywordPhrases()+" "+item.toString() + " "+ _entityList.toString());
-		}
-		return _entityList;
+	public void searchPhrases(@RequestParam("searchPhrases") final String searchPhrases)  {
+//		if (searchPhrases == null) {
+//			return _entityList;
+//		}
+		
+		GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
 	}
 }
