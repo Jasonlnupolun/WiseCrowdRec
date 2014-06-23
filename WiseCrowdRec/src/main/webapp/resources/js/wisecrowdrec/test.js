@@ -13,22 +13,6 @@ function test(eventSourceSocket) {
     } else {
         console.log("WebSocket is supported by this browser.");
     }
-    
-//	var movieGraph = {
-//			  "nodes":[
-////			    {"movieName":"Myriel","group":1},
-////			    {"movieName":"Count","group":1},
-////			    {"movieName":"OldMan","group":1},
-////			    {"movieName":"Mabeuf","group":8},
-////			    {"movieName":"Mme.Hucheloup","group":8}
-//			  ],
-//			  "links":[
-////			    {"source":1,"target":0,"value":1},
-////			    {"source":2,"target":0,"value":8},
-////			    {"source":3,"target":0,"value":10},
-////			    {"source":4,"target":1,"value":10},
-//			  ]
-//			};
 
     var width = 1500,
         height = 900;
@@ -54,15 +38,10 @@ function test(eventSourceSocket) {
 
     var nodes = force.nodes(),
         links = force.links(),
+            //.linkDistance(function(d) { return d.distance; }),
         node = svg.selectAll(".node"),
-        link = svg.selectAll(".link");
-    
-//    var texts = svg.selectAll(".text")
-//    	.data(nodes)
-//    	.enter().append("text")
-//    	.attr("class", "label")
-//    	.attr("fill", "black")
-//    	.text(function(d) {  return d.name;  });
+        link = svg.selectAll(".link"),
+        label = svg.selectAll(".text");    
 
     //   node.append("image")
     //      .attr("xlink:href", "https://github.com/favicon.ico")
@@ -70,10 +49,6 @@ function test(eventSourceSocket) {
     //      .attr("y", -8)
     //      .attr("width", 16)
     //      .attr("height", 16);
-    //   node.append("text")
-    //      .attr("dx", 12)
-    //      .attr("dy", ".35em")
-    //      .text("test");
 
     var cursor = svg.append("circle")
         .attr("r", 30)
@@ -84,6 +59,14 @@ function test(eventSourceSocket) {
     stormMessage();
     sparkSSEmessage();
 //    sparkMsg();
+        
+//    show();
+        
+    function show() {
+        nodes.push({"name":"Myriel","group":1});
+        nodes.push({"name":"Napoleon","group":1});
+        links.push({"source":1,"target":0,"value":1});
+    }
 
     function stormMessage() {
         var ws = new WebSocket("ws://0.0.0.0:9292/wcrstorm");
@@ -98,7 +81,8 @@ function test(eventSourceSocket) {
             //		   var node = {x: 500, y: 500};
 //            nodes.push({"movieName":json.count,"group":1}); //Math.random()*width, y: Math.random()*height});
             console.log('node[0]---- ' + node[0].Entity);
-            nodes.push(node);
+//            nodes.push(node);
+            nodes.push({"name": msg.data ,"group":1});
             restart();
         };
         ws.onclose = function() { 
@@ -110,7 +94,8 @@ function test(eventSourceSocket) {
     	eventSourceSocket.onmessage = function(event) {
 // 		   var node = {x: event.id, y: event.data};
 // 		   var node = {x: 500, y: 500};
- 		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
+// 		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
+ 		   nodes.push({"name": event.data ,"group":1});
     	   console.log('spark-------' + event);
  		   restart();
  	   };
@@ -160,32 +145,34 @@ function test(eventSourceSocket) {
             .attr("y2", function(d) { return d.target.y; });
 
         node.attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; })
-        	.attr("movieRating", "1");
+            .attr("cy", function(d) { return d.y; });
+            //.attr("movieRating", "1");
+        
+        label.attr("dx", function(d) { return d.x; })
+            .attr("dy", function(d) { return d.y; });
+        	
 //	    node.attr("transform", function(d) { 
 //	        return 'translate(' + [d.x, d.y] + ')'; 
-//	    });     
-        
+//	    });            
     }
 
     function restart() {
-        link = link.data(links);
-        
+        link = link.data(links);        
         link.enter().insert("line", ".node")
             .attr("class", "link");
 
-        node = node.data(nodes);
+        node = node.data(nodes);          
         node.enter().insert("circle", ".cursor")
             .attr("class", "node")
             .attr("r", 3+5*Math.random())
 //            .style("fill", function(d) { return color(d.movieRating); })
             .call(force.drag);
         
-        
-//        var labels = node.enter().insert("text")
-//		  .text(function(d) { return d.movieRating; });
-//        
-//        console.log(labels);
+        label = label.data(nodes);
+        label.enter().append("text")
+    	.attr("class", "label")
+    	//.attr("fill", "black")
+        .text(function(d) {  return d.name;  });
         
         force.start();
     }
