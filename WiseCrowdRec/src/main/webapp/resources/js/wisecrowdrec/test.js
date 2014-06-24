@@ -4,6 +4,8 @@
  * 
  * http://www.d3noob.org/2013/03/d3js-force-directed-graph-example-basic.html
  * http://jsfiddle.net/DEeNB/36/
+ * 
+ * D3 API: https://github.com/mbostock/d3/wiki/API-Reference
  */
 
 function test(eventSourceSocket) {
@@ -62,11 +64,11 @@ function test(eventSourceSocket) {
         
 //    show();
         
-    function show() {
-        nodes.push({"name":"Myriel","group":1});
-        nodes.push({"name":"Napoleon","group":1});
-        links.push({"source":1,"target":0,"value":1});
-    }
+//    function show() {
+//        nodes.push({"name":"Myriel","group":1});
+//        nodes.push({"name":"Napoleon","group":1});
+//        links.push({"source":1,"target":0,"value":1});
+//    }
 
     function stormMessage() {
         var ws = new WebSocket("ws://0.0.0.0:9292/wcrstorm");
@@ -76,13 +78,11 @@ function test(eventSourceSocket) {
         };
         ws.onmessage = function(msg) {
             console.log('client: received a message! ' + msg.data);
-//            var json = JSON.parse();
-//            var json = JSON.parse(msg.data);
-            //		   var node = {x: 500, y: 500};
+            var json = JSON.parse(msg.data);
 //            nodes.push({"movieName":json.count,"group":1}); //Math.random()*width, y: Math.random()*height});
-            console.log('node[0]---- ' + node[0].Entity);
+//            console.log('node[0]---- ' + node[0].Entity);
 //            nodes.push(node);
-            nodes.push({"name": msg.data ,"group":1});
+            nodes.push({"name": json.movie.movieName ,"count":json.count});
             restart();
         };
         ws.onclose = function() { 
@@ -92,11 +92,8 @@ function test(eventSourceSocket) {
 
     function sparkSSEmessage() {
     	eventSourceSocket.onmessage = function(event) {
-// 		   var node = {x: event.id, y: event.data};
-// 		   var node = {x: 500, y: 500};
-// 		   nodes.push(node); //Math.random()*width, y: Math.random()*height});
- 		   nodes.push({"name": event.data ,"group":1});
-    	   console.log('spark-------' + event);
+ 		   nodes.push({"name": event.data ,"count":1});
+    	   console.log('spark-------' + event.data);
  		   restart();
  	   };
     }
@@ -123,7 +120,7 @@ function test(eventSourceSocket) {
 
     function mousedown() {
         var point = d3.mouse(this),
-            node = {x: point[0], y: point[1], movieRating: "1"}, 
+            node = {x: point[0], y: point[1], count: "2"}, 
             n = nodes.push(node);
         
         // add links to any nearby nodes
@@ -164,14 +161,14 @@ function test(eventSourceSocket) {
         node = node.data(nodes);          
         node.enter().insert("circle", ".cursor")
             .attr("class", "node")
-            .attr("r", 3+5*Math.random())
-//            .style("fill", function(d) { return color(d.movieRating); })
+            .attr("r", function(d) {  return d.count;  })
+            .style("fill", function(d) { return color(d.count); })
             .call(force.drag);
         
         label = label.data(nodes);
         label.enter().append("text")
     	.attr("class", "label")
-    	//.attr("fill", "black")
+    	.attr("fill", "blue")
         .text(function(d) {  return d.name;  });
         
         force.start();
