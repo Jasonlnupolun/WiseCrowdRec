@@ -182,7 +182,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 				});
 		//		entitiesWithEntityInfo.print();
 
-		JavaPairDStream<String, Integer> entityTuples = entitiesWithEntityInfo.map(
+		JavaPairDStream<String, Integer> entityTuples = entitiesWithEntityInfo.mapToPair(
 				new PairFunction<String, String, Integer>() {
 					private static final long serialVersionUID = 1L;
 
@@ -206,7 +206,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 				new Duration(5*1000*60)); // 5 mins
 		//		entityCount.print();
 
-		JavaPairDStream<Integer, String> swappedCounts = entityCount.map(
+		JavaPairDStream<Integer, String> swappedCounts = entityCount.mapToPair(
 				new PairFunction<Tuple2<String, Integer>, Integer, String>() {
 					private static final long serialVersionUID = -4651464169440876349L;
 
@@ -215,7 +215,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					}
 				}
 				);
-		JavaPairDStream<Integer, String> sortedCounts = swappedCounts.transform(
+		JavaPairDStream<Integer, String> sortedCounts = swappedCounts.transformToPair(
 				new Function<JavaPairRDD<Integer, String>, JavaPairRDD<Integer, String>>() {
 
 					private static final long serialVersionUID = -5874306184950642137L;
