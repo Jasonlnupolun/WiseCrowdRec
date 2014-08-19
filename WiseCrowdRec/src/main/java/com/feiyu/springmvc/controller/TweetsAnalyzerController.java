@@ -1,5 +1,9 @@
 package com.feiyu.springmvc.controller;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +14,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.feiyu.signinwithtwitter.SignInWithTwitter;
 import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.model.Person;
 import com.feiyu.springmvc.service.PersonService;
 import com.feiyu.utils.GlobalVariables;
+import com.feiyu.utils.InitializeWCR;
 import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.model.Rows;
 import com.netflix.astyanax.serializers.StringSerializer;
@@ -51,6 +58,17 @@ public class TweetsAnalyzerController {
 		model.addAttribute("serverTime", formattedDate );
 
 		return "index";
+	}
+	
+	@RequestMapping(value = "signinwithtwitter/login")
+	@ResponseBody
+	public String signinwithtwitter() throws IOException, KeyManagementException, InvalidKeyException, NoSuchAlgorithmException, HttpException {
+		InitializeWCR initWcr = new InitializeWCR();
+		initWcr.getWiseCrowdRecConfigInfo();
+		initWcr.signInWithTwitterGetAppOauth();
+		
+		SignInWithTwitter s = new SignInWithTwitter();
+		return s.obtainingARequestToken();
 	}
 
 	@RequestMapping(value = "/startbackgroundtopology")

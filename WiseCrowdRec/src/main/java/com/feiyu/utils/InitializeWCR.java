@@ -31,6 +31,11 @@ public class InitializeWCR implements java.io.Serializable{
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
 		GlobalVariables.WCR_PROPS.load(in);
 	}
+	
+	public void signInWithTwitterGetAppOauth() {
+		GlobalVariables.TWT_APP_OAUTH_CONSUMER_KEY = GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey3");
+		GlobalVariables.TWT_APP_OAUTH_CONSUMER_SECRET = GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret3");	
+	}
 
 	public void twitterInitBack() {
 		// Set Twitter app oauth infor

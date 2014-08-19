@@ -18,6 +18,9 @@ import com.rabbitmq.client.Connection;
 public class GlobalVariables {
 	public static Properties WCR_PROPS;
 	
+	public static String TWT_APP_OAUTH_CONSUMER_KEY ;
+	public static String TWT_APP_OAUTH_CONSUMER_SECRET ;	
+	
 	public static SparkTwitterStreaming SPARK_TWT_STREAMING = new SparkTwitterStreaming();
 
 	public static ConfigurationBuilder TWT_CONF_BUILDER_BACK; 

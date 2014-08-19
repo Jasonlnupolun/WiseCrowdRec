@@ -28,6 +28,18 @@
 			<artifactId>scalawebsocket_2.10</artifactId>
 			<version>0.1.0</version>
 		</dependency> -->
+		<!-- Sign in with twitter -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId> 
+			<artifactId>commons-codec</artifactId> 
+			<version>1.9</version>
+		</dependency>
+		<!-- log -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -447,7 +459,7 @@
             <groupId>com.omertron</groupId>
             <artifactId>themoviedbapi</artifactId>
             <version>3.9</version>
-        </dependency>
+        </dependency> 
     </dependencies>
 
     <prerequisites>

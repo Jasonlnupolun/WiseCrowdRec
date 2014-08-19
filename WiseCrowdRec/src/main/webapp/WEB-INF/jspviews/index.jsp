@@ -67,6 +67,19 @@
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
     		<h3>Left Menu</h3>
     		<a href="${pageContext.request.contextPath}">Back to home</a>
+    <br>
+		<img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter."/>
+		<script type="text/javascript" id="signinwithtwitter">	
+						var signinwithtwitter= document.getElementById('signinwithtwitter');
+						signinwithtwitter.onclick = function() {
+		    				$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login', function(jsonRet) {
+								var head_str = "https://api.twitter.com/oauth/authenticate?oauth_token=";
+								var oauthToken = jsonRet.oauthToken;
+								var redirect2url = head_str.concat(oauthToken);
+								console.log(head_str+"***");
+								window.open(redirect2url, '_blank');
+								});};
+					</script>
     		
     <!-- AJAX json begin -->
     
@@ -298,7 +311,7 @@
         
         <!-- show linked data graph -->
         <script>
-           window.onload=start ;
+           window.onload=start;
        	</script>
 
    </body>
