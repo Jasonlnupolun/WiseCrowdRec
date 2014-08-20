@@ -69,6 +69,7 @@
     		<a href="${pageContext.request.contextPath}">Back to home</a>
     <br>
 		<img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter."/>
+		<div id="signinwithtwittershowuserinfo"></div>
 		<script type="text/javascript" id="signinwithtwitter">	
 						var signinwithtwitter= document.getElementById('signinwithtwitter');
 						signinwithtwitter.onclick = function() {
@@ -79,7 +80,16 @@
 								console.log(head_str+"***");
 								window.open(redirect2url, '_blank');
 								});};
-					</script>
+		</script>
+			
+		<script type="text/javascript" id="signinwithtwittershowuserinfo">
+		$(document).ready(function() {	
+			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
+					 function(oauth_token, oauth_verifier) {
+						console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);	
+					});
+			});
+		</script>
     		
     <!-- AJAX json begin -->
     

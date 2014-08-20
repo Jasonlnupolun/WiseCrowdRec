@@ -53,10 +53,6 @@ import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 
 public class SignInWithTwitter {
-	private String oauth_token = null;
-	private String oauth_token_secret = null;
-	private String oauth_callback_confirmed = null;
-
 	/* 
 	 * Example request (Authorization header has been wrapped):
 POST /oauth/request_token HTTP/1.1
@@ -73,6 +69,7 @@ Authorization:
               oauth_version="1.0"
 	 */
 	public String obtainingARequestToken () throws IOException, HttpException, NoSuchAlgorithmException, KeyManagementException, InvalidKeyException {
+		System.out.println("\n---------------obtainingARequestToken---------------");
 
 		String METHOD = "POST";
 		String twitter_request_token = "https://api.twitter.com/oauth/request_token";
@@ -95,6 +92,11 @@ Authorization:
 				+ "&" + URLEncoder.encode(twitter_request_token, "UTF-8") 
 				+ "&" + URLEncoder.encode(paraString, "UTF-8");
 
+		//Response parameters
+		String oauth_token = null;
+		String oauth_token_secret = null;
+		String oauth_callback_confirmed = null;
+
 		// https://dev.twitter.com/docs/auth/creating-signature
 		// http://oauth.net/core/1.0/#signing_process
 		Mac mac = Mac.getInstance(oauth_signature_method_Mac); // HMAC-SHA1
@@ -104,7 +106,7 @@ Authorization:
 		String oauth_signature = new String(Base64.encodeBase64(mac.doFinal(signature_basestring.getBytes()))).trim();
 		// http://stackoverflow.com/questions/5997955/library-for-generating-hmac-sha1-oauth-signature-on-android
 		//		System.out.println("\nbaseString --> "+signature_basestring);
-		System.out.println("oauth_signature --> "+oauth_signature);
+		System.out.println("obtainingARequestToken->oauth_signature --> "+oauth_signature);
 
 		String http_msg_header_value = 
 				"OAuth "
@@ -134,7 +136,7 @@ Authorization:
 		coreContext.setTargetHost(host);
 		DefaultBHttpClientConnection conn = new DefaultBHttpClientConnection(8 * 1024); //@
 		ConnectionReuseStrategy connStrategy = DefaultConnectionReuseStrategy.INSTANCE;
-		
+
 		TwitterResponse jsonTwitterResponseMsg = new TwitterResponse();
 
 		try {
@@ -168,9 +170,9 @@ Authorization:
 			} else {
 				//  Your application should verify that oauth_callback_confirmed is true and store the other two values for the next steps.
 				String responseText = EntityUtils.toString(response.getEntity());
-				System.out.println("responseText -> " + responseText);
+				System.out.println("\nresponseText -> " + responseText);
 
-				String oauth_callback_confirmed = responseText.substring(responseText.indexOf("oauth_callback_confirmed=")+25);
+				oauth_callback_confirmed = responseText.substring(responseText.indexOf("oauth_callback_confirmed=")+25);
 				if (oauth_callback_confirmed.equals("true")) {
 					StringTokenizer strTokenizer = new StringTokenizer(responseText, "&");
 					String curToken = "";
@@ -191,7 +193,7 @@ Authorization:
 					System.out.println("oauth_token_secret=false!!!");
 					System.out.println("oauth_token="+oauth_token);
 					System.out.println("oauth_token_secret="+oauth_token_secret);
-					
+
 					jsonTwitterResponseMsg.setTwitterResponseStatus("Failure");
 					jsonTwitterResponseMsg.setTwitterResponseMessage("The HTTP status of the response from twitter is 200, but the oauth_callback_confirmed is false!");
 				}
@@ -213,27 +215,34 @@ Authorization:
 		return jsonResponseMsg;
 	}
 
-	public void redirectingTheUser() throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException {
+	public void converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException {
+		System.out.println("\n---------------converRequestToken2AccessToken---------------");
+
 		String METHOD = "POST";
-		String twitter_request_token = "https://api.twitter.com/oauth/request_token";
-		String twitter_request_token_host = "api.twitter.com";
-		String twitter_request_token_path = "/oauth/request_token";
-		String oauth_callback = URLEncoder.encode("http://127.0.0.1:9999/WiseCrowdRec/twitter/callback", "UTF-8"); 
+		String twitter_access_token = "https://api.twitter.com/oauth/access_token";
+		String twitter_access_token_host = "api.twitter.com";
+		String twitter_access_token_path = "/oauth/access_token";
 		String oauth_nonce = UUID.randomUUID().toString().replace("-", ""); // a nonce is an arbitrary number used only once in a cryptographic communication
 		String oauth_signature_method = "HMAC-SHA1";
 		String oauth_signature_method_Mac = "HmacSHA1";
 		String oauth_timestamp = (new Long(Calendar.getInstance().getTimeInMillis()/1000)).toString();
 		String oauth_version = "1.0";
 		String paraString = 
-				"oauth_callback=" + oauth_callback
-				+ "&oauth_consumer_key=" + GlobalVariables.TWT_APP_OAUTH_CONSUMER_KEY
+				"&oauth_consumer_key=" + GlobalVariables.TWT_APP_OAUTH_CONSUMER_KEY 
 				+ "&oauth_nonce=" + oauth_nonce 
 				+ "&oauth_signature_method=" + oauth_signature_method
 				+ "&oauth_timestamp=" + oauth_timestamp 
+				+ "&oauth_token=" + oauth_token 
 				+ "&oauth_version="+ oauth_version;			
 		String signature_basestring = METHOD 
-				+ "&" + URLEncoder.encode(twitter_request_token, "UTF-8") 
+				+ "&" + URLEncoder.encode(twitter_access_token, "UTF-8") 
 				+ "&" + URLEncoder.encode(paraString, "UTF-8");
+	
+		//Response parameters
+		String new_oauth_token = null;
+		String new_oauth_token_secret = null;
+		String user_id = null;
+		String screen_name = null;
 
 		// https://dev.twitter.com/docs/auth/creating-signature
 		// http://oauth.net/core/1.0/#signing_process
@@ -244,16 +253,16 @@ Authorization:
 		String oauth_signature = new String(Base64.encodeBase64(mac.doFinal(signature_basestring.getBytes()))).trim();
 		// http://stackoverflow.com/questions/5997955/library-for-generating-hmac-sha1-oauth-signature-on-android
 		//		System.out.println("\nbaseString --> "+signature_basestring);
-		System.out.println("oauth_signature --> "+oauth_signature);
+		System.out.println("converRequestToken2AccessToken->oauth_signature --> "+oauth_signature);
 
 		String http_msg_header_value = 
 				"OAuth "
-						+ "oauth_callback=\""+ oauth_callback//URLEncoder.encode(callback_string,"UTF-8")
-						+ "\",oauth_consumer_key=\"" + GlobalVariables.TWT_APP_OAUTH_CONSUMER_KEY
+						+ "oauth_consumer_key=\"" + GlobalVariables.TWT_APP_OAUTH_CONSUMER_KEY
 						+ "\",oauth_nonce=\"" + oauth_nonce 
 						+ "\",oauth_signature=\"" + URLEncoder.encode(oauth_signature, "UTF-8") 
 						+ "\",oauth_signature_method=\"" + oauth_signature_method//HMAC-SHA1
 						+ "\",oauth_timestamp=\"" + oauth_timestamp 
+						+ "\",oauth_token=\"" + oauth_token 
 						+ "\",oauth_version=\"" + oauth_version//1.0
 						+ "\"";
 		//		System.out.println("authorization_header_string=" + http_msg_header_value); 	// print out authorization_header_string for error checking
@@ -267,7 +276,7 @@ Authorization:
 
 		HttpRequestExecutor httpexecutor = new HttpRequestExecutor();
 		HttpCoreContext coreContext = HttpCoreContext.create();
-		HttpHost host = new HttpHost(twitter_request_token_host, 443); 
+		HttpHost host = new HttpHost(twitter_access_token_host, 443); 
 		//api.twitter.com use, 80 -> HTTP, 443 -> HTTPS
 		// 80 -> HTTP for debugging
 		// twitter requires 443 https
@@ -287,8 +296,8 @@ Authorization:
 				conn.bind(socket);
 			}
 
-			BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(METHOD, twitter_request_token_path); // POST /oauth/request_token
-			request.setEntity(new StringEntity("", ContentType.create("application/x-www-form-urlencoded", Consts.UTF_8))); 
+			BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(METHOD, twitter_access_token_path); // POST /oauth/access_token
+			request.setEntity(new StringEntity("oauth_verifier=" + URLEncoder.encode(oauth_verifier, "UTF-8"), ContentType.create("application/x-www-form-urlencoded", Consts.UTF_8))); 
 			// In HTTP there are two ways to POST data: application/x-www-form-urlencoded and multipart/form-data. 
 			request.addHeader("Authorization", http_msg_header_value);
 			System.out.println("\n>>>>> Request URI: " + request.toString()); //@
@@ -301,30 +310,34 @@ Authorization:
 
 			if (response.getStatusLine().toString().indexOf("200") == -1) {
 				System.out.println("Response failed!!!");
+//				jsonTwitterResponseMsg.setTwitterResponseStatus("Failure");
+//				jsonTwitterResponseMsg.setTwitterResponseMessage("The HTTP status of the response from twitter is not 200!");
 			} else {
 				//  Your application should verify that oauth_callback_confirmed is true and store the other two values for the next steps.
 				String responseText = EntityUtils.toString(response.getEntity());
-				System.out.println("responseText -> " + responseText);
+				System.out.println("\nresponseText -> " + responseText);
 
-				oauth_callback_confirmed = responseText.substring(responseText.indexOf("oauth_callback_confirmed=")+25);
-				if (oauth_callback_confirmed.equals("true")) {
-					StringTokenizer strTokenizer = new StringTokenizer(responseText, "&");
-					String curToken = "";
-					while (strTokenizer.hasMoreTokens()) {
-						curToken = strTokenizer.nextToken();
-						if (curToken.startsWith("oauth_token=")) {
-							oauth_token = curToken.substring(curToken.indexOf("=")+1);
-							System.out.println("oauth_token="+oauth_token);
-						} else if (curToken.startsWith("oauth_token_secret=")) {
-							oauth_token_secret = curToken.substring(curToken.indexOf("=")+1);
-							System.out.println("oauth_token_secret="+oauth_token_secret);
-						}
+				StringTokenizer strTokenizer = new StringTokenizer(responseText, "&");
+				String curToken = "";
+				while (strTokenizer.hasMoreTokens()) {
+					curToken = strTokenizer.nextToken();
+					if (curToken.startsWith("oauth_token=")) {
+						new_oauth_token = curToken.substring(curToken.indexOf("=")+1);
+						System.out.println("new_oauth_token="+new_oauth_token);
+					} else if (curToken.startsWith("oauth_token_secret=")) {
+						new_oauth_token_secret = curToken.substring(curToken.indexOf("=")+1);
+						System.out.println("new_oauth_token_secret="+new_oauth_token_secret);
+					} else if (curToken.startsWith("user_id=")) {
+						user_id = curToken.substring(curToken.indexOf("=")+1);
+						System.out.println("user_id="+user_id);
+					} else if (curToken.startsWith("screen_name=")) {
+						screen_name = curToken.substring(curToken.indexOf("=")+1);
+						System.out.println("screen_name="+screen_name);
 					}
-				} else {
-					System.out.println("oauth_token_secret=false!!!");
-					System.out.println("oauth_token="+oauth_token);
-					System.out.println("oauth_token_secret="+oauth_token_secret);
 				}
+//				jsonTwitterResponseMsg.setTwitterResponseStatus("Success");
+//				jsonTwitterResponseMsg.setTwitterResponseMessage("Got the oauth_token");
+//				jsonTwitterResponseMsg.setOauthToken(oauth_token);
 			}
 
 			System.out.println("==============");
@@ -342,8 +355,9 @@ Authorization:
 		InitializeWCR initWCR = new InitializeWCR();
 		initWCR.getWiseCrowdRecConfigInfo();
 		initWCR.signInWithTwitterGetAppOauth();
-		
+
 		SignInWithTwitter s = new SignInWithTwitter();
 		s.obtainingARequestToken();
+		s.converRequestToken2AccessToken("", "");
 	}
 }

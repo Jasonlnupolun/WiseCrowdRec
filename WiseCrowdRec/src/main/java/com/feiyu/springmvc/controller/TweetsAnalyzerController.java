@@ -5,10 +5,8 @@ import java.security.InvalidKeyException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +38,8 @@ public class TweetsAnalyzerController {
 	private static Logger logger = Logger.getLogger(TweetsAnalyzerController.class.getName());
 	private PersonService personService;
 	private EntityInfo entityInfo;
+	private InitializeWCR initWcr = new InitializeWCR();
+	private SignInWithTwitter signInWithTwitter = new SignInWithTwitter();
 //	private List<EntityInfo> entitiesInfo = new ArrayList<>();
 //	private EntityList _entityList = new EntityList(); 
 
@@ -63,12 +63,16 @@ public class TweetsAnalyzerController {
 	@RequestMapping(value = "signinwithtwitter/login")
 	@ResponseBody
 	public String signinwithtwitter() throws IOException, KeyManagementException, InvalidKeyException, NoSuchAlgorithmException, HttpException {
-		InitializeWCR initWcr = new InitializeWCR();
 		initWcr.getWiseCrowdRecConfigInfo();
 		initWcr.signInWithTwitterGetAppOauth();
 		
-		SignInWithTwitter s = new SignInWithTwitter();
-		return s.obtainingARequestToken();
+		return signInWithTwitter.obtainingARequestToken();
+	}
+	
+	@RequestMapping(value = "twitter/callback", method = RequestMethod.GET)
+	@ResponseBody
+	public void converRequestToken2AccessToken(@RequestParam("oauth_token") final String oauth_token, @RequestParam("oauth_verifier") final String oauth_verifier) throws InvalidKeyException, KeyManagementException, NoSuchAlgorithmException, IOException, HttpException  {
+		signInWithTwitter.converRequestToken2AccessToken(oauth_token, oauth_verifier);
 	}
 
 	@RequestMapping(value = "/startbackgroundtopology")
