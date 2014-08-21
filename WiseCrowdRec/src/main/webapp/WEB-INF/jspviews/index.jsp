@@ -196,31 +196,32 @@
 					
     <!-- Sign in with twitter begins here -->
 		<img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter."/>
-		<div id="signinwithtwittershowuserinfo"></div>
+		<div id="signinwithtwittershowmsg"></div>
 		<script type="text/javascript" id="signinwithtwitter">	
-						var signinwithtwitter= document.getElementById('signinwithtwitter');
-						signinwithtwitter.onclick = function() {
-		    				$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login', function(jsonRet) {
-								var head_str = "https://api.twitter.com/oauth/authenticate?oauth_token=";
-								var oauthToken = jsonRet.oauthToken;
-								var redirect2url = head_str.concat(oauthToken);
-								console.log(head_str+"***");
-								window.open(redirect2url, '_blank');
-								});};
-		</script>
-			
-		<script type="text/javascript" id="signinwithtwittershowuserinfo">
-			$('#signinwithtwitter').click(function() {
+		$('#signinwithtwitter').click(function() {
+			$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login', function(jsonRet) {
+				var head_str = "https://api.twitter.com/oauth/authenticate?oauth_token=";
+				var oauthToken = jsonRet.oauthToken;
+				var redirect2url = head_str.concat(oauthToken);
+				console.log(head_str+"***");
+				window.open(redirect2url, '_blank');
+				
 				var oauth_token = +$('#oauth_token').val();
 				var oauth_verifier = +$('#oauth_verifier').val();
 				$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
 				function() {
 					console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
-					$('#signinwithtwittershowmsg').text('Logged into Twitter');
 					});
-				});
+				});			
+			});
+		if (document.URL.indexOf("oauth_verifier=") > -1) {
+			$('#signinwithtwittershowmsg').text('Logged into Twitter!');
+			console.log(document.URL);
+		} else {
+			$('#signinwithtwittershowmsg').text('Log into Twitter please...');
+			console.log(document.URL);
+		}
 		</script>
-			
     <!-- Sign in with twitter ends here-->		
 					
     				
