@@ -20,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -51,6 +52,7 @@ import com.feiyu.elasticsearch.SerializeBeans2JSON;
 import com.feiyu.springmvc.model.TwitterResponse;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
+import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 public class SignInWithTwitterService {
 	/* 
@@ -215,7 +217,7 @@ Authorization:
 		return jsonResponseMsg;
 	}
 
-	public void converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException {
+	public void converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException {
 		System.out.println("\n---------------converRequestToken2AccessToken---------------");
 
 		String METHOD = "POST";
@@ -335,6 +337,7 @@ Authorization:
 						System.out.println("screen_name="+screen_name);
 					}
 				}
+				GlobalVariables.AST_CASSANDRA_UL.insertDataToDB(user_id, new_oauth_token, new_oauth_token_secret, screen_name);
 //				jsonTwitterResponseMsg.setTwitterResponseStatus("Success");
 //				jsonTwitterResponseMsg.setTwitterResponseMessage("Got the oauth_token");
 //				jsonTwitterResponseMsg.setOauthToken(oauth_token);
@@ -351,7 +354,7 @@ Authorization:
 		}
 	}
 
-	public static void main(String[] argv) throws IOException, HttpException, GeneralSecurityException {
+	public static void main(String[] argv) throws IOException, HttpException, GeneralSecurityException, ConnectionException, InterruptedException, ExecutionException {
 		InitializeWCR initWCR = new InitializeWCR();
 		initWCR.getWiseCrowdRecConfigInfo();
 		initWCR.signInWithTwitterGetAppOauth();

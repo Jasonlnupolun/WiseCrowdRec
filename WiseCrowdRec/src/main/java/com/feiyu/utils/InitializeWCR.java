@@ -16,6 +16,7 @@ import org.apache.thrift.TException;
 import twitter4j.conf.ConfigurationBuilder;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
+import com.feiyu.database.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
@@ -65,6 +66,9 @@ public class InitializeWCR implements java.io.Serializable{
 			URISyntaxException, IOException, TException {
 		GlobalVariables.AST_CASSANDRA_MNPLT= new AstyanaxCassandraManipulator("wcrCluster","wcrkeyspace","wcrPool","localhost",9160);
 		GlobalVariables.AST_CASSANDRA_MNPLT.initialSetup();
+		
+		GlobalVariables.AST_CASSANDRA_UL = new AstyanaxCassandraUserList("userlist");
+		GlobalVariables.AST_CASSANDRA_UL.initialSetup();
 	}
 
 	public void elasticsearchInitial() {

@@ -6,8 +6,10 @@ import twitter4j.conf.ConfigurationBuilder;
 import mx.bigdata.jcalais.CalaisClient;
 
 import com.feiyu.database.AstyanaxCassandraManipulator;
+import com.feiyu.database.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.spark.SparkTwitterStreaming;
+import com.netflix.astyanax.Keyspace;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
@@ -27,6 +29,9 @@ public class GlobalVariables {
 	public static ConfigurationBuilder TWT_CONF_BUILDER_DYNA; 
 
 	public static AstyanaxCassandraManipulator AST_CASSANDRA_MNPLT;
+	public static AstyanaxCassandraUserList AST_CASSANDRA_UL;
+	public static Keyspace KS_AST;
+	
 	public static JestElasticsearchManipulator JEST_ES_MNPLT;
 	public static boolean CLEAN_BEFORE_INSERT_ES = true;
 

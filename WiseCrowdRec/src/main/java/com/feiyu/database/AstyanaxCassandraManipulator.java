@@ -19,6 +19,7 @@ import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
+import com.feiyu.utils.GlobalVariables;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.netflix.astyanax.AstyanaxContext;
@@ -50,7 +51,7 @@ public class AstyanaxCassandraManipulator {
 	private final String _host;
 	private final Integer _port;
 	private AstyanaxContext<Keyspace> context;
-	private static Keyspace KS_AST;
+//	private static Keyspace KS_AST;
 	private static ColumnFamily<String, String> CF_AST_BACK;
 	private static ColumnFamily<String, String> CF_AST_DYNA;
 
@@ -76,7 +77,7 @@ public class AstyanaxCassandraManipulator {
 		.buildKeyspace(ThriftFamilyFactory.getInstance());
 
 		context.start();
-		KS_AST = context.getClient();
+		GlobalVariables.KS_AST = context.getClient();
 
 		CF_AST_BACK = ColumnFamily
 				.newColumnFamily(_columnFamilyNameBack,
@@ -121,7 +122,7 @@ public class AstyanaxCassandraManipulator {
 	public void insertDataToDB(String rowKey, String entity, String category, 
 			String sentiment, String time, String text, String count, String entityInfo, boolean isDynamicSearch) throws ConnectionException, InterruptedException, ExecutionException {
 
-		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
+		MutationBatch mb = GlobalVariables.KS_AST.prepareMutationBatch();//The mutator is not thread safe
 		ColumnFamily<String, String> CF_AST;
 		if (isDynamicSearch) {
 			CF_AST = CF_AST_DYNA;
@@ -147,7 +148,7 @@ public class AstyanaxCassandraManipulator {
 			String sentiment, String time, String text, String count, String entityInfo, boolean isDynamicSearch) 
 					throws ConnectionException, InterruptedException, ExecutionException {
 
-		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
+		MutationBatch mb = GlobalVariables.KS_AST.prepareMutationBatch();//The mutator is not thread safe
 		ColumnFamily<String, String> CF_AST;
 		if (isDynamicSearch) {
 			CF_AST = CF_AST_DYNA;
@@ -173,7 +174,7 @@ public class AstyanaxCassandraManipulator {
 	public void insertMovieDataToDB_asynchronous(String rowKey, String movieName, String hybridRating, String count) 
 			throws ConnectionException, InterruptedException, ExecutionException {
 
-		MutationBatch mb = KS_AST.prepareMutationBatch();//The mutator is not thread safe
+		MutationBatch mb = GlobalVariables.KS_AST.prepareMutationBatch();//The mutator is not thread safe
 		ColumnFamily<String, String> CF_AST = CF_AST_BACK;
 
 		mb.withRow(CF_AST, rowKey)
@@ -190,7 +191,7 @@ public class AstyanaxCassandraManipulator {
 	public String queryWithRowKeyGetRating(String rowKey) throws ConnectionException {
 		String rating = null;
 		ColumnFamily<String, String> CF_AST = CF_AST_BACK;
-		ColumnList<String> columns = KS_AST.prepareQuery(CF_AST)
+		ColumnList<String> columns = GlobalVariables.KS_AST.prepareQuery(CF_AST)
 				.getKey(rowKey)
 				.execute()
 				.getResult();
@@ -211,7 +212,7 @@ public class AstyanaxCassandraManipulator {
 		}
 
 		// no asynchronous feature
-		ColumnList<String> columns = KS_AST.prepareQuery(CF_AST)
+		ColumnList<String> columns = GlobalVariables.KS_AST.prepareQuery(CF_AST)
 				.getKey(rowKey)
 				.execute()
 				.getResult();
@@ -231,7 +232,7 @@ public class AstyanaxCassandraManipulator {
 		}
 
 		// asynchronous feature
-		final ListenableFuture<OperationResult<ColumnList<String>>> listenableFuture = KS_AST
+		final ListenableFuture<OperationResult<ColumnList<String>>> listenableFuture = GlobalVariables.KS_AST
 				.prepareQuery(CF_AST)
 				.getKey(rowKey)
 				.executeAsync();
@@ -274,7 +275,7 @@ public class AstyanaxCassandraManipulator {
 		 */
 		Rows<String, String> rows = null;
 		try {
-			rows = KS_AST.prepareQuery(CF_AST)
+			rows = GlobalVariables.KS_AST.prepareQuery(CF_AST)
 					.getAllRows()
 					.withColumnRange(new RangeBuilder().build())
 					.setExceptionCallback(new ExceptionCallback() {

@@ -216,10 +216,8 @@
 			});
 		if (document.URL.indexOf("oauth_verifier=") > -1) {
 			$('#signinwithtwittershowmsg').text('Logged into Twitter!');
-			console.log(document.URL);
 		} else {
 			$('#signinwithtwittershowmsg').text('Log into Twitter please...');
-			console.log(document.URL);
 		}
 		</script>
     <!-- Sign in with twitter ends here-->		

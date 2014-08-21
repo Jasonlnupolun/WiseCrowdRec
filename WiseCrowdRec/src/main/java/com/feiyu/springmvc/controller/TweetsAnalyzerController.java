@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.service.SignInWithTwitterService;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
+import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 @Controller
 public class TweetsAnalyzerController {
@@ -64,7 +66,7 @@ public class TweetsAnalyzerController {
 	public void converRequestToken2AccessToken(
 			@RequestParam(value = "oauth_token") final String oauth_token, 
 			@RequestParam(value = "oauth_verifier") final String oauth_verifier)
-	throws InvalidKeyException, KeyManagementException, NoSuchAlgorithmException, IOException, HttpException  { 
+	throws InvalidKeyException, KeyManagementException, NoSuchAlgorithmException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException  { 
 		signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
 	}
 
