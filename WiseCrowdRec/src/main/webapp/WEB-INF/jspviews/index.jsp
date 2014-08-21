@@ -58,7 +58,6 @@
 		function start() {
 			menuNav();
 			test(source);
-			validatePersonId(personId);
 		}
      </script>
    </head>
@@ -68,122 +67,7 @@
     		<h3>Left Menu</h3>
     		<a href="${pageContext.request.contextPath}">Back to home</a>
     <br>
-		<img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter."/>
-		<div id="signinwithtwittershowuserinfo"></div>
-		<script type="text/javascript" id="signinwithtwitter">	
-						var signinwithtwitter= document.getElementById('signinwithtwitter');
-						signinwithtwitter.onclick = function() {
-		    				$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login', function(jsonRet) {
-								var head_str = "https://api.twitter.com/oauth/authenticate?oauth_token=";
-								var oauthToken = jsonRet.oauthToken;
-								var redirect2url = head_str.concat(oauthToken);
-								console.log(head_str+"***");
-								window.open(redirect2url, '_blank');
-								});};
-		</script>
-			
-		<script type="text/javascript" id="signinwithtwittershowuserinfo">
-		$(document).ready(function() {	
-			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
-					 function(oauth_token, oauth_verifier) {
-						console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);	
-					});
-			});
-		</script>
-    		
-    <!-- AJAX json begin -->
-    
-    	<br><br><br>
-	<div class="container">
-	<!--  From https://github.com/stevehanson/spring-mvc-ajax -->
-		Spring MVC AJAX Json<br><br>		
-		-- Random Person Generator: 
-		<br>
-		<input type="submit" value="Get Random Person" id="randomPerson" class="btn btn-success">
-		<br/><br/>
-		<div id="personResponse"> </div>
-		<br>
-		<br>
-		
-		-- Get By ID: 
-		<br>
-		<form id="idForm">
-			<div class="error hide" id="idError">Please enter a valid ID in range 0-3</div>
-			<label for="personId">ID (0-3): </label><input name="id" id="personId" value="0" type="number" />
-			<input type="submit" value="Get Person By ID" class="btn btn-success"/> <br /><br/>
-			<div id="personIdResponse"> </div>
-		</form>
-		
-		<br>
-		<br>
-		
-		-- Submit new Person: 
-		<br>
-		<form id="newPersonForm">
-			<label for="nameInput">Name: </label>
-			<input type="text" name="name" id="nameInput" />
-			<br/>
-			
-			<label for="ageInput">Age: </label>
-			<input type="text" name="age" id="ageInput" />
-			<br/>
-			<input type="submit" value="Save Person" class="btn btn-success" /><br/><br/>
-			<div id="personFormResponse" class="green"> </div>
-		</form>
-	</div>
-				
-		<script type="text/javascript">	
-		$(document).ready(function() {	
-			// Random Person AJAX Request
-			$('#randomPerson').click(function() {
-				$.getJSON('${pageContext.request.contextPath}/restapi/person/random', function(person) {
-					$('#personResponse').text(person.name + ', age ' + person.age);
-				});
-			});
-			
-			// Request Person by ID AJAX
-			$('#idForm').submit(function(e) {
-				var personId = +$('#personId').val();
-				if(!validatePersonId(personId)) 
-					return false;
-				$.get('${pageContext.request.contextPath}/restapi/person/' + personId, function(person) {
-					$('#personIdResponse').text(person.name + ', age ' + person.age);
-				});
-				e.preventDefault(); // prevent actual form submit
-			});
-			
-			// Save Person AJAX Form Submit
-			$('#randomPerson').click(function() {
-				$.getJSON('${pageContext.request.contextPath}/restapi/person/random', function(person) {
-					$('#personResponse').text(person.name + ', age ' + person.age);
-				});
-			});
-			
-			$('#newPersonForm').submit(function(e) {
-				// will pass the form date using the jQuery serialize function
-				$.post('${pageContext.request.contextPath}/restapi/person', $(this).serialize(), function(response) {
-					$('#personFormResponse').text(response);
-				});
-				
-				e.preventDefault(); // prevent actual form submit and page reload
-			});
-			
-		});
-	
-		function validatePersonId(personId) {
-			console.log(personId);
-			if(personId === undefined || personId < 0 || personId > 3) {
-				$('#idError').show();
-				return false;
-			} else {
-				$('#idError').hide();
-				return true;
-			};
-		}
-		
-	</script>
-			
-    <!-- AJAX json end -->
+
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
     		<a href="${pageContext.request.contextPath}">Back to home</a>
@@ -309,6 +193,36 @@
 							$.get('${pageContext.request.contextPath}/startdynamicsearch', function() {});
 						};
 					</script>
+					
+    <!-- Sign in with twitter begins here -->
+		<img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter."/>
+		<div id="signinwithtwittershowuserinfo"></div>
+		<script type="text/javascript" id="signinwithtwitter">	
+						var signinwithtwitter= document.getElementById('signinwithtwitter');
+						signinwithtwitter.onclick = function() {
+		    				$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login', function(jsonRet) {
+								var head_str = "https://api.twitter.com/oauth/authenticate?oauth_token=";
+								var oauthToken = jsonRet.oauthToken;
+								var redirect2url = head_str.concat(oauthToken);
+								console.log(head_str+"***");
+								window.open(redirect2url, '_blank');
+								});};
+		</script>
+			
+		<script type="text/javascript" id="signinwithtwittershowuserinfo">
+			$('#signinwithtwitter').click(function() {
+				var oauth_token = +$('#oauth_token').val();
+				var oauth_verifier = +$('#oauth_verifier').val();
+				$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
+				function() {
+					console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
+					$('#signinwithtwittershowmsg').text('Logged into Twitter');
+					});
+				});
+		</script>
+			
+    <!-- Sign in with twitter ends here-->		
+					
     				
     			</nav>
     			<button id="showLeftPush" class="icon-drop" data-info="Show/Hide Left Push Menu">Show/Hide Left Push Menu</button>

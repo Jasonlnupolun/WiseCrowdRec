@@ -1,4 +1,4 @@
-package com.feiyu.signinwithtwitter;
+package com.feiyu.springmvc.service;
 /**
  * reference: 
  * https://github.com/apache/httpcore/blob/4.3.x/httpcore/src/examples/org/apache/http/examples/ElementalHttpPost.java
@@ -52,7 +52,7 @@ import com.feiyu.springmvc.model.TwitterResponse;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 
-public class SignInWithTwitter {
+public class SignInWithTwitterService {
 	/* 
 	 * Example request (Authorization header has been wrapped):
 POST /oauth/request_token HTTP/1.1
@@ -75,7 +75,7 @@ Authorization:
 		String twitter_request_token = "https://api.twitter.com/oauth/request_token";
 		String twitter_request_token_host = "api.twitter.com";
 		String twitter_request_token_path = "/oauth/request_token";
-		String oauth_callback = URLEncoder.encode("http://127.0.0.1:9999/WiseCrowdRec/twitter/callback", "UTF-8"); 
+		String oauth_callback = URLEncoder.encode("http://127.0.0.1:9999/WiseCrowdRec", "UTF-8"); 
 		String oauth_nonce = UUID.randomUUID().toString().replace("-", ""); // a nonce is an arbitrary number used only once in a cryptographic communication
 		String oauth_signature_method = "HMAC-SHA1";
 		String oauth_signature_method_Mac = "HmacSHA1";
@@ -356,7 +356,7 @@ Authorization:
 		initWCR.getWiseCrowdRecConfigInfo();
 		initWCR.signInWithTwitterGetAppOauth();
 
-		SignInWithTwitter s = new SignInWithTwitter();
+		SignInWithTwitterService s = new SignInWithTwitterService();
 		s.obtainingARequestToken();
 		s.converRequestToken2AccessToken("", "");
 	}
