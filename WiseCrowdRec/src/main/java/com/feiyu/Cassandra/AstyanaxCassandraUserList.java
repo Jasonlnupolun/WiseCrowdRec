@@ -1,7 +1,7 @@
 /**
  * @author feiyu
  */
-package com.feiyu.database;
+package com.feiyu.Cassandra;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

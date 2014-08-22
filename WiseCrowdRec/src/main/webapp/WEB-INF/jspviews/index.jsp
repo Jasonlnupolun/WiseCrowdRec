@@ -205,19 +205,19 @@
 				var redirect2url = head_str.concat(oauthToken);
 				console.log(head_str+"***");
 				window.open(redirect2url, '_blank');
-				
-				var oauth_token = +$('#oauth_token').val();
-				var oauth_verifier = +$('#oauth_verifier').val();
-				$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
-				function() {
-					console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
-					});
 				});			
 			});
 		if (document.URL.indexOf("oauth_verifier=") > -1) {
 			$('#signinwithtwittershowmsg').text('Logged into Twitter!');
+			var curURL = document.URL;
+			var oauth_token = curURL.substring(curURL.indexOf("oauth_token=")+12, curURL.indexOf("&oauth_verifier="));
+			var oauth_verifier = curURL.substring(curURL.indexOf("&oauth_verifier=")+16); 
+			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
+			function() {
+				console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
+				});
 		} else {
-			$('#signinwithtwittershowmsg').text('Log into Twitter please...');
+			$('#signinwithtwittershowmsg').text('Click and get the magic!!'); 
 		}
 		</script>
     <!-- Sign in with twitter ends here-->		

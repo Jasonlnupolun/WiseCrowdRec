@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import twitter4j.TwitterException;
+
 import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.service.SignInWithTwitterService;
 import com.feiyu.utils.GlobalVariables;
@@ -61,12 +63,12 @@ public class TweetsAnalyzerController {
 		return signInWithTwitterService.obtainingARequestToken();
 	}
 
-	@RequestMapping(value = "twitter/callback", params = {"oauth_token", "oauth_verifier"})
+	@RequestMapping(value = "twitter/callback", params = {"oauth_token", "oauth_verifier"} , method = RequestMethod.GET)
 	@ResponseBody
 	public void converRequestToken2AccessToken(
 			@RequestParam(value = "oauth_token") final String oauth_token, 
 			@RequestParam(value = "oauth_verifier") final String oauth_verifier)
-	throws InvalidKeyException, KeyManagementException, NoSuchAlgorithmException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException  { 
+	throws InvalidKeyException, KeyManagementException, NoSuchAlgorithmException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException, NumberFormatException, TwitterException  { 
 		signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
 	}
 

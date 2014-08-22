@@ -2,7 +2,7 @@
  * From https://github.com/s7/scale7-pelops
  * modified by feiyu
  */
-package com.feiyu.database;
+package com.feiyu.Cassandra;
 
 import java.io.BufferedReader;
 import java.io.IOException;

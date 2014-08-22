@@ -2,7 +2,7 @@
  * @author feiyu
  * reference: https://github.com/Netflix/astyanax/wiki/Getting-Started
  */
-package com.feiyu.database;
+package com.feiyu.Cassandra;
 
 import java.io.BufferedReader;
 import java.io.IOException;

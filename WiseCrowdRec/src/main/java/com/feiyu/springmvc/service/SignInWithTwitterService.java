@@ -48,8 +48,11 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
 
+import twitter4j.TwitterException;
+
 import com.feiyu.elasticsearch.SerializeBeans2JSON;
 import com.feiyu.springmvc.model.TwitterResponse;
+import com.feiyu.twitter.FollowingWho;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
@@ -217,7 +220,7 @@ Authorization:
 		return jsonResponseMsg;
 	}
 
-	public void converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException {
+	public void converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException, NumberFormatException, TwitterException {
 		System.out.println("\n---------------converRequestToken2AccessToken---------------");
 
 		String METHOD = "POST";
@@ -338,6 +341,8 @@ Authorization:
 					}
 				}
 				GlobalVariables.AST_CASSANDRA_UL.insertDataToDB(user_id, new_oauth_token, new_oauth_token_secret, screen_name);
+				FollowingWho fw = new FollowingWho();
+				fw.getOauth(user_id);
 //				jsonTwitterResponseMsg.setTwitterResponseStatus("Success");
 //				jsonTwitterResponseMsg.setTwitterResponseMessage("Got the oauth_token");
 //				jsonTwitterResponseMsg.setOauthToken(oauth_token);
@@ -354,7 +359,7 @@ Authorization:
 		}
 	}
 
-	public static void main(String[] argv) throws IOException, HttpException, GeneralSecurityException, ConnectionException, InterruptedException, ExecutionException {
+	public static void main(String[] argv) throws IOException, HttpException, GeneralSecurityException, ConnectionException, InterruptedException, ExecutionException, NumberFormatException, TwitterException {
 		InitializeWCR initWCR = new InitializeWCR();
 		initWCR.getWiseCrowdRecConfigInfo();
 		initWCR.signInWithTwitterGetAppOauth();

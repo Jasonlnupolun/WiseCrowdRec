@@ -10,6 +10,8 @@ import org.apache.cassandra.thrift.UnavailableException;
 import org.apache.thrift.TException;
 import org.junit.Test;
 
+import com.feiyu.Cassandra.PelopsCassandraManipulator;
+
 public class TestPelopsCassandraManipulator {
 	@Test
 	public void testWholeProcess() 

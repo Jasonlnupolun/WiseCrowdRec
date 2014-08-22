@@ -13,6 +13,7 @@ import org.apache.thrift.TException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.model.Rows;

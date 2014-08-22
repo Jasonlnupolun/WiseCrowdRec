@@ -31,6 +31,5 @@ public class StartInitSetupAutomatically extends HttpServlet {
 		}
 		
 		GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
-
 	}
 }

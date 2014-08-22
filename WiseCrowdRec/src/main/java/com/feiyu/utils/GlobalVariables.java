@@ -5,8 +5,8 @@ import java.util.Properties;
 import twitter4j.conf.ConfigurationBuilder;
 import mx.bigdata.jcalais.CalaisClient;
 
-import com.feiyu.database.AstyanaxCassandraManipulator;
-import com.feiyu.database.AstyanaxCassandraUserList;
+import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
+import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.netflix.astyanax.Keyspace;

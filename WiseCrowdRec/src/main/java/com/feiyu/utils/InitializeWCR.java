@@ -15,8 +15,8 @@ import org.apache.thrift.TException;
 
 import twitter4j.conf.ConfigurationBuilder;
 
-import com.feiyu.database.AstyanaxCassandraManipulator;
-import com.feiyu.database.AstyanaxCassandraUserList;
+import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
+import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
