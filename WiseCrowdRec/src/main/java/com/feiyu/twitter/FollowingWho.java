@@ -15,6 +15,7 @@ public class FollowingWho {
 
 	public void getOauth(String userID) throws ConnectionException, NumberFormatException, TwitterException {
 		String[] oauthAry =  GlobalVariables.AST_CASSANDRA_UL.queryWithUserID(userID);
+		
 		Twitter twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(
 				GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey3"), 
@@ -23,8 +24,9 @@ public class FollowingWho {
 				oauthAry[1], oauthAry[2]);
 		twitter.setOAuthAccessToken(oathAccessToken);
 
-		System.out.println("Listing followers's ids.");
-		IDs ids = twitter.getFollowersIDs(Long.parseLong(oauthAry[0], 10));
+		System.out.println("Listing friends's ids of"+twitter.getId()+":");
+		System.out.println(twitter.getId()+" is following:");
+		IDs ids = twitter.getFriendsIDs(twitter.getId(), -1);
 		for (long id : ids.getIDs()) {
 			System.out.println("id->"+id);
 		}
