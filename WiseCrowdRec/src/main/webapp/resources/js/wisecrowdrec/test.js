@@ -8,7 +8,7 @@
  * D3 API: https://github.com/mbostock/d3/wiki/API-Reference
  */
 
-function test(eventSourceSocket) {
+function test(sparkEventSourceSocket) {
 
     if (!window.WebSocket) {
         console.log("WebSocket is not supported by this browser!!!");
@@ -86,12 +86,12 @@ function test(eventSourceSocket) {
             restart();
         };
         ws.onclose = function() { 
-            alert("Websocket is closed..."); 
+        	console.log("Websocket "+ws.toString()+" is closed..."); 
         };
     }
 
     function sparkSSEmessage() {
-    	eventSourceSocket.onmessage = function(event) {
+    	sparkEventSourceSocket.onmessage = function(event) {
  		   nodes.push({"name": event.data ,"count":1});
     	   console.log('spark-------' + event.data);
  		   restart();

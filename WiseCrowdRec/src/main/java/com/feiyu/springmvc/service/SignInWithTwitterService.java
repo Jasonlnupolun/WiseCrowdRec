@@ -13,14 +13,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URLEncoder;
-import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -48,14 +46,11 @@ import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
 
-import twitter4j.TwitterException;
-
 import com.feiyu.elasticsearch.SerializeBeans2JSON;
 import com.feiyu.springmvc.model.TwitterResponse;
-import com.feiyu.twitter.FollowingWho;
+import com.feiyu.twitter.FollowingWhom;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
-import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 public class SignInWithTwitterService {
 	/* 
@@ -220,7 +215,7 @@ Authorization:
 		return jsonResponseMsg;
 	}
 
-	public void converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws NoSuchAlgorithmException, InvalidKeyException, KeyManagementException, IOException, HttpException, ConnectionException, InterruptedException, ExecutionException, NumberFormatException, TwitterException {
+	public String converRequestToken2AccessToken(String oauth_token, String oauth_verifier) throws Exception {
 		System.out.println("\n---------------converRequestToken2AccessToken---------------");
 
 		String METHOD = "POST";
@@ -248,6 +243,8 @@ Authorization:
 		String new_oauth_token_secret = null;
 		String user_id = null;
 		String screen_name = null;
+		
+		String json = null;
 
 		// https://dev.twitter.com/docs/auth/creating-signature
 		// http://oauth.net/core/1.0/#signing_process
@@ -341,8 +338,10 @@ Authorization:
 					}
 				}
 				GlobalVariables.AST_CASSANDRA_UL.insertDataToDB(user_id, new_oauth_token, new_oauth_token_secret, screen_name);
-				FollowingWho fw = new FollowingWho();
-				fw.getOauth(user_id);
+				
+				FollowingWhom fw = new FollowingWhom();
+				json = fw.getFollowingWhomList(user_id);
+				
 //				jsonTwitterResponseMsg.setTwitterResponseStatus("Success");
 //				jsonTwitterResponseMsg.setTwitterResponseMessage("Got the oauth_token");
 //				jsonTwitterResponseMsg.setOauthToken(oauth_token);
@@ -357,9 +356,10 @@ Authorization:
 		} finally {
 			conn.close();
 		}
+		return json;
 	}
 
-	public static void main(String[] argv) throws IOException, HttpException, GeneralSecurityException, ConnectionException, InterruptedException, ExecutionException, NumberFormatException, TwitterException {
+	public static void main(String[] argv) throws Exception {
 		InitializeWCR initWCR = new InitializeWCR();
 		initWCR.getWiseCrowdRecConfigInfo();
 		initWCR.signInWithTwitterGetAppOauth();

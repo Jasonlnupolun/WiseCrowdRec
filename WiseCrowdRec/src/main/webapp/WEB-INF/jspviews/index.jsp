@@ -50,16 +50,18 @@
 	<!-- var source = new EventSource("ws://localhost:9292/wcrstorm"); -->
 	<script type="text/javascript">
    		if (typeof (EventSource) !== "undefined") {
-   			var source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
+   			var sparkServerSentEvents2D3Source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
  	 	} else {
  	  		document.getElementById("sparkSSE2D3").innerHTML = "Your browser does not support server-sent events, use other browsers like Chrome instead please.";
   		} 
+   		
 		
 		function start() {
 			menuNav();
-			test(source);
+			test(sparkServerSentEvents2D3Source);
 		}
      </script>
+     
    </head>
     
     <body class="cbp-spmenu-push">
@@ -213,8 +215,12 @@
 			var oauth_token = curURL.substring(curURL.indexOf("oauth_token=")+12, curURL.indexOf("&oauth_verifier="));
 			var oauth_verifier = curURL.substring(curURL.indexOf("&oauth_verifier=")+16); 
 			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
-			function() {
+			function(jsonRet) {
+				console.log('following list -> jsonRet'+jsonRet);
 				console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
+				JSON.parse(jsonRet, function (k, v) {
+					console.log(v);
+				});
 				});
 		} else {
 			$('#signinwithtwittershowmsg').text('Click and get the magic!!'); 
