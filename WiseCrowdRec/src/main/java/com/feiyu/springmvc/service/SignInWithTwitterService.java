@@ -48,7 +48,6 @@ import org.apache.http.util.EntityUtils;
 
 import com.feiyu.elasticsearch.SerializeBeans2JSON;
 import com.feiyu.springmvc.model.TwitterResponse;
-import com.feiyu.twitter.FollowingWhom;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 
@@ -244,8 +243,6 @@ Authorization:
 		String user_id = null;
 		String screen_name = null;
 		
-		String json = null;
-
 		// https://dev.twitter.com/docs/auth/creating-signature
 		// http://oauth.net/core/1.0/#signing_process
 		Mac mac = Mac.getInstance(oauth_signature_method_Mac); // HMAC-SHA1
@@ -339,9 +336,6 @@ Authorization:
 				}
 				GlobalVariables.AST_CASSANDRA_UL.insertDataToDB(user_id, new_oauth_token, new_oauth_token_secret, screen_name);
 				
-				FollowingWhom fw = new FollowingWhom();
-				json = fw.getFollowingWhomList(user_id);
-				
 //				jsonTwitterResponseMsg.setTwitterResponseStatus("Success");
 //				jsonTwitterResponseMsg.setTwitterResponseMessage("Got the oauth_token");
 //				jsonTwitterResponseMsg.setOauthToken(oauth_token);
@@ -356,7 +350,7 @@ Authorization:
 		} finally {
 			conn.close();
 		}
-		return json;
+		return user_id;
 	}
 
 	public static void main(String[] argv) throws Exception {

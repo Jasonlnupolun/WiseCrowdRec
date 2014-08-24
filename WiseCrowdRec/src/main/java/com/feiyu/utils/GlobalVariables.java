@@ -41,7 +41,13 @@ public class GlobalVariables {
 	public static TheMovieDbApi TMDB;
 	public static final String SENTI_CSS = "alert alert-success"; // change later
 
-	public static final String RABBITMQ_QUEUE_NAME = "WCR_SPARK_RABBITMQ";
+	public static final String RABBITMQ_QUEUE_NAME_SPARK = "WCR_SPARK_RABBITMQ";
 	public static Connection RABBITMQ_CNCT;
 	public static Channel RABBITMQ_CHANNEL;
+//	public static Connection RABBITMQ_CNCT_SPARK;
+//	public static Channel RABBITMQ_CHANNEL_SPARK;
+	
+	public static final String RABBITMQ_QUEUE_NAME_SMGSUBGRAPH= "WCR_SMGSUBGRAPH_RABBITMQ";
+//	public static Connection RABBITMQ_CNCT_SMGSUBGRAPH;
+//	public static Channel RABBITMQ_CHANNEL_SMGSUBGRAPH;
 }

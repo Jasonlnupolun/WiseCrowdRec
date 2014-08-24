@@ -49,16 +49,19 @@
 	<!-- var socket = new WebSocket(host); -->
 	<!-- var source = new EventSource("ws://localhost:9292/wcrstorm"); -->
 	<script type="text/javascript">
+		var sparkServerSentEvents2D3Source, starMovieGroupSubGraphServerSentEvents2D3Source;
    		if (typeof (EventSource) !== "undefined") {
-   			var sparkServerSentEvents2D3Source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
- 	 	} else {
+   			sparkServerSentEvents2D3Source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
+   			starMovieGroupSubGraphServerSentEvents2D3Source = new EventSource("${pageContext.request.contextPath}/StarMovieGroupSubGraphServerSentEvents2D3");
+ 	 	} 
+/*    		else {
  	  		document.getElementById("sparkSSE2D3").innerHTML = "Your browser does not support server-sent events, use other browsers like Chrome instead please.";
-  		} 
+  		}  */
    		
 		
 		function start() {
 			menuNav();
-			test(sparkServerSentEvents2D3Source);
+			test(sparkServerSentEvents2D3Source, starMovieGroupSubGraphServerSentEvents2D3Source);
 		}
      </script>
      
@@ -180,11 +183,19 @@
     			<span></span> <!-- head name -->
     			<nav>
     				<!-- http://tympanus.net/Blueprints/QuotesRotator/ -->
-    				<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
+<!--     				<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
 					<script type="text/javascript" id="startbackgroundtopology">	
 						var backTopo = document.getElementById('startbackgroundtopology');
 						backTopo.onclick = function() {
 							$.get('${pageContext.request.contextPath}/startbackgroundtopology', function() {});
+						};
+					</script> -->
+					
+    				<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
+					<script type="text/javascript" id="startbackgroundtopology">	
+						var backTopo = document.getElementById('startbackgroundtopology');
+						backTopo.onclick = function() {
+							$.get('${pageContext.request.contextPath}/smgSubGraphSSEmessagebutton', function() {});
 						};
 					</script>
 					
@@ -211,16 +222,16 @@
 			});
 		if (document.URL.indexOf("oauth_verifier=") > -1) {
 			$('#signinwithtwittershowmsg').text('Logged into Twitter!');
+			/* var freebase= require('freebase'); */
 			var curURL = document.URL;
 			var oauth_token = curURL.substring(curURL.indexOf("oauth_token=")+12, curURL.indexOf("&oauth_verifier="));
 			var oauth_verifier = curURL.substring(curURL.indexOf("&oauth_verifier=")+16); 
 			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
-			function(jsonRet) {
-				console.log('following list -> jsonRet'+jsonRet);
+			function(user_id) {
 				console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
-				JSON.parse(jsonRet, function (k, v) {
-					console.log(v);
-				});
+				$.get('${pageContext.request.contextPath}/smgSubGraphSSEmessage?user_id='+ user_id, function() {
+						console.log('smgSubGraphSSEmessage');
+					});
 				});
 		} else {
 			$('#signinwithtwittershowmsg').text('Click and get the magic!!'); 

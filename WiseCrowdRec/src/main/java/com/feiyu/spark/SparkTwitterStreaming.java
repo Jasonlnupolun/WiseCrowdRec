@@ -238,8 +238,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 
 						// send message to the RabbitMQ queue
 						String message = out;
-						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME, null, message.getBytes());
-						System.out.println(" [x] Message Sent to queue buffer.");
+						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, message.getBytes());
+						System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
 
 						return null;
 					}
@@ -261,7 +261,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
 		initWcr.coreNLPInitial();
-		initWcr.rabbitmqInit();
+		initWcr.rabbitmqInit_spark();
+//		initWcr.rabbitmqInit_smgSubGraph();
 
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();
 		sts.sparkInit();

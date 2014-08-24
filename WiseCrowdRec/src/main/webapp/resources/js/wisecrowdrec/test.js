@@ -8,7 +8,7 @@
  * D3 API: https://github.com/mbostock/d3/wiki/API-Reference
  */
 
-function test(sparkEventSourceSocket) {
+function test(sparkEventSourceSocket, smgSubGraphEventSourceSocket) {
 
     if (!window.WebSocket) {
         console.log("WebSocket is not supported by this browser!!!");
@@ -60,6 +60,8 @@ function test(sparkEventSourceSocket) {
     restart();
     stormMessage();
     sparkSSEmessage();
+    smgSubGraphSSEmessage();
+    
 //    sparkMsg();
         
 //    show();
@@ -90,10 +92,19 @@ function test(sparkEventSourceSocket) {
         };
     }
 
+    
     function sparkSSEmessage() {
-    	sparkEventSourceSocket.onmessage = function(event) {
- 		   nodes.push({"name": event.data ,"count":1});
-    	   console.log('spark-------' + event.data);
+    	sparkEventSourceSocket.onmessage = function(event1) {
+    	   console.log('sparkSSEmessage-------' + event1.data);
+ 		   nodes.push({"name": event1.data ,"count":1});
+ 		   restart();
+ 	   };
+    }
+    
+    function smgSubGraphSSEmessage() {
+    	smgSubGraphEventSourceSocket.onmessage = function(event2) {
+    	   console.log('smgSubGraphSSEmessage-------' + event2.data);
+ 		   nodes.push({"name": event2.data ,"count":1});
  		   restart();
  	   };
     }

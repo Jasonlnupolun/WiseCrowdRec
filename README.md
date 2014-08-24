@@ -12,18 +12,24 @@ WiseCrowdRec
     - [x] Calais      
 - [x] Tomcat  
 - [x] Spring MVC  
+- [x] REST API  
 - [ ] Ajax  
 - [x] Google Compute Engine  
 - [x] Google Web Toolkit (GWT)  
 - [ ] D3 Force-Directed Graph  
 - [ ] Apache Spark 0.9.1   
-- [ ] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
+- [ ] Jetty  
+- [x] Rabbitmq    
+- [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
 - [ ] Apache Camel -> from(“file://xxxx").to("activemq://xxxx") (to ActiveMQ's JMS)  
     - $ `netstat -a` -> to check if the activemq process has started    
     - $ `bin/activemq start`   
     - $ `lsof -i:<port>`    
     - $ `kill -9 {PID}`    
     - $ `sudo lsof -i -n -P | grep TCP`  
+- [x] Freebase  
+- [ ] node.js  
+
 
 To do list:  
 - [ ] java.lang.OutOfMemoryError: PermGen space  

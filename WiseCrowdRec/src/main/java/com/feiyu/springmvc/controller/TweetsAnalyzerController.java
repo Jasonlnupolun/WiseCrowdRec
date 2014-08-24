@@ -20,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import twitter4j.TwitterException;
+
 import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.service.SignInWithTwitterService;
+import com.feiyu.twitter.FollowingWhom;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
+import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 @Controller
 public class TweetsAnalyzerController {
@@ -31,6 +35,7 @@ public class TweetsAnalyzerController {
 	private SignInWithTwitterService signInWithTwitterService = new SignInWithTwitterService();
 	private EntityInfo entityInfo;
 	private InitializeWCR initWcr = new InitializeWCR();
+	String userID = null;
 
 //	@Autowired
 //	public TweetsAnalyzerController(SignInWithTwitterService signInWithTwitterService) {
@@ -65,6 +70,23 @@ public class TweetsAnalyzerController {
 			@RequestParam(value = "oauth_verifier") final String oauth_verifier)
 	throws Exception  { 
 		return signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
+	}
+	
+	@RequestMapping(value = "smgSubGraphSSEmessage", params = {"user_id"}, method = RequestMethod.GET)
+	@ResponseBody
+	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) throws NumberFormatException, ConnectionException, TwitterException, IOException {
+		FollowingWhom fw = new FollowingWhom();
+		fw.getFollowingWhomList(user_id);
+		userID = user_id;
+		logger.info("Welcome -> smgSubGraphSSEmessage");
+	}
+	
+	@RequestMapping(value = "/smgSubGraphSSEmessagebutton" )
+	@ResponseBody
+	public void smgSubGraphSSEmessagebutton() throws NumberFormatException, ConnectionException, TwitterException, IOException {
+		FollowingWhom fw = new FollowingWhom();
+		fw.getFollowingWhomList(userID);
+		logger.info("Welcome -> smgSubGraphSSEmessagebutton");
 	}
 
 	@RequestMapping(value = "/startbackgroundtopology")

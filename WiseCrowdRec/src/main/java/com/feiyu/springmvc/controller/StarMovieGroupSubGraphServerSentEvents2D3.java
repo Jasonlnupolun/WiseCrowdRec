@@ -1,7 +1,5 @@
 package com.feiyu.springmvc.controller;
 /**
- * referenc http://www.html5rocks.com/en/tutorials/eventsource/basics/
- * https://github.com/rabbitmq/rabbitmq-tutorials/tree/master/java
  * @author feiyu
  */
 
@@ -24,10 +22,10 @@ import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
-@WebServlet("/SparkServerSentEvents2D3")
-public class SparkServerSentEvents2D3 extends HttpServlet implements ActionListener  {
-	private static final long serialVersionUID = 5218233378862748470L;
-	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK;
+@WebServlet("/StarMovieGroupSubGraphServerSentEvents2D3")
+public class StarMovieGroupSubGraphServerSentEvents2D3 extends HttpServlet implements ActionListener  {
+	private static final long serialVersionUID = -2489334504273883211L;
+	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_SMGSUBGRAPH;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -49,7 +47,7 @@ public class SparkServerSentEvents2D3 extends HttpServlet implements ActionListe
 		Channel channel = connection.createChannel();
 
 		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-		System.out.println(" [*] SparkServerSentEvents2D3: waiting for messages. To exit press CTRL+C");
+		System.out.println(" [*] StarMovieGroupSubGraphServerSentEvents2D3: waiting for messages. To exit press CTRL+C");
 
 		QueueingConsumer consumer = new QueueingConsumer(channel);
 		channel.basicConsume(QUEUE_NAME, true, consumer);
@@ -63,18 +61,11 @@ public class SparkServerSentEvents2D3 extends HttpServlet implements ActionListe
 				e.printStackTrace();
 			}
 			String message = new String(delivery.getBody());
-			System.out.println(" [...x...] SparkServerSentEvents2D3 received '" + message.replaceAll("\\s+","") + "'");
-
-			out.print("id: " + "sparkSSE2D3" + "\n");
-			out.print("data: " + message.replaceAll("\\s+","") + "\n\n");
+			System.out.println(" [...x...] StarMovieGroupSubGraphServerSentEvents2D3 received: '" + message + "'");
+			
+			out.print("id: " + "smgSubGraphSSE2D3" + "\n");
+			out.print("data: " + message + "\n\n");
 			out.flush();
-			// out.close(); 
-			//			try {
-			//				Thread.currentThread();
-			//				Thread.sleep(5000);
-			//			} catch (InterruptedException e) {
-			//				e.printStackTrace();
-			//			}
 		}
 	}
 

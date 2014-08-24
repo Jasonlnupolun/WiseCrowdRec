@@ -24,7 +24,8 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			initWcr.cassandraInitial();
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
-			initWcr.rabbitmqInit();
+			initWcr.rabbitmqInit_spark();
+//			initWcr.rabbitmqInit_smgSubGraph();
 		} catch (NoSuchFieldException | IllegalAccessException | InstantiationException | MovieDbException
 				| ClassNotFoundException | URISyntaxException | IOException | TException e) {
 			e.printStackTrace();
