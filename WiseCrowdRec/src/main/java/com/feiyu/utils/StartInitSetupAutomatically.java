@@ -1,14 +1,9 @@
 package com.feiyu.utils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import javax.servlet.http.HttpServlet;
 
-import org.apache.thrift.TException;
-
-import com.omertron.themoviedbapi.MovieDbException;
 import com.feiyu.utils.InitializeWCR;
+import com.feiyu.websocket.SparkWebSocketHandler;
 
 public class StartInitSetupAutomatically extends HttpServlet {
 
@@ -25,12 +20,24 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
 			initWcr.rabbitmqInit_spark();
-//			initWcr.rabbitmqInit_smgSubGraph();
-		} catch (NoSuchFieldException | IllegalAccessException | InstantiationException | MovieDbException
-				| ClassNotFoundException | URISyntaxException | IOException | TException e) {
+			//			initWcr.rabbitmqInit_smgSubGraph();
+
+			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
+
+			Thread SparkWebSocketHandlerThread = new Thread () {
+				public void run () {
+					try {
+						SparkWebSocketHandler.start();//Open Spark server side websocket
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
+			};
+			SparkWebSocketHandlerThread.start();
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
+
 	}
 }

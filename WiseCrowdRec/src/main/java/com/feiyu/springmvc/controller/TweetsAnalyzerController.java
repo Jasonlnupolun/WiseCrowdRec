@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import twitter4j.TwitterException;
 
-import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.service.SignInWithTwitterService;
 import com.feiyu.twitter.FollowingWhom;
 import com.feiyu.utils.GlobalVariables;
@@ -33,7 +32,6 @@ import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 public class TweetsAnalyzerController {
 	private static Logger logger = Logger.getLogger(TweetsAnalyzerController.class.getName());
 	private SignInWithTwitterService signInWithTwitterService = new SignInWithTwitterService();
-	private EntityInfo entityInfo;
 	private InitializeWCR initWcr = new InitializeWCR();
 	String userID = null;
 

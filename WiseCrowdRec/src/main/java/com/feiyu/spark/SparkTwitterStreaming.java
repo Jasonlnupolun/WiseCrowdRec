@@ -254,7 +254,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 	//	    connection.close();
 	//	}
 
-	public static void main(String[] argv) throws IOException {
+	public static void main(String[] argv) throws Exception {
 
 		InitializeWCR initWcr = new InitializeWCR();
 		initWcr.getWiseCrowdRecConfigInfo();

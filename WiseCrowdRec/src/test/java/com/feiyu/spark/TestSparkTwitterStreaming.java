@@ -12,7 +12,7 @@ public class TestSparkTwitterStreaming implements java.io.Serializable {
 	InitializeWCR initWcr = new InitializeWCR();
 
 	@Before
-	public void init() throws IOException {
+	public void init() throws Exception {
 		initWcr.getWiseCrowdRecConfigInfo();
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();

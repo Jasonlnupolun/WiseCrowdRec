@@ -40,30 +40,17 @@
     <link href="resources/css/social-graph.css" rel="stylesheet" type="text/css">
     <!-- link href="resources/css/ftest.css" rel="stylesheet" type="text/css"-->
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="resources/js/wisecrowdrec/test.js"></script>
+	<script type="text/javascript" src="resources/js/wisecrowdrec/WCRD3.js"></script>
 	<!-- end http://bl.ocks.org/mbostock/929623  -->
 	
 	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
 
-	<!--  "${pageContext.request.contextPath}/ServerSentEventsD3 -->
-	<!-- var socket = new WebSocket(host); -->
-	<!-- var source = new EventSource("ws://localhost:9292/wcrstorm"); -->
 	<script type="text/javascript">
-		var sparkServerSentEvents2D3Source, starMovieGroupSubGraphServerSentEvents2D3Source;
-   		if (typeof (EventSource) !== "undefined") {
-   			sparkServerSentEvents2D3Source = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
-   			starMovieGroupSubGraphServerSentEvents2D3Source = new EventSource("${pageContext.request.contextPath}/StarMovieGroupSubGraphServerSentEvents2D3");
- 	 	} 
-/*    		else {
- 	  		document.getElementById("sparkSSE2D3").innerHTML = "Your browser does not support server-sent events, use other browsers like Chrome instead please.";
-  		}  */
-   		
-		
-		function start() {
-			menuNav();
-			test(sparkServerSentEvents2D3Source, starMovieGroupSubGraphServerSentEvents2D3Source);
-		}
-     </script>
+	function start() {
+		menuNav();
+		WCRD3();
+	}
+    </script>
      
    </head>
     

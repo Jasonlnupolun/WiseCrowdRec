@@ -63,8 +63,8 @@ public class StarMovieGroupSubGraphServerSentEvents2D3 extends HttpServlet imple
 			String message = new String(delivery.getBody());
 			System.out.println(" [...x...] StarMovieGroupSubGraphServerSentEvents2D3 received: '" + message + "'");
 			
-			out.print("id: " + "smgSubGraphSSE2D3" + "\n");
-			out.print("data: " + message + "\n\n");
+//			out.print("id: " + "smgSubGraphSSE2D3" + "\n");
+			out.write("data: " + message + "\n\n");
 			out.flush();
 		}
 	}

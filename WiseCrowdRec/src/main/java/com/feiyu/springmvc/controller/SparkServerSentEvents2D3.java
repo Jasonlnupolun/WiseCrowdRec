@@ -65,8 +65,8 @@ public class SparkServerSentEvents2D3 extends HttpServlet implements ActionListe
 			String message = new String(delivery.getBody());
 			System.out.println(" [...x...] SparkServerSentEvents2D3 received '" + message.replaceAll("\\s+","") + "'");
 
-			out.print("id: " + "sparkSSE2D3" + "\n");
-			out.print("data: " + message.replaceAll("\\s+","") + "\n\n");
+//			out.print("id: " + "sparkSSE2D3" + "\n");
+			out.write("data: " + message.replaceAll("\\s+","") + "\n\n");
 			out.flush();
 			// out.close(); 
 			//			try {

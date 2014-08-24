@@ -49,7 +49,7 @@ public class InitializeWCR implements java.io.Serializable{
 		.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret1"));
 	}
 
-	public void twitterInitDyna() {
+	public void twitterInitDyna() throws Exception {
 		// Set Twitter app oauth infor
 		GlobalVariables.TWT_CONF_BUILDER_DYNA = new ConfigurationBuilder();
 		//twitterConf.setIncludeEntitiesEnabled(true);
@@ -57,7 +57,7 @@ public class InitializeWCR implements java.io.Serializable{
 		.setOAuthConsumerKey(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerKey2"))
 		.setOAuthConsumerSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.consumerSecret2"))
 		.setOAuthAccessToken(GlobalVariables.WCR_PROPS.getProperty("oauth.accessToken2"))
-		.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret2"));
+		.setOAuthAccessTokenSecret(GlobalVariables.WCR_PROPS.getProperty("oauth.accessTokenSecret2"));	
 	}
 
 	public void cassandraInitial() 
