@@ -9,14 +9,9 @@
  */
 
 function WCRD3() {
-	var sparkEventSourceSocket=null, smgSubGraphEventSourceSocket=null;
-		if (typeof (EventSource) !== "undefined") {
-			sparkEventSourceSocket = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
-//			smgSubGraphEventSourceSocket = new EventSource("${pageContext.request.contextPath}/StarMovieGroupSubGraphServerSentEvents2D3");
-	 	} 
-		else {
-		window.alert("Your browser does not support server-sent events, use other browsers like Chrome instead please.");
-		}  
+	if (typeof (EventSource) == "undefined") {
+			window.alert("Your browser does not support server-sent events, use other browsers like Chrome instead please.");
+	}  
 
     if (!window.WebSocket) {
         console.log("WebSocket is not supported by this browser!!!");

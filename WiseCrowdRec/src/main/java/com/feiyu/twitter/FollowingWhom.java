@@ -51,18 +51,17 @@ public class FollowingWhom {
 					);
 			jsonMap.put(Long.toString(user.getId()),user.getName());
 
-			String json = mapper.writeValueAsString(jsonMap);
-
 			// send message to the RabbitMQ queue RABBITMQ_QUEUE_NAME_SMGSUBGRAPH
-			String message = json;
+			String message = user.getName(); // @ json
 
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
-			message = dateFormat.format(date).toString() + "-> " + message; 
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//			Date date = new Date();
+//			message = dateFormat.format(date).toString() + "-> " + message; 
 
 			GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, null, message.getBytes());
 			System.out.println(" [x] RABBITMQ_QUEUE_NAME_SMCSUBGRAPH: message Sent to queue buffer: " + message);
 		}
-
+		String json = mapper.writeValueAsString(jsonMap);
+		System.out.println("Following whom list: " + json);
 	}
 }

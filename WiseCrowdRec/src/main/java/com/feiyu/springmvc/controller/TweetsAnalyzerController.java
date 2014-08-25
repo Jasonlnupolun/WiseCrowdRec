@@ -79,12 +79,12 @@ public class TweetsAnalyzerController {
 		logger.info("controller smcSubGraphws -> after sign run this automatically");
 	}
 	
-	@RequestMapping(value = "/smgSubGraphSSEmessagebutton" )
+	@RequestMapping(value = "/smcSubGraphSSEmessagebutton" )
 	@ResponseBody
-	public void smgSubGraphSSEmessagebutton() throws NumberFormatException, ConnectionException, TwitterException, IOException {
+	public void smcSubGraphSSEmessagebutton() throws NumberFormatException, ConnectionException, TwitterException, IOException {
 		FollowingWhom fw = new FollowingWhom();
 		fw.getFollowingWhomList(userID);
-		logger.info("controller Welcome -> smgSubGraphSSEmessagebutton");
+		logger.info("controller welcome -> smcSubGraphSSEmessagebutton");
 	}
 
 	@RequestMapping(value = "/startbackgroundtopology")

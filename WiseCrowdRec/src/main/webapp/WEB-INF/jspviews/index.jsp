@@ -169,22 +169,21 @@
     		<header>
     			<span></span> <!-- head name -->
     			<nav>
+    				<button id="smcSubGraphSSEmessagebutton" class="icon-drop" data-info="smcSubGraphSSEmessagebutton">Start Background Topology</button>
+					<script type="text/javascript" id="smcSubGraphSSEmessagebutton">	
+						document.getElementById('smcSubGraphSSEmessagebutton').onclick = function() {
+							$.get('${pageContext.request.contextPath}/smcSubGraphSSEmessagebutton', function() {});
+						};
+					</script>
+
     				<!-- http://tympanus.net/Blueprints/QuotesRotator/ -->
-<!--     				<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
+					<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
 					<script type="text/javascript" id="startbackgroundtopology">	
 						var backTopo = document.getElementById('startbackgroundtopology');
 						backTopo.onclick = function() {
 							$.get('${pageContext.request.contextPath}/startbackgroundtopology', function() {});
 						};
-					</script> -->
-					
-    				<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
-					<script type="text/javascript" id="startbackgroundtopology">	
-						var backTopo = document.getElementById('startbackgroundtopology');
-						backTopo.onclick = function() {
-							$.get('${pageContext.request.contextPath}/smgSubGraphSSEmessagebutton', function() {});
-						};
-					</script>
+					</script> 
 					
     				<button id="startdynamicsearch" class="icon-drop" data-info="Start Dynamic Search">Start Dynamic Search</button>
 					<script type="text/javascript" id="startdynamicsearch">	
