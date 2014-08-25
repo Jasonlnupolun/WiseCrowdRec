@@ -216,8 +216,8 @@
 			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
 			function(user_id) {
 				console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
-				$.get('${pageContext.request.contextPath}/smgSubGraphSSEmessage?user_id='+ user_id, function() {
-						console.log('smgSubGraphSSEmessage');
+				$.get('${pageContext.request.contextPath}/smcSubGraphws?user_id='+ user_id, function() {
+						console.log('client smcSubGraphws -> after sign run this automatically');
 					});
 				});
 		} else {

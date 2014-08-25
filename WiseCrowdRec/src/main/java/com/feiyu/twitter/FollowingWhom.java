@@ -23,7 +23,7 @@ public class FollowingWhom {
 	public void getFollowingWhomList(String userID) throws ConnectionException, NumberFormatException, TwitterException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String,String> jsonMap = new TreeMap<String,String>();
-		
+
 		String[] oauthAry =  GlobalVariables.AST_CASSANDRA_UL.queryWithUserID(userID);
 
 		Twitter twitter = new TwitterFactory().getInstance();
@@ -34,12 +34,12 @@ public class FollowingWhom {
 				oauthAry[1], oauthAry[2]);
 		twitter.setOAuthAccessToken(oathAccessToken);
 
-//		System.out.println("Listing friends's ids of"+twitter.getId()+":");
-//		System.out.println(twitter.getId()+" is following:");
-//		IDs ids = twitter.getFriendsIDs(twitter.getId(), -1);
-//		for (long id : ids.getIDs()) {
-//			System.out.println("id->"+id);
-//		}
+		//		System.out.println("Listing friends's ids of"+twitter.getId()+":");
+		//		System.out.println(twitter.getId()+" is following:");
+		//		IDs ids = twitter.getFriendsIDs(twitter.getId(), -1);
+		//		for (long id : ids.getIDs()) {
+		//			System.out.println("id->"+id);
+		//		}
 
 		System.out.println(twitter.getId()+" is following:");
 		PagableResponseList<User> friendList = twitter.getFriendsList(twitter.getId(), -1);
@@ -50,19 +50,19 @@ public class FollowingWhom {
 					+"---"+user.getId()
 					);
 			jsonMap.put(Long.toString(user.getId()),user.getName());
+
+			String json = mapper.writeValueAsString(jsonMap);
+
+			// send message to the RabbitMQ queue RABBITMQ_QUEUE_NAME_SMGSUBGRAPH
+			String message = json;
+
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Date date = new Date();
+			message = dateFormat.format(date).toString() + "-> " + message; 
+
+			GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, null, message.getBytes());
+			System.out.println(" [x] RABBITMQ_QUEUE_NAME_SMCSUBGRAPH: message Sent to queue buffer: " + message);
 		}
-		
-		String json = mapper.writeValueAsString(jsonMap);
-	    
-	    // send message to the RabbitMQ queue RABBITMQ_QUEUE_NAME_SMGSUBGRAPH
-	    String message = json;
 
-	    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		message = dateFormat.format(date).toString(); //+ "-> " + message; 
-
-	    GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SMGSUBGRAPH, null, message.getBytes());
-
-	    System.out.println(" [x] RABBITMQ_QUEUE_NAME_SMGSUBGRAPH: message Sent to queue buffer: " + message);
 	}
 }

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServlet;
 
 import com.feiyu.utils.InitializeWCR;
 import com.feiyu.websocket.SparkWebSocketHandler;
+import com.feiyu.websocket.StarMovieCategorySubGraphWebSocketHandler;
 
 public class StartInitSetupAutomatically extends HttpServlet {
 
@@ -35,6 +36,16 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			};
 			SparkWebSocketHandlerThread.start();
 
+			Thread StarMovieCategorySubGraphWebSocketHandlerThread = new Thread () {
+				public void run () {
+					try {
+						StarMovieCategorySubGraphWebSocketHandler.start();//Open Spark server side websocket
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
+			};
+			StarMovieCategorySubGraphWebSocketHandlerThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

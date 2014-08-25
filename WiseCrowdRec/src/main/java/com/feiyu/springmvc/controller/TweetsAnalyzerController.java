@@ -70,13 +70,13 @@ public class TweetsAnalyzerController {
 		return signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
 	}
 	
-	@RequestMapping(value = "smgSubGraphSSEmessage", params = {"user_id"}, method = RequestMethod.GET)
+	@RequestMapping(value = "smcSubGraphws", params = {"user_id"}, method = RequestMethod.GET)
 	@ResponseBody
 	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) throws NumberFormatException, ConnectionException, TwitterException, IOException {
 		FollowingWhom fw = new FollowingWhom();
 		fw.getFollowingWhomList(user_id);
 		userID = user_id;
-		logger.info("Welcome -> smgSubGraphSSEmessage");
+		logger.info("controller smcSubGraphws -> after sign run this automatically");
 	}
 	
 	@RequestMapping(value = "/smgSubGraphSSEmessagebutton" )
@@ -84,7 +84,7 @@ public class TweetsAnalyzerController {
 	public void smgSubGraphSSEmessagebutton() throws NumberFormatException, ConnectionException, TwitterException, IOException {
 		FollowingWhom fw = new FollowingWhom();
 		fw.getFollowingWhomList(userID);
-		logger.info("Welcome -> smgSubGraphSSEmessagebutton");
+		logger.info("controller Welcome -> smgSubGraphSSEmessagebutton");
 	}
 
 	@RequestMapping(value = "/startbackgroundtopology")

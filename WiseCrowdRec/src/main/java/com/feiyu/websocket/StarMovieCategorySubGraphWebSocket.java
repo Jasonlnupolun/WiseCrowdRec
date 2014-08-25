@@ -11,8 +11,8 @@ import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
-public class SparkWebSocket implements WebSocket.OnTextMessage{
-	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK;
+public class StarMovieCategorySubGraphWebSocket implements WebSocket.OnTextMessage{
+	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH;
 	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
 
 	@Override
@@ -27,7 +27,7 @@ public class SparkWebSocket implements WebSocket.OnTextMessage{
 			rabbitmqConnection = factory.newConnection();
 			Channel channel = rabbitmqConnection.createChannel();
 			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-			System.out.println(" [*] SparkWebSocket server is waiting for messages. To exit press CTRL+C");
+			System.out.println(" [*] StarMovieCategorySubGraphWebSocket server is waiting for messages. To exit press CTRL+C");
 
 			QueueingConsumer consumer = new QueueingConsumer(channel);
 			channel.basicConsume(QUEUE_NAME, true, consumer);
@@ -40,10 +40,10 @@ public class SparkWebSocket implements WebSocket.OnTextMessage{
 					e.printStackTrace();
 				}
 				String message = new String(delivery.getBody());
-				System.out.println(" [...x...] SparkWebSocket server received '" + message.replaceAll("\\s+","") + "'");
+				System.out.println(" [...x...] StarMovieCategorySubGraphWebSocket server received '" + message + "'");
 
 				try {
-					jettyWSconnection.sendMessage("SparkWebSocket server send: " + message.replaceAll("\\s+",""));
+					jettyWSconnection.sendMessage("StarMovieCategorySubGraphWebSocket server send: " + message);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -56,14 +56,14 @@ public class SparkWebSocket implements WebSocket.OnTextMessage{
 
 	@Override
 	public void onClose(int i, String s) {
-		System.out.println("SparkWebSocket server is closed");
+		System.out.println("StarMovieCategorySubGraphWebSocket server is closed");
 	}
 
 	@Override
 	public void onMessage(String s) {
-		System.out.println("SparkWebSocket server got message: " + s);
+		System.out.println("StarMovieCategorySubGraphWebSocket server got message: " + s);
 		try {
-			jettyWSconnection.sendMessage("SparkWebSocket server got " + s);
+			jettyWSconnection.sendMessage("StarMovieCategorySubGraphWebSocket server got " + s);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -100,7 +100,7 @@ public class InitializeWCR implements java.io.Serializable{
 
 //		GlobalVariables.RABBITMQ_CNCT_SMGSUBGRAPH = factory.newConnection();
 //		GlobalVariables.RABBITMQ_CHANNEL_SMGSUBGRAPH = GlobalVariables.RABBITMQ_CNCT.createChannel();
-		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SMGSUBGRAPH, false, false, false, null);
+		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, false, false, false, null);
 	}
 	
 //	public void rabbitmqInit_smgSubGraph() throws IOException  {

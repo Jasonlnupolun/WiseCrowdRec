@@ -66,8 +66,10 @@ function WCRD3() {
         .attr("class", "cursor");
 
     restart();
+    
     stormMessage();
     sparkMsgWebSocket();
+    smcSubGraphWebSocket();
 //    sparkSSEmessage();
 //    smgSubGraphSSEmessage();
 //    show();
@@ -114,22 +116,37 @@ function WCRD3() {
         	};
     }
     
-    function sparkSSEmessage() {
-    	sparkEventSourceSocket.onmessage = function(event1) {
-    	   console.log('sparkSSEmessage-------' + event1.data);
- 		   nodes.push({"name": event1.data ,"count":1});
- 		   restart();
- 	   };
+    function smcSubGraphWebSocket() {
+    	var ws = new WebSocket('ws://localhost:9988/smcsubgraphws');
+        console.log('D3 smcSubGraphWebSocket client connecting...');
+        ws.onopen = function() { 
+        	console.log('D3 smcSubGraphWebSocket client connected!'); 
+        	};
+        ws.onclose = function() { 
+        	console.log('D3 smcSubGraphWebSocket client lost connection'); 
+        	};
+        ws.onmessage = function(msg) { 
+        	console.log('D3 smcSubGraphWebSocket client received message: '+msg.data); 
+ 		    nodes.push({"name": msg.data ,"count":1});
+ 		    restart();
+        	};
     }
     
-    function smgSubGraphSSEmessage() {
-    	smgSubGraphEventSourceSocket.onmessage = function(event2) {
-    	   console.log('smgSubGraphSSEmessage-------' + event2.data);
- 		   nodes.push({"name": event2.data ,"count":1});
- 		   restart();
- 	   };
-    }
-    
+//    function sparkSSEmessage() {
+//    	sparkEventSourceSocket.onmessage = function(event1) {
+//    	   console.log('sparkSSEmessage-------' + event1.data);
+// 		   nodes.push({"name": event1.data ,"count":1});
+// 		   restart();
+// 	   };
+//    }
+//    
+//    function smgSubGraphSSEmessage() {
+//    	smgSubGraphEventSourceSocket.onmessage = function(event2) {
+//    	   console.log('smgSubGraphSSEmessage-------' + event2.data);
+// 		   nodes.push({"name": event2.data ,"count":1});
+// 		   restart();
+// 	   };
+//    }
 
     function mousemove() {
         cursor.attr("transform", "translate(" + d3.mouse(this) + ")");
