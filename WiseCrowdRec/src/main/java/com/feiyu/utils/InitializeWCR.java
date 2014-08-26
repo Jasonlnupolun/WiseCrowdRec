@@ -94,21 +94,8 @@ public class InitializeWCR implements java.io.Serializable{
 		factory.setHost("localhost");
 		GlobalVariables.RABBITMQ_CNCT= factory.newConnection();
 		GlobalVariables.RABBITMQ_CHANNEL= GlobalVariables.RABBITMQ_CNCT.createChannel();
-//		GlobalVariables.RABBITMQ_CNCT_SPARK = factory.newConnection();
-//		GlobalVariables.RABBITMQ_CHANNEL_SPARK = GlobalVariables.RABBITMQ_CNCT.createChannel();
-		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, false, false, false, null);
 
-//		GlobalVariables.RABBITMQ_CNCT_SMGSUBGRAPH = factory.newConnection();
-//		GlobalVariables.RABBITMQ_CHANNEL_SMGSUBGRAPH = GlobalVariables.RABBITMQ_CNCT.createChannel();
+		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, false, false, false, null);
 		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, false, false, false, null);
 	}
-	
-//	public void rabbitmqInit_smgSubGraph() throws IOException  {
-//		ConnectionFactory factory = new ConnectionFactory();
-//		factory.setHost("localhost");
-//		GlobalVariables.RABBITMQ_CNCT_SMGSUBGRAPH = factory.newConnection();
-//		GlobalVariables.RABBITMQ_CHANNEL_SMGSUBGRAPH = GlobalVariables.RABBITMQ_CNCT_SMGSUBGRAPH.createChannel();
-//
-//		GlobalVariables.RABBITMQ_CHANNEL_SMGSUBGRAPH.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SMGSUBGRAPH, false, false, false, null);
-//	}
 }

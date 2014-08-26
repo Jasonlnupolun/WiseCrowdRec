@@ -498,9 +498,9 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>${tomcat7-maven-plugin-version}</version>
                 <configuration>
-                    <url>http://127.0.0.1:8080/manager/text</url>
+                    <url>http://127.0.0.1:9999/manager/text</url>
                     <server>TomcatServer</server>
-                    <path>/WiseCrowdRecWebApp</path>
+                    <path>/WiseCrowdRec</path>
                 </configuration>
             </plugin>
 

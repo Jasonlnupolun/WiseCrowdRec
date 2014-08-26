@@ -3,8 +3,6 @@ package com.feiyu.utils;
 import javax.servlet.http.HttpServlet;
 
 import com.feiyu.utils.InitializeWCR;
-import com.feiyu.websocket.SparkWebSocketHandler;
-import com.feiyu.websocket.StarMovieCategorySubGraphWebSocketHandler;
 
 public class StartInitSetupAutomatically extends HttpServlet {
 
@@ -21,31 +19,7 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
 			initWcr.rabbitmqInit_spark();
-			//			initWcr.rabbitmqInit_smgSubGraph();
-
 			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
-
-			Thread SparkWebSocketHandlerThread = new Thread () {
-				public void run () {
-					try {
-						SparkWebSocketHandler.start();//Open Spark server side websocket
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			SparkWebSocketHandlerThread.start();
-
-			Thread StarMovieCategorySubGraphWebSocketHandlerThread = new Thread () {
-				public void run () {
-					try {
-						StarMovieCategorySubGraphWebSocketHandler.start();//Open Spark server side websocket
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			StarMovieCategorySubGraphWebSocketHandlerThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

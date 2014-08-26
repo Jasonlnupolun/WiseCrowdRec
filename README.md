@@ -130,11 +130,11 @@ local
 - $ `gcutil listinstances`    
 - get `ssh` link from gce client website, and then use this link connect remote machine    
 
-[http://localhost:8080/](http://localhost:8080/)      
-[http://localhost:8080/docs/](http://localhost:8080/docs/)    
-[http://localhost:8080/examples/](http://localhost:8080/examples/)      
-[http://localhost:8080/manager/html](http://localhost:8080/manager/html)      
-[http://localhost:8080/host-manager/html](http://localhost:8080/host-manager/html)     
+[http://localhost:9999/](http://localhost:9999/)      
+[http://localhost:9999/docs/](http://localhost:9999/docs/)    
+[http://localhost:9999/examples/](http://localhost:9999/examples/)      
+[http://localhost:9999/manager/html](http://localhost:9999/manager/html)      
+[http://localhost:9999/host-manager/html](http://localhost:9999/host-manager/html)     
 
 - Before importing this Maven project into eclipse, run $ `mvn eclipse:eclipse`      
 
@@ -145,11 +145,11 @@ local
 - $ `sudo su`    
 - $ `source ~/.bash_profile`  
 
-[http://173.255.114.111:8080/](http://173.255.114.111:8080/)    
-[http://173.255.114.111:8080/docs/](http://173.255.114.111:8080/docs/)    
-[http://173.255.114.111:8080/examples/](http://173.255.114.111:8080/examples/)    
-[http://173.255.114.111:8080/manager/html](http://173.255.114.111:8080/manager/html)    
-[http://173.255.114.111:8080/host-manager/html](http://173.255.114.111:8080/host-manager/html)    
+[http://173.255.114.111:9999/](http://173.255.114.111:9999/)    
+[http://173.255.114.111:9999/docs/](http://173.255.114.111:9999/docs/)    
+[http://173.255.114.111:9999/examples/](http://173.255.114.111:9999/examples/)    
+[http://173.255.114.111:9999/manager/html](http://173.255.114.111:9999/manager/html)    
+[http://173.255.114.111:9999/host-manager/html](http://173.255.114.111:9999/host-manager/html)    
 
 ~~sudo service tomcat7 start~~    
 ~~sudo service tomcat7 restart~~    

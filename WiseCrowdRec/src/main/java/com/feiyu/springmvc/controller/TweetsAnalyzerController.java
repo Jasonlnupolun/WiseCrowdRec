@@ -26,6 +26,7 @@ import com.feiyu.springmvc.service.SignInWithTwitterService;
 import com.feiyu.twitter.FollowingWhom;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
+import com.feiyu.websocket.StartWebSocket;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 @Controller
@@ -52,13 +53,14 @@ public class TweetsAnalyzerController {
 		return "index";
 	}
 
-	@RequestMapping(value = "signinwithtwitter/login")
+	@RequestMapping(value = "signinwithtwitter/login", params = {"callbackURL"} , method = RequestMethod.GET)
 	@ResponseBody
-	public String signinwithtwitter() throws IOException, KeyManagementException, InvalidKeyException, NoSuchAlgorithmException, HttpException {
+	public String signinwithtwitter(@RequestParam(value = "callbackURL") final String callbackURL) 
+			throws IOException, KeyManagementException, InvalidKeyException, NoSuchAlgorithmException, HttpException {
 		initWcr.getWiseCrowdRecConfigInfo();
 		initWcr.signInWithTwitterGetAppOauth();
 
-		return signInWithTwitterService.obtainingARequestToken();
+		return signInWithTwitterService.obtainingARequestToken(callbackURL);
 	}
 
 	@RequestMapping(value = "twitter/callback", params = {"oauth_token", "oauth_verifier"} , method = RequestMethod.GET)
@@ -70,13 +72,22 @@ public class TweetsAnalyzerController {
 		return signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
 	}
 	
+	@RequestMapping(value = "startWebSocketWithUserID", params = {"user_id"}, method = RequestMethod.GET)
+	@ResponseBody
+	public void startWebSocketWithUserID(@RequestParam(value = "user_id") final String user_id) {
+		userID = user_id;
+
+		StartWebSocket startWS = new StartWebSocket();
+		startWS.startWebSocketWithUserID(user_id);
+		logger.info("controller startWebSocketWithUserID");
+	}
+	
 	@RequestMapping(value = "smcSubGraphws", params = {"user_id"}, method = RequestMethod.GET)
 	@ResponseBody
 	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) throws NumberFormatException, ConnectionException, TwitterException, IOException {
 		FollowingWhom fw = new FollowingWhom();
 		fw.getFollowingWhomList(user_id);
-		userID = user_id;
-		logger.info("controller smcSubGraphws -> after sign run this automatically");
+		logger.info("controller smcSubGraphws");
 	}
 	
 	@RequestMapping(value = "/smcSubGraphSSEmessagebutton" )

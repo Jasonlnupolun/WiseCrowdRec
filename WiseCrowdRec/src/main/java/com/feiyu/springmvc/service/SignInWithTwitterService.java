@@ -67,14 +67,14 @@ Authorization:
               oauth_timestamp="1318467427",
               oauth_version="1.0"
 	 */
-	public String obtainingARequestToken () throws IOException, HttpException, NoSuchAlgorithmException, KeyManagementException, InvalidKeyException {
+	public String obtainingARequestToken (String callbackURL) throws IOException, HttpException, NoSuchAlgorithmException, KeyManagementException, InvalidKeyException {
 		System.out.println("\n---------------obtainingARequestToken---------------");
 
 		String METHOD = "POST";
 		String twitter_request_token = "https://api.twitter.com/oauth/request_token";
 		String twitter_request_token_host = "api.twitter.com";
 		String twitter_request_token_path = "/oauth/request_token";
-		String oauth_callback = URLEncoder.encode("http://127.0.0.1:9999/WiseCrowdRec", "UTF-8"); 
+		String oauth_callback = URLEncoder.encode(callbackURL, "UTF-8"); 
 		String oauth_nonce = UUID.randomUUID().toString().replace("-", ""); // a nonce is an arbitrary number used only once in a cryptographic communication
 		String oauth_signature_method = "HMAC-SHA1";
 		String oauth_signature_method_Mac = "HmacSHA1";
@@ -359,7 +359,7 @@ Authorization:
 		initWCR.signInWithTwitterGetAppOauth();
 
 		SignInWithTwitterService s = new SignInWithTwitterService();
-		s.obtainingARequestToken();
+		s.obtainingARequestToken("http://127.0.0.1:9999/WiseCrowdRec");
 		s.converRequestToken2AccessToken("", "");
 	}
 }

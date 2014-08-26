@@ -9,15 +9,13 @@
  */
 
 function WCRD3() {
-	if (typeof (EventSource) == "undefined") {
-			window.alert("Your browser does not support server-sent events, use other browsers like Chrome instead please.");
+	if (typeof document.addEventListener === "undefined") {
+		window.alert("Your browser does not support document.addEventListener, use other browsers like Chrome instead please.");
 	}  
 
     if (!window.WebSocket) {
-        console.log("WebSocket is not supported by this browser!!!");
-    } else {
-        console.log("WebSocket is supported by this browser.");
-    }
+    	window.alert("WebSocket is not supported by this browser!!! Use other browsers like Chrome instead please.");
+    } 
 
     var width = 1500,
         height = 900;
@@ -61,13 +59,7 @@ function WCRD3() {
         .attr("class", "cursor");
 
     restart();
-    
     stormMessage();
-    sparkMsgWebSocket();
-    smcSubGraphWebSocket();
-//    sparkSSEmessage();
-//    smgSubGraphSSEmessage();
-//    show();
         
 //    function show() {
 //        nodes.push({"name":"Myriel","group":1});
@@ -76,13 +68,14 @@ function WCRD3() {
 //    }
 
     function stormMessage() {
-        var ws = new WebSocket("ws://0.0.0.0:9292/wcrstorm");
-        ws.onopen = function() {
-//            ws.send("Message to send");
-            console.log("D3 StormMsgWebSocket client "+ws.toString()+" is open, and message is sent from the client to the server");
+    	var wsurl = 'ws://0.0.0.0:9292/wcrstorm';
+    	var wcrstormws = new WebSocket(wsurl);
+        wcrstormws.onopen = function() {
+//            wcrstormws.send("Message to send");
+            console.log(wsurl+" is open, and message is sent from the client to the server");
         };
-        ws.onmessage = function(msg) {
-            console.log('D3 StormMsgWebSocket client received a message! ' + msg.data);
+        wcrstormws.onmessage = function(msg) {
+            console.log(wsurl+" received a message! " + msg.data);
             var json = JSON.parse(msg.data);
 //            nodes.push({"movieName":json.count,"group":1}); //Math.random()*width, y: Math.random()*height});
 //            console.log('node[0]---- ' + node[0].Entity);
@@ -90,42 +83,44 @@ function WCRD3() {
             nodes.push({"name": json.movie.movieName ,"count":json.count});
             restart();
         };
-        ws.onclose = function() { 
-        	console.log("D3 StormMsgWebSocket client ws://0.0.0.0:9292/wcrstorm is closed..."); 
+        wcrstormws.onclose = function() { 
+        	console.log(wsurl+" is closed..."); 
         };
     }
     
-    function sparkMsgWebSocket() {
-    	var ws = new WebSocket('ws://localhost:8899/sparkws');
-        console.log('D3 SparkMsgWebSocket client connecting...');
-        ws.onopen = function() { 
-        	console.log('D3 SparkMsgWebSocket client connected!'); 
+    this.sparkMsgWS = function sparkMsgWebSocket(userID) {
+    	var wsurl = 'ws://localhost:8899/sparkws/'+userID;
+    	var sparkws = new WebSocket(wsurl);
+        console.log(userID+" "+wsurl+" connecting...");
+        sparkws.onopen = function() { 
+        	console.log(userID+" "+wsurl+" connected!"); 
         	};
-        ws.onclose = function() { 
-        	console.log('D3 SparkMsgWebSocket client lost connection'); 
+        sparkws.onclose = function() { 
+        	console.log(userID+" "+wsurl+" closed!"); 
         	};
-        ws.onmessage = function(msg) { 
-        	console.log('D3 SparkMsgWebSocket client received message: '+msg.data); 
+        sparkws.onmessage = function(msg) { 
+        	console.log(userID+" "+wsurl+" received message: "+msg.data); 
  		    nodes.push({"name": msg.data ,"count":1});
  		    restart();
         	};
-    }
+    };
     
-    function smcSubGraphWebSocket() {
-    	var ws = new WebSocket('ws://localhost:9988/smcsubgraphws');
-        console.log('D3 smcSubGraphWebSocket client connecting...');
-        ws.onopen = function() { 
-        	console.log('D3 smcSubGraphWebSocket client connected!'); 
+    this.smcSubGraphMsgWS = function smcSubGraphWebSocket(userID) {
+    	var wsurl = 'ws://localhost:9988/smcsubgraphws/'+userID;
+    	var smcsubgraphws = new WebSocket(wsurl);
+        console.log(userID+" "+wsurl+" connecting...");
+        smcsubgraphws.onopen = function() { 
+        	console.log(userID+" "+wsurl+" connected!"); 
         	};
-        ws.onclose = function() { 
-        	console.log('D3 smcSubGraphWebSocket client lost connection'); 
+        smcsubgraphws.onclose = function() { 
+        	console.log(userID+" "+wsurl+" closed!"); 
         	};
-        ws.onmessage = function(msg) { 
-        	console.log('D3 smcSubGraphWebSocket client received message: '+msg.data); 
+        smcsubgraphws.onmessage = function(msg) { 
+        	console.log(userID+" "+wsurl+" received message: "+msg.data); 
  		    nodes.push({"name": msg.data ,"count":1});
  		    restart();
         	};
-    }
+    };
     
 //    function sparkSSEmessage() {
 //    	sparkEventSourceSocket.onmessage = function(event1) {

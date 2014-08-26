@@ -93,6 +93,7 @@ public class BackgroundTopology {
 		BackgroundTopology t = new BackgroundTopology();
 
 		boolean isFakeTopologyForTest = true;
+//		boolean isFakeTopologyForTest = false;
 		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
 	}
 }

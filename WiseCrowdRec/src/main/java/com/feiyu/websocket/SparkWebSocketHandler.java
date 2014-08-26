@@ -5,15 +5,11 @@ import org.eclipse.jetty.server.Server;
 
 public class SparkWebSocketHandler {
 
-	public static void start() throws Exception {
+	public static void start(String userID) throws Exception {
 		Server server = new Server(8899);
 		ServletContextHandler contextHandler = new ServletContextHandler(server, "/", true, false);
-		contextHandler.addServlet(SparkWebSocketServlet.class, "/sparkws");
+		contextHandler.addServlet(SparkWebSocketServlet.class, "/sparkws/"+userID);
 		server.start();
 		server.join();
-	}
-	
-	public static void main(String[] args) throws Exception {
-		start();
 	}
 }

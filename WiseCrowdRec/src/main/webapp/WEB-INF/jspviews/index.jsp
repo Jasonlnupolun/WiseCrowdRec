@@ -48,7 +48,6 @@
 	<script type="text/javascript">
 	function start() {
 		menuNav();
-		WCRD3();
 	}
     </script>
      
@@ -80,21 +79,6 @@
 		<div id="loading" style="display: none;" class="container">
 			<img src="resources/images/loader.gif" alt="Please wait.." />
 		</div>
-		
-		<!-- sse -->
- 		<div id="sparkSSE2D3"></div>
-	 	<script>
-  		if (typeof (EventSource) !== "undefined") {
-   			var s = new EventSource("${pageContext.request.contextPath}/SparkServerSentEvents2D3");
-   			s.onmessage = function(event) {
-   			 document.getElementById("sparkSSE2D3").innerHTML += "msg from spark --> " + event.data
-     		 + "<br><br>";
- 		  };
- 	 	} else {
- 	  		document.getElementById("sparkSSE2D3").innerHTML = "Your browser does not support server-sent events, use other browsers like Chrome instead please.";
-  		}
- 		</script>
- 		<!-- end sse -->
 		
 		<c:if test="${not empty serverTime}">
 		<div class="textarea">
@@ -198,7 +182,8 @@
 		<div id="signinwithtwittershowmsg"></div>
 		<script type="text/javascript" id="signinwithtwitter">	
 		$('#signinwithtwitter').click(function() {
-			$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login', function(jsonRet) {
+			var callbackURL = document.URL;
+			$.getJSON('${pageContext.request.contextPath}/signinwithtwitter/login?callbackURL='+callbackURL, function(jsonRet) {
 				var head_str = "https://api.twitter.com/oauth/authenticate?oauth_token=";
 				var oauthToken = jsonRet.oauthToken;
 				var redirect2url = head_str.concat(oauthToken);
@@ -206,6 +191,7 @@
 				window.open(redirect2url, '_blank');
 				});			
 			});
+		var wcrd3 = new WCRD3();
 		if (document.URL.indexOf("oauth_verifier=") > -1) {
 			$('#signinwithtwittershowmsg').text('Logged into Twitter!');
 			/* var freebase= require('freebase'); */
@@ -215,9 +201,47 @@
 			$.get('${pageContext.request.contextPath}/twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier,
 			function(user_id) {
 				console.log('twitter/callback?oauth_token='+ oauth_token+'&oauth_verifier='+oauth_verifier);
-				$.get('${pageContext.request.contextPath}/smcSubGraphws?user_id='+ user_id, function() {
-						console.log('client smcSubGraphws -> after sign run this automatically');
-					});
+				
+				var stepOne = function () {
+					console.log('stepOne');
+					var r = $.Deferred();
+	 				$.get('${pageContext.request.contextPath}/startWebSocketWithUserID?user_id='+ user_id, function() {
+						console.log('client startWebSocketWithUserID');
+					}); 
+
+					setTimeout(function () {
+					    r.resolve();
+					 }, 2500);
+					  return r;
+					};
+					
+				var stepTwo = function () {
+					console.log('stepTwo');
+					var r = $.Deferred();
+					wcrd3.sparkMsgWS(user_id);
+					wcrd3.smcSubGraphMsgWS(user_id);
+
+					setTimeout(function () {
+					    r.resolve();
+					 }, 2500);
+					  return r;
+					};
+					
+				var stepThree = function () {
+					console.log('stepThree');
+					var r = $.Deferred();
+	 				$.get('${pageContext.request.contextPath}/smcSubGraphws?user_id='+ user_id, function() {
+						console.log('client smcSubGraphws');
+					}); 
+
+					setTimeout(function () {
+					    r.resolve();
+					 }, 2500);
+					  return r;
+					};
+					
+				stepOne().done(stepTwo);
+				stepTwo().done(stepThree);
 				});
 		} else {
 			$('#signinwithtwittershowmsg').text('Click and get the magic!!'); 
