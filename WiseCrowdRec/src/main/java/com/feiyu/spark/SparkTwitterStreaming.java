@@ -230,8 +230,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					private static final long serialVersionUID = 4754852556443175871L;
 
 					public Void call(JavaPairRDD<Integer, String> rdd) throws IOException {
-						String out = "\nTop 20 entities:\n";
-						for (Tuple2<Integer, String> t: rdd.take(20)) {
+						String out = "\nTop 7 entities:\n";
+						for (Tuple2<Integer, String> t: rdd.take(7)) {
 							out = out + t.toString() + "\n";
 						}
 						log.info("\n-------------------\n-------------------"+out);
@@ -261,8 +261,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 		initWcr.twitterInitDyna();
 		initWcr.elasticsearchInitial();
 		initWcr.coreNLPInitial();
-		initWcr.rabbitmqInit_spark();
-//		initWcr.rabbitmqInit_smgSubGraph();
+		initWcr.rabbitmqInit();
 
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();
 		sts.sparkInit();

@@ -3,6 +3,7 @@ package com.feiyu.utils;
 import javax.servlet.http.HttpServlet;
 
 import com.feiyu.utils.InitializeWCR;
+import com.feiyu.websocket.StormHistogramChartWebSocketHandler;
 
 public class StartInitSetupAutomatically extends HttpServlet {
 
@@ -18,8 +19,19 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			initWcr.cassandraInitial();
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
-			initWcr.rabbitmqInit_spark();
+			initWcr.rabbitmqInit();
 			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
+
+			Thread StormHistogramChartWebSocketHandlerThread = new Thread () {
+				public void run () {
+					try {
+						StormHistogramChartWebSocketHandler.start();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
+			};
+			StormHistogramChartWebSocketHandlerThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

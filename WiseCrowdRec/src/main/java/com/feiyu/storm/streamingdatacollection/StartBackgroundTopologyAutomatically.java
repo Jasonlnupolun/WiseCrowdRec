@@ -26,6 +26,7 @@ public class StartBackgroundTopologyAutomatically extends HttpServlet {
 			initWcr.cassandraInitial();
 			initWcr.coreNLPInitial();
 			initWcr.themoviedbOrgInitial();
+			initWcr.rabbitmqInit();
 
 			t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
 		} catch ( NoSuchFieldException | IllegalAccessException | InstantiationException

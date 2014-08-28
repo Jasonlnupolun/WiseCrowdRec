@@ -89,6 +89,7 @@ public class BackgroundTopology {
 		initWcr.cassandraInitial();
 		initWcr.coreNLPInitial();
 		initWcr.themoviedbOrgInitial();
+		initWcr.rabbitmqInit();
 
 		BackgroundTopology t = new BackgroundTopology();
 

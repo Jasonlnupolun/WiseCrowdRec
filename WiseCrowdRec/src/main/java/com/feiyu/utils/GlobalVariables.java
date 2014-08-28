@@ -1,5 +1,7 @@
 package com.feiyu.utils;
 
+import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Properties;
 
 import twitter4j.conf.ConfigurationBuilder;
@@ -9,6 +11,8 @@ import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
 import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.spark.SparkTwitterStreaming;
+import com.feiyu.springmvc.model.MovieWithCountComparable;
+import com.feiyu.storm.streamingdatacollection.bolt.MovieCounter;
 import com.netflix.astyanax.Keyspace;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 
@@ -43,6 +47,10 @@ public class GlobalVariables {
 
 	public static final String RABBITMQ_QUEUE_NAME_SPARK = "WCR_SPARK_RABBITMQ";
 	public static final String RABBITMQ_QUEUE_NAME_SMCSUBGRAPH= "WCR_SMCSUBGRAPH_RABBITMQ";
+	public static final String RABBITMQ_QUEUE_NAME_STORMHISTOGRAMCHART= "WCR_STORMHISTOGRAMCHART_RABBITMQ";
 	public static Connection RABBITMQ_CNCT;
 	public static Channel RABBITMQ_CHANNEL;
+	
+	public static final PriorityQueue<MovieWithCountComparable> STORM_MOVIELIST_HEAP = new PriorityQueue<MovieWithCountComparable>();
+	public static final HashMap<String, MovieCounter> STORM_MOVIELIST_HM = new HashMap<String, MovieCounter>();
 }

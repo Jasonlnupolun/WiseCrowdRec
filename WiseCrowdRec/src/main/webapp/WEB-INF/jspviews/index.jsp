@@ -44,6 +44,7 @@
 	<!-- end http://bl.ocks.org/mbostock/929623  -->
 	
 	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
+	<script type="text/javascript" src="resources/js/wisecrowdrec/HistogramD3.js"></script>
 
 	<script type="text/javascript">
 	function start() {
@@ -63,10 +64,7 @@
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
     		<a href="${pageContext.request.contextPath}">Back to home</a>
     		
-    <!-- Sentiment Analysis begin from https://github.com/shekhargulati/day20-stanford-sentiment-analysis-demo -->
-    <!-- modified by feiyu -->
 	<div class="container">
-	
 		<div class="row">
 			<div class="col-md-6">
 				<textarea class="form-control" rows="3"
@@ -76,38 +74,8 @@
 				<input type="submit" value="Search Phrases & Run Sentiment Analysis" id="submit" class="btn btn-success">
 			</div>
 		</div>
-		<div id="loading" style="display: none;" class="container">
-			<img src="resources/images/loader.gif" alt="Please wait.." />
-		</div>
-		
-		<c:if test="${not empty serverTime}">
-		<div class="textarea">
-		${serverTime}
-		</div>
-		</c:if>
-
-		<div id="Default" class="contentHolder">
-      		<div id="result" class="row"></div>
-    	</div>
-    	
-	
 	</div>
-	
-	<script type="text/template" id="searchResult">
-	<div class="col-md-12" id="{{keywordPhrases}}">
-		<ul class="unstyled">
-			{{#entityList}}
-				<div class="alert alert-success">
-					{{text}}
-				</div>
-			{{/entityList}}
-		</ul>
-	</div>
-</script>
-
-	<!--  script type="text/javascript" src="resources/js/jquery.js"></script-->
-	<script type="text/javascript"
-		src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
 	<script type="text/javascript">
 		$("#submit")
 				.on("click",
@@ -118,30 +86,24 @@
 							var text = $("textarea#text").val();
 							var searchPhrases = text;
 							if (text) {
-								$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases,
-								 function(entityList) {
-									$('#loading').hide();
-									console.log('entityList : ' + entityList);
-									var data = { keywordPhrases: searchPhrases+"->"+entityList.keywordPhrases,};
-									var template = "Keyword Phrases:{{keywordPhrases}}";
-									var html = Mustache.to_html(template, data);
-									$('#result').append(html);  
-				
-									var data = {
-										keywordPhrases : entityList.keywordPhrases,
-										entityList : entityList.entitiesInfo,};
-									var template = $('#searchResult').html();
-									var html = Mustache.to_html(template, data);
-									$('#result').append(html); 
+								$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases, function(){
 								});
 							}else{
 								alert("Please enter text in textarea");
-							};
+							}
 						});
 	</script>	
+    <br>
+    <br>
+    <br>
 	
+	<div class="container">
+	    <div id="Default" class="contentHolder">
+			<div id="chart"></div>
+		</div>
+	</div>
+    <script>renderChart();</script>
 	
-	<!-- Sentiment Analysis end from https://github.com/shekhargulati/day20-stanford-sentiment-analysis-demo -->
 	 
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="cbp-spmenu-s4">

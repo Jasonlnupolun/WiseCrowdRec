@@ -23,6 +23,17 @@
     </properties>
 
     <dependencies>
+        <!-- freebase -->
+        <dependency>
+          <groupId>com.google.api-client</groupId>
+          <artifactId>google-api-client</artifactId>
+          <version>1.18.0-rc</version>
+        </dependency>
+        <dependency>
+   		 	<groupId>com.google.http-client</groupId>
+    		<artifactId>google-http-client-jackson</artifactId>
+    		<version>1.18.0-rc</version>
+		</dependency>
 <!-- 		<dependency>
 			<groupId>eu.piotrbuda</groupId>
 			<artifactId>scalawebsocket_2.10</artifactId>
@@ -208,12 +219,12 @@
             <artifactId>j-calais</artifactId>
             <version>1.0</version>
         </dependency>
-        <!-- Jackson --> 
+<!--         Jackson 
         <dependency> 
             <groupId>org.codehaus.jackson</groupId> 
             <artifactId>jackson-mapper-asl</artifactId> 
             <version>1.9.13</version> 
-        </dependency> 
+        </dependency>  -->
         <!-- javax servlet-->
         <dependency>
             <groupId>javax.servlet</groupId>

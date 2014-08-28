@@ -3,14 +3,18 @@ package com.feiyu.storm.streamingdatacollection.bolt;
  * @author feiyu
  */
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 
 import com.feiyu.springmvc.model.Movie;
 import com.feiyu.springmvc.model.MovieWithCount;
+import com.feiyu.springmvc.model.MovieWithCountComparable;
+import com.feiyu.utils.GetTopK;
 import com.feiyu.utils.GlobalVariables;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
@@ -54,6 +58,25 @@ public class MovieCount2CassandraBackBolt implements IBasicBolt {
 		movieWithCount.setMovie(movie);
 		collector.emit(new Values(movieWithCount)); //? _counts or collector
 		// collector.emit(tuple(movieIMDbID, count)); //? _counts or collector
+		
+		count = count*movie.getRating(); //@@count -> HybridRating
+		String movieName = movie.getMovieName();
+		// send to ws://localhost:9998/stormchartws for storm real-time histogram chart
+		if (!GlobalVariables.STORM_MOVIELIST_HM.containsKey(movieName)) {
+			MovieCounter countOfMovie = new MovieCounter(count);
+			GlobalVariables.STORM_MOVIELIST_HEAP.add(new MovieWithCountComparable(movieName, countOfMovie));
+			GlobalVariables.STORM_MOVIELIST_HM.put(movieName, countOfMovie);
+		}else {
+			MovieCounter preCountOfMovie =GlobalVariables.STORM_MOVIELIST_HM.get(movieName);
+			preCountOfMovie._count = count;
+		}
+
+		GetTopK getTopK = new GetTopK();
+		try {
+			getTopK.getTopKMovies(10);
+		} catch (JSONException | IOException e2) {
+			e2.printStackTrace();
+		}
 
 		// InsertData into Cassandra
 		try {
