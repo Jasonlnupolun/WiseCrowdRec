@@ -12,10 +12,11 @@
 	 var gridLabelHeight = 18; // space reserved for gridline labels
 	 var gridChartOffset = 3; // space between start of grid and first bar
 	 var maxBarWidth = 420; // width of the bar with the max value
+	 
+	 stormws();
+	 sparkmws();
 
-	 ws();
-
-	 function ws() {
+	 function stormws() {
 	     var wsurl = 'ws://localhost:9998/stormchartws';
 	     var stormHistogramChartWS= new WebSocket(wsurl);
 	     console.log(wsurl+" connecting...");
@@ -27,33 +28,56 @@
 	     };
 	     stormHistogramChartWS.onmessage = function(msg) { 
 	  	    console.log(wsurl+" received message: "+msg.data);     
-	         showChart(msg);
+	  	    parseShowValueStorm(msg);
 	     };
 	 }
-
-	 function showChart(msg){
-	         var JSONData = JSON.parse(msg.data);
-	         var data = JSONData.slice();
+	 
+	 function sparkmws() {
+	     var wsurl = 'ws://localhost:8889/sparkchartws';
+	     var stormHistogramChartWS= new WebSocket(wsurl);
+	     console.log(wsurl+" connecting...");
+	     stormHistogramChartWS.onopen = function() { 
+	 	    console.log(wsurl+" connected!"); 
+	     };
+	     stormHistogramChartWS.onclose = function() { 
+	  	    console.log(wsurl+" closed!"); 
+	     };
+	     stormHistogramChartWS.onmessage = function(msg) { 
+	  	    console.log(wsurl+" received message: "+msg.data);     
+	  	    parseShowValueSpark(msg);
+	     };
+	 }
+	 
+	 function parseShowValueStorm(msg) {
+	     var JSONData = JSON.parse(msg.data);
+	     var data = JSONData.slice();
 	     
-	  		// accessor functions 
-	  		var barLabel = function(d) { return d.MovieName; };
-	  		var barValue = function(d) { return parseFloat(d.HybridRating); };		
-	         
-	  		// sorting
+	  	 var barLabel = function(d) { return d.MovieName; };
+	  	 var barValue = function(d) { return parseFloat(d.HybridRating); };		
+	  	 showChart(data, barLabel, barValue, msg, '#stormchart');
+	 }
+	 
+	 function parseShowValueSpark(msg) {
+	     var JSONData = JSON.parse(msg.data);
+	     var data = JSONData.slice();
+	     
+	  	 var barLabel = function(d) { return d.MovieStarName; };
+	  	 var barValue = function(d) { return parseFloat(d.CountInFiveMinus); };		
+	  	 showChart(data, barLabel, barValue, msg, '#sparkchart');
+	 }
+
+	 function showChart(data, barLabel, barValue, msg, chartIdName){
 	  		var sortedData = data.sort(function(a, b) {
 	  			return d3.descending(barValue(a), barValue(b));
 	  		}); 
 	  		
-	  		// scales
 	  		var yScale = d3.scale.ordinal().domain(d3.range(0, sortedData.length)).rangeBands([0, sortedData.length * barHeight]);
 	  		var y = function(d, i) { return yScale(i); };
 	  		var yText = function(d, i) { return y(d, i) + yScale.rangeBand() / 2; };
 	  		var x = d3.scale.linear().domain([0, d3.max(sortedData, barValue)]).range([0, maxBarWidth]);
 	  		
-	  		// svg container element
-	         d3.select('#chart').select("svg").remove();
-	     
-	         var chart = d3.select('#chart').append("svg")
+	         d3.select(chartIdName).select("svg").remove();
+	         var chart = d3.select(chartIdName).append("svg")
 	  		.attr('width', maxBarWidth + barLabelWidth + valueLabelWidth)
 	         .attr('height', gridLabelHeight + gridChartOffset + sortedData.length * barHeight);     
 
@@ -65,6 +89,7 @@
 	  		.attr("dy", -3)
 	  		.attr("text-anchor", "middle")
 	  		.text(String);
+	  		        
 	  		// vertical grid lines
 	  		gridContainer.selectAll("line").data(x.ticks(10)).enter().append("line")
 	  		.attr("x1", x)
@@ -72,6 +97,7 @@
 	  		.attr("y1", 0)
 	  		.attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
 	  		.style("stroke", "#ccc");
+	  		
 	  		// bar labels
 	  		var labelsContainer = chart.append('g')
 	  		.attr('transform', 'translate(' + (barLabelWidth - barLabelPadding) + ',' + (gridLabelHeight + gridChartOffset) + ')'); 
@@ -82,6 +108,7 @@
 	  		  .attr("dy", ".35em") // vertical-align: middle
 	  		  .attr('text-anchor', 'end')
 	  		  .text(barLabel);
+	  		
 	  		// bars
 	  		var barsContainer = chart.append('g')
 	  		.attr('transform', 'translate(' + barLabelWidth + ',' + (gridLabelHeight + gridChartOffset) + ')'); 
@@ -91,6 +118,7 @@
 	  		.attr('width', function(d) { return x(barValue(d)); })
 	  		.attr('stroke', 'white')
 	  		.attr('fill', 'steelblue');
+	  		
 	  		// bar value labels
 	  		barsContainer.selectAll("text").data(sortedData).enter().append("text")
 	  		.attr("x", function(d) { return x(barValue(d)); })
@@ -101,6 +129,7 @@
 	  		  .attr("fill", "black")
 	  		  .attr("stroke", "none")
 	  		  .text(function(d) { return d3.round(barValue(d), 2); });
+	  		
 	  		// start line
 	  		barsContainer.append("line")
 	  		.attr("y1", -gridChartOffset)

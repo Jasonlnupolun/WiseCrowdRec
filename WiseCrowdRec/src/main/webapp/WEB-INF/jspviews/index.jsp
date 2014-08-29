@@ -102,9 +102,14 @@
     <br>
     <br>
 	
+	
 	<div class="container">
 	    <div id="Default" class="contentHolder">
-			<div id="chart"></div>
+			Top mentioned movie stars in current 5 mins:
+			<div id="sparkchart"></div>
+    		<br>
+			Top mentioned movies today:
+			<div id="stormchart"></div>
 		</div>
 	</div>
 	 

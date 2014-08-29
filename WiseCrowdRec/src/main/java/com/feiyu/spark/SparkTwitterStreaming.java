@@ -22,6 +22,8 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.*;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 
 import com.feiyu.elasticsearch.SerializeBeans2JSON;
 import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
@@ -40,6 +42,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 	private static final long serialVersionUID = -1741488739982924186L;
 	private static JavaStreamingContext ssc;
 	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private String labe1 = "MovieStarName";
+	private String labe2 = "CountInFiveMinus";
 
 	public void sparkInit() {
 		PropertyConfigurator.configure(SparkTwitterStreaming.class.getClassLoader().getResource("log4j.properties"));
@@ -230,17 +234,32 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 					private static final long serialVersionUID = 4754852556443175871L;
 
 					public Void call(JavaPairRDD<Integer, String> rdd) throws IOException {
-						String out = "\nTop 7 entities:\n";
+						JSONArray jsonArray = new JSONArray();
+						JSONObject jsonObject;
+						int i=0;
 						for (Tuple2<Integer, String> t: rdd.take(7)) {
-							out = out + t.toString() + "\n";
+							jsonObject = new JSONObject();
+							try {
+								jsonObject.put(labe1, t._2);
+								jsonObject.put(labe2, String.valueOf(t._1));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							jsonArray.put(jsonObject);
+							i++;
 						}
-						log.info("\n-------------------\n-------------------"+out);
+						String json = jsonArray.toString();
+						log.info("\n-------------------\n-------------------\nTop 7 entities:\n"+json);
 
-						// send message to the RabbitMQ queue
-						String message = out;
-						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, message.getBytes());
-						System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
-
+						if (i>0) {
+							// send message to the RabbitMQ queue
+							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, json.getBytes());
+							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
+							
+							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART, null, json.getBytes());
+							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART: Message Sent to queue buffer.");
+						}
 						return null;
 					}
 				}

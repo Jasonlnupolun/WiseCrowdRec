@@ -39,7 +39,7 @@ public class MovieWithCountComparable implements Comparable<MovieWithCountCompar
 
 	@Override
 	public String toString() {
-		return "MovieWithCount:{"
+		return "MovieWithCountComparable:{"
 				+"MovieName:"+ this.movieName
 				+",count:" + this.count
 				+ "}";

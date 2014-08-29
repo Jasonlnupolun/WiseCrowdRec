@@ -28,8 +28,8 @@ public class MovieWithCount implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "MovieWithCount:{"
-				+",count:" + this.count
 				+"Movie:"+ this.movie.toString()
+				+",count:" + this.count
 				+ "}";
 	}	
 }
