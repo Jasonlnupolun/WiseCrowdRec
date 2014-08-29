@@ -5,6 +5,7 @@ package com.feiyu.utils;
 
 import javax.servlet.http.HttpServlet;
 
+import com.feiyu.storm.streamingdatacollection.BackgroundTopology;
 import com.feiyu.utils.InitializeWCR;
 import com.feiyu.websocket.SparkHistogramWebSocketHandler;
 import com.feiyu.websocket.SparkWebSocketHandler;
@@ -20,11 +21,13 @@ public class StartInitSetupAutomatically extends HttpServlet {
 		try {
 			initWcr.getWiseCrowdRecConfigInfo();
 			initWcr.twitterInitDyna();
+			initWcr.twitterInitBack();
 			initWcr.coreNLPInitial();
 			initWcr.cassandraInitial();
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
 			initWcr.rabbitmqInit();
+			
 			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
 
 			Thread StormHistogramChartWebSocketHandlerThread = new Thread () {
@@ -59,6 +62,20 @@ public class StartInitSetupAutomatically extends HttpServlet {
 				}
 			};
 			SparkWebSocketHandlerThread.start();
+			
+			Thread StormThread = new Thread () {
+				public void run () {
+					try {
+						BackgroundTopology t = new BackgroundTopology();
+						boolean isFakeTopologyForTest = true;
+						//		boolean isFakeTopologyForTest = false;
+						t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
+			};
+			StormThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
