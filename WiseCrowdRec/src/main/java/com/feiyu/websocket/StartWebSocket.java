@@ -1,17 +1,13 @@
 package com.feiyu.websocket;
+/**
+ * 
+ * @author feiyu
+ *
+ */
 
 public class StartWebSocket {
-	
+
 	public void startWebSocketWithUserID(final String userID) {
-		Thread SparkWebSocketHandlerThread = new Thread () {
-			public void run () {
-				try {
-					SparkWebSocketHandler.start(userID);//Open Spark server side websocket
-				} catch (Exception e) {
-					e.printStackTrace();
-				} 
-			}
-		};
 
 		Thread StarMovieCategorySubGraphWebSocketHandlerThread = new Thread () {
 			public void run () {
@@ -22,8 +18,7 @@ public class StartWebSocket {
 				} 
 			}
 		};
-		
-		SparkWebSocketHandlerThread.start();
+
 		StarMovieCategorySubGraphWebSocketHandlerThread.start();
 
 		System.out.println("---------------startServerSideWebSocketWithUserID---------------"+userID);

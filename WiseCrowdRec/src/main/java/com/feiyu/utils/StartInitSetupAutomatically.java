@@ -1,8 +1,12 @@
 package com.feiyu.utils;
+/**
+ * @author feiyu
+ */
 
 import javax.servlet.http.HttpServlet;
 
 import com.feiyu.utils.InitializeWCR;
+import com.feiyu.websocket.SparkWebSocketHandler;
 import com.feiyu.websocket.StormHistogramChartWebSocketHandler;
 
 public class StartInitSetupAutomatically extends HttpServlet {
@@ -32,6 +36,17 @@ public class StartInitSetupAutomatically extends HttpServlet {
 				}
 			};
 			StormHistogramChartWebSocketHandlerThread.start();
+
+			Thread SparkWebSocketHandlerThread = new Thread () {
+				public void run () {
+					try {
+						SparkWebSocketHandler.start();//Open Spark server side websocket
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
+			};
+			SparkWebSocketHandlerThread.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

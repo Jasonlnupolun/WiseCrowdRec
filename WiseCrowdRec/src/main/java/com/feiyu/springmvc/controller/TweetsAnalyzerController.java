@@ -36,10 +36,10 @@ public class TweetsAnalyzerController {
 	private InitializeWCR initWcr = new InitializeWCR();
 	String userID = null;
 
-//	@Autowired
-//	public TweetsAnalyzerController(SignInWithTwitterService signInWithTwitterService) {
-//		this.signInWithTwitterService = signInWithTwitterService;
-//	}
+	//	@Autowired
+	//	public TweetsAnalyzerController(SignInWithTwitterService signInWithTwitterService) {
+	//		this.signInWithTwitterService = signInWithTwitterService;
+	//	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest req, HttpServletResponse resp,Locale locale, Model model) throws Exception {
@@ -51,6 +51,16 @@ public class TweetsAnalyzerController {
 		model.addAttribute("serverTime", formattedDate );
 
 		return "index";
+	}
+
+	@RequestMapping(value = "restapi/searchPhrases", method = RequestMethod.GET)
+	@ResponseBody
+	public void searchPhrases(@RequestParam("searchPhrases") final String searchPhrases)  {
+		//		if (searchPhrases == null) {
+		//			return _entityList;
+		//		}
+
+		GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
 	}
 
 	@RequestMapping(value = "signinwithtwitter/login", params = {"callbackURL"} , method = RequestMethod.GET)
@@ -68,10 +78,10 @@ public class TweetsAnalyzerController {
 	public String converRequestToken2AccessToken(
 			@RequestParam(value = "oauth_token") final String oauth_token, 
 			@RequestParam(value = "oauth_verifier") final String oauth_verifier)
-	throws Exception  { 
+					throws Exception  { 
 		return signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
 	}
-	
+
 	@RequestMapping(value = "startWebSocketWithUserID", params = {"user_id"}, method = RequestMethod.GET)
 	@ResponseBody
 	public void startWebSocketWithUserID(@RequestParam(value = "user_id") final String user_id) {
@@ -81,7 +91,7 @@ public class TweetsAnalyzerController {
 		startWS.startWebSocketWithUserID(user_id);
 		logger.info("controller startWebSocketWithUserID");
 	}
-	
+
 	@RequestMapping(value = "smcSubGraphws", params = {"user_id"}, method = RequestMethod.GET)
 	@ResponseBody
 	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) throws NumberFormatException, ConnectionException, TwitterException, IOException {
@@ -89,7 +99,9 @@ public class TweetsAnalyzerController {
 		fw.getFollowingWhomList(user_id);
 		logger.info("controller smcSubGraphws");
 	}
-	
+
+
+
 	@RequestMapping(value = "/smcSubGraphSSEmessagebutton" )
 	@ResponseBody
 	public void smcSubGraphSSEmessagebutton() throws NumberFormatException, ConnectionException, TwitterException, IOException {
@@ -136,15 +148,5 @@ public class TweetsAnalyzerController {
 		//		initWcr.rabbitmqInit();
 
 		GlobalVariables.SPARK_TWT_STREAMING.startSpark("movie");
-	}
-
-	@RequestMapping(value = "restapi/searchPhrases", method = RequestMethod.GET)
-	@ResponseBody
-	public void searchPhrases(@RequestParam("searchPhrases") final String searchPhrases)  {
-		//		if (searchPhrases == null) {
-		//			return _entityList;
-		//		}
-
-		GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
 	}
 }

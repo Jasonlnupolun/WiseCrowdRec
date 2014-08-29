@@ -1,4 +1,7 @@
 package com.feiyu.websocket;
+/**
+ * @author feiyu
+ */
 
 import java.io.IOException;
 
@@ -13,11 +16,11 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 public class StarMovieCategorySubGraphWebSocket implements WebSocket.OnTextMessage{
 	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH;
-//	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
+	//	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
 
 	@Override
 	public void onOpen(org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection) {
-//		this.jettyWSconnection = jettyWSconnection;
+		//		this.jettyWSconnection = jettyWSconnection;
 
 		// RabbitMQ
 		try {
@@ -42,11 +45,11 @@ public class StarMovieCategorySubGraphWebSocket implements WebSocket.OnTextMessa
 				String message = new String(delivery.getBody());
 				System.out.println(" [...x...] StarMovieCategorySubGraphWebSocket server received '" + message + "'");
 
-//				try {
-//					jettyWSconnection.sendMessage(message);
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
+				//				try {
+				//					jettyWSconnection.sendMessage(message);
+				//				} catch (IOException e) {
+				//					e.printStackTrace();
+				//				}
 			}
 
 		} catch (IOException e1) {
@@ -62,10 +65,10 @@ public class StarMovieCategorySubGraphWebSocket implements WebSocket.OnTextMessa
 	@Override
 	public void onMessage(String s) {
 		System.out.println("StarMovieCategorySubGraphWebSocket server got message: " + s);
-//		try {
-//			jettyWSconnection.sendMessage("StarMovieCategorySubGraphWebSocket server got " + s);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		//		try {
+		//			jettyWSconnection.sendMessage("StarMovieCategorySubGraphWebSocket server got " + s);
+		//		} catch (IOException e) {
+		//			e.printStackTrace();
+		//		}
 	}
 }

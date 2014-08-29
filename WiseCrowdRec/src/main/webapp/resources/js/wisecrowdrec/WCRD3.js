@@ -60,6 +60,7 @@ function WCRD3() {
 
     restart();
     stormMessage();
+    sparkMsgWebSocket();
         
 //    function show() {
 //        nodes.push({"name":"Myriel","group":1});
@@ -88,18 +89,18 @@ function WCRD3() {
         };
     }
     
-    this.sparkMsgWS = function sparkMsgWebSocket(userID) {
-    	var wsurl = 'ws://localhost:8899/sparkws/'+userID;
+    function sparkMsgWebSocket() {
+    	var wsurl = 'ws://localhost:8899/sparkws';
     	var sparkws = new WebSocket(wsurl);
-        console.log(userID+" "+wsurl+" connecting...");
+        console.log(wsurl+" connecting...");
         sparkws.onopen = function() { 
-        	console.log(userID+" "+wsurl+" connected!"); 
+        	console.log(wsurl+" connected!"); 
         	};
         sparkws.onclose = function() { 
-        	console.log(userID+" "+wsurl+" closed!"); 
+        	console.log(wsurl+" closed!"); 
         	};
         sparkws.onmessage = function(msg) { 
-        	console.log(userID+" "+wsurl+" received message: "+msg.data); 
+        	console.log(wsurl+" received message: "+msg.data); 
  		    nodes.push({"name": msg.data ,"count":1});
  		    restart();
         	};

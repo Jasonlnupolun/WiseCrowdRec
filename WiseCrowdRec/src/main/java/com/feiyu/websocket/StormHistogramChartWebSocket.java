@@ -1,4 +1,7 @@
 package com.feiyu.websocket;
+/**
+ * @author feiyu
+ */
 
 import java.io.IOException;
 
@@ -13,11 +16,11 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 public class StormHistogramChartWebSocket implements WebSocket.OnTextMessage{
 	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_STORMHISTOGRAMCHART;
-	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
+//	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
 
 	@Override
 	public void onOpen(org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection) {
-		this.jettyWSconnection = jettyWSconnection;
+//		this.jettyWSconnection = jettyWSconnection;
 
 		// RabbitMQ
 		try {

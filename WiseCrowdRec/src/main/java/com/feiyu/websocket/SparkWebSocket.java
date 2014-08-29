@@ -1,4 +1,7 @@
 package com.feiyu.websocket;
+/**
+ * @author feiyu
+ */
 
 import java.io.IOException;
 
@@ -42,11 +45,11 @@ public class SparkWebSocket implements WebSocket.OnTextMessage{
 				String message = new String(delivery.getBody());
 				System.out.println(" [...x...] SparkWebSocket server received '" + message.replaceAll("\\s+","") + "'");
 
-//				try {
-//					jettyWSconnection.sendMessage("SparkWebSocket server send: " + message.replaceAll("\\s+",""));
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
+				try {
+					jettyWSconnection.sendMessage(message.replaceAll("\\s+",""));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 		} catch (IOException e1) {

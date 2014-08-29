@@ -57,12 +57,13 @@
     <body class="cbp-spmenu-push">
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
     		<h3>Left Menu</h3>
-    		<a href="${pageContext.request.contextPath}">Back to home</a>
     <br>
 
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
-    		<a href="${pageContext.request.contextPath}">Back to home</a>
+    		<h3> &#8592; Back to home by clicking this round blue button.</h3>
+    <br>
+    <br>
     		
 	<div class="container">
 		<div class="row">
@@ -115,29 +116,7 @@
     		<header>
     			<span></span> <!-- head name -->
     			<nav>
-    				<button id="smcSubGraphSSEmessagebutton" class="icon-drop" data-info="smcSubGraphSSEmessagebutton">Start Background Topology</button>
-					<script type="text/javascript" id="smcSubGraphSSEmessagebutton">	
-						document.getElementById('smcSubGraphSSEmessagebutton').onclick = function() {
-							$.get('${pageContext.request.contextPath}/smcSubGraphSSEmessagebutton', function() {});
-						};
-					</script>
-
     				<!-- http://tympanus.net/Blueprints/QuotesRotator/ -->
-					<button id="startbackgroundtopology" class="icon-drop" data-info="Start Background Topology">Start Background Topology</button>
-					<script type="text/javascript" id="startbackgroundtopology">	
-						var backTopo = document.getElementById('startbackgroundtopology');
-						backTopo.onclick = function() {
-							$.get('${pageContext.request.contextPath}/startbackgroundtopology', function() {});
-						};
-					</script> 
-					
-    				<button id="startdynamicsearch" class="icon-drop" data-info="Start Dynamic Search">Start Dynamic Search</button>
-					<script type="text/javascript" id="startdynamicsearch">	
-						var dynaSearch = document.getElementById('startdynamicsearch');
-						dynaSearch.onclick = function() {
-							$.get('${pageContext.request.contextPath}/startdynamicsearch', function() {});
-						};
-					</script>
 					
     <!-- Sign in with twitter begins here -->
 		<img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter."/>
@@ -180,9 +159,7 @@
 				var stepTwo = function () {
 					console.log('stepTwo');
 					var r = $.Deferred();
-					wcrd3.sparkMsgWS(user_id);
 					wcrd3.smcSubGraphMsgWS(user_id);
-
 					setTimeout(function () {
 					    r.resolve();
 					 }, 2500);

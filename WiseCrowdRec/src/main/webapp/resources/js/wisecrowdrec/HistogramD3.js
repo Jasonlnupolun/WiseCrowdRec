@@ -51,7 +51,7 @@
 	  		var x = d3.scale.linear().domain([0, d3.max(sortedData, barValue)]).range([0, maxBarWidth]);
 	  		
 	  		// svg container element
-	         d3.select("svg").remove();
+	         d3.select('#chart').select("svg").remove();
 	     
 	         var chart = d3.select('#chart').append("svg")
 	  		.attr('width', maxBarWidth + barLabelWidth + valueLabelWidth)
