@@ -90,6 +90,7 @@ public class GetMoviedataBolt extends BaseRichBolt {
 
 					if (category.equals("NUMBER")) {
 						String[] list = entity.split("/");
+						System.out.println(list[0]);
 						rating = Integer.valueOf(list[0].replaceAll("[^0-9]","")); 
 						// @@@ modify this later -> might lose some tweets -> e.g. Hunger Games 2 9/10 -> "2 9/10"=NUMBER
 					}

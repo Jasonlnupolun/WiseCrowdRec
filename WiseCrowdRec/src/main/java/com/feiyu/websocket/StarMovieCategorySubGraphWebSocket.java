@@ -45,11 +45,11 @@ public class StarMovieCategorySubGraphWebSocket implements WebSocket.OnTextMessa
 				String message = new String(delivery.getBody());
 				System.out.println(" [...x...] StarMovieCategorySubGraphWebSocket server received '" + message + "'");
 
-				//				try {
-				//					jettyWSconnection.sendMessage(message);
-				//				} catch (IOException e) {
-				//					e.printStackTrace();
-				//				}
+				try {
+					jettyWSconnection.sendMessage(message);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 		} catch (IOException e1) {

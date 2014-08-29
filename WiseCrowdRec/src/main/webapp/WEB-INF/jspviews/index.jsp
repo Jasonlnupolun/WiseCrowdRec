@@ -86,11 +86,15 @@
 							$('#loading').show();
 							var text = $("textarea#text").val();
 							var searchPhrases = text;
-							if (text) {
-								$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases, function(){
-								});
-							}else{
-								alert("Please enter text in textarea");
+							if (document.URL.indexOf("oauth_verifier=") > -1) {
+								if (text) {
+									$.get('${pageContext.request.contextPath}/restapi/searchPhrases?searchPhrases='+ searchPhrases, function(){
+									});
+								}else{
+									alert("Please enter text in textarea");
+								}
+							} else {
+								alert("Please click the \"Sign in with Twitter\" button in advance");
 							}
 						});
 	</script>	
@@ -103,8 +107,6 @@
 			<div id="chart"></div>
 		</div>
 	</div>
-    <script>renderChart();</script>
-	
 	 
     	</nav>
     	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="cbp-spmenu-s4">
@@ -160,6 +162,8 @@
 					console.log('stepTwo');
 					var r = $.Deferred();
 					wcrd3.smcSubGraphMsgWS(user_id);
+					wcrd3.sparkMsgWS();
+					renderChart();
 					setTimeout(function () {
 					    r.resolve();
 					 }, 2500);

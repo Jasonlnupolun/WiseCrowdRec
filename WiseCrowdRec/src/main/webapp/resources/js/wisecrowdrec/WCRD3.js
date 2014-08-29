@@ -60,7 +60,6 @@ function WCRD3() {
 
     restart();
     stormMessage();
-    sparkMsgWebSocket();
         
 //    function show() {
 //        nodes.push({"name":"Myriel","group":1});
@@ -89,7 +88,7 @@ function WCRD3() {
         };
     }
     
-    function sparkMsgWebSocket() {
+    this.sparkMsgWS = function sparkMsgWebSocket() {
     	var wsurl = 'ws://localhost:8899/sparkws';
     	var sparkws = new WebSocket(wsurl);
         console.log(wsurl+" connecting...");
