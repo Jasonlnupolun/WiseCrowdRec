@@ -67,8 +67,8 @@ public class StartInitSetupAutomatically extends HttpServlet {
 				public void run () {
 					try {
 						BackgroundTopology t = new BackgroundTopology();
-						boolean isFakeTopologyForTest = true;
-						//		boolean isFakeTopologyForTest = false;
+//						boolean isFakeTopologyForTest = true;
+						boolean isFakeTopologyForTest = false;
 						t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
 					} catch (Exception e) {
 						e.printStackTrace();

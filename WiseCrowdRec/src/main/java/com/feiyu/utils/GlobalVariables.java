@@ -54,4 +54,6 @@ public class GlobalVariables {
 	
 	public static final PriorityQueue<MovieWithCountComparable> STORM_MOVIELIST_HEAP = new PriorityQueue<MovieWithCountComparable>();
 	public static final HashMap<String, MovieCounter> STORM_MOVIELIST_HM = new HashMap<String, MovieCounter>();
+	
+	public static String FREEBASE_API_KEY;
 }
