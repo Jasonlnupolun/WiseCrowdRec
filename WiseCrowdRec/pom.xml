@@ -105,6 +105,12 @@
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+        <!-- Breeze is a library for numerical processing, machine learning, and natural language processing in scala -->
+        <dependency>
+  			<groupId>org.scalanlp</groupId>
+    		<artifactId>breeze_2.10</artifactId> <!-- or 2.11 -->
+    		<version>0.8.1</version>
+		</dependency>
         <!-- Spark -->
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -155,6 +161,29 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-twitter_2.10</artifactId>
+            <version>${spark.version}</version>
+            <exclusions>
+                <exclusion> 
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion> 
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.10 </artifactId>
             <version>${spark.version}</version>
             <exclusions>
                 <exclusion> 

@@ -123,10 +123,10 @@ public class GetActorMovieGenreSubgraphVectorNEdge {
 			initWCR.themoviedbOrgInitial();
 
 			GetActorMovieGenreSubgraphVectorNEdge getAMGSubGraphVE = new GetActorMovieGenreSubgraphVectorNEdge();
-			getAMGSubGraphVE.getMovieListByActorName("Kiefer Sutherland");
-			getAMGSubGraphVE.getActorNamesByMovieName("Inception");
+			getAMGSubGraphVE.getMovieListByActorName("River Phoenix");
+			getAMGSubGraphVE.getActorNamesByMovieName("Stand by Me");
 			getAMGSubGraphVE.getActorNamesByIMDbMovieID("tt0109830");
-			getAMGSubGraphVE.getFilmGenreByActorNMovieName("Kiefer Sutherland", "Stand by Me");
+			getAMGSubGraphVE.getFilmGenreByActorNMovieName("Kiefer Sutherland", "Flatliners");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
