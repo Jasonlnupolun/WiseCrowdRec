@@ -1,7 +1,6 @@
 package com.feiyu.deeplearning.RBM;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 
 import com.feiyu.springmvc.model.Tuple;
@@ -13,11 +12,23 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	private int sizeHiddenUnits;
 
 	private double[][][] Md; // 3D data matrix, users X movies X softmax (users X movies X rating), m-by-n-by-k
-	private double[][][] Mw; // 3D weight matrix, movies X softmax X hidden units, n-by-k-by-l
-	private double[][][] Mpha; // 3D positive hidden associations matrix, oneUser X softmax X hidden units, 1-by-k-by-l
-	private double[][][] Mphp; // 3D positive hidden probabilities matrix, oneUser X softmax X hidden units, 1-by-k-by-l; Mpha->p(u(i)s(β)h(j))->Mphp
-	private double[][][] MdT; // transpose data matrix, movies X users X softmax , n-by-m-by-k
-	private double[][][] MwT; // transpose weight matrix, hidden units X movies X softmax , n-by-k-by-l
+	private double[][][] Mw; // 3D weight matrix, movies X hidden units X softmax , n-by-l-by-k
+	private double[][][] MdT; // transpose data matrix, movies X users X softmax , n-by-1-by-k
+	private double[][][] MwT; // transpose weight matrix, hidden units X movies X softmax , l-by-n-by-k
+
+	private double[][][] Mpha; // 3D positive hidden associations matrix, oneUser X hidden X softmax units, 1-by-l-by-k
+	private double[][][] Mphp; // 3D positive hidden probabilities matrix, oneUser X hidden units X softmax, 1-by-l-by-k; Mpha->p(u(i)s(β)h(j))->Mphp
+	private double[][][] Mphs; // 3D positive hidden states matrix, oneUser X hidden units X softmax, 1-by-l-by-k; only one unit in a softmax is 1, the rest are all zeros
+	
+	private double[][][] Mwpos; // positive 3D weight matrix, movies X hidden units X softmax , n-by-l-by-k
+	private double[][][] Mwneg; // negative 3D weight matrix, movies X hidden units X softmax , n-by-l-by-k
+	
+	private double[][][] Mnva; // 3D negative visible associations matrix, oneUser X movies X softmax, 1-by-n-by-k
+	private double[][][] Mnvp; // 3D negative visible probabilities matrix, oneUserX movies X softmax , 1-by-n-by-k; Mnva->p(u(i)s(β)h(j))->Mnvp
+	private double[][][] MnvpT; // transpose negative visible probabilities matrix, movies X oneUser X softmax , n-by-1-by-k; 
+	
+	private double[][][] Mnha; // 3D negative hidden associations matrix, oneUser X hidden X softmax units, 1-by-l-by-k
+	private double[][][] Mnhp; // 3D negative hidden probabilities matrix, oneUser X hidden units X softmax, 1-by-l-by-k; Mnha->p(u(i)s(β)h(j))->Mnhp
 
 	private Random randomN = new Random();
 
@@ -27,54 +38,30 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		this.sizeSoftmax = sizeSoftmax;
 		this.numMovies = numMovies;
 		this.sizeHiddenUnits = sizeHiddenUnits;
-		this.Mw = new double[this.numMovies+2][this.sizeHiddenUnits+1][this.sizeSoftmax];
-	}
-
-	private void setBiasUnitsToZeros_WeightMatrix() {
-		for (int y=0; y<=this.sizeHiddenUnits; y++) {
-			for (int z=0; z<this.sizeSoftmax; z++) {
-				this.Mw[0][y][z] = 0;
-			}
-		}
-
-		for (int i=1; i<=this.numMovies; i++) {
-			for (int z=0; z<this.sizeSoftmax; z++) {
-				this.Mw[i][0][z] = 0;
-			}
-		}
-	}
-
-	private void setBiasUnitsToOnes_DataMatrix() {
-		for (int i=0; i<this.sizeSoftmax; i++) {
-			this.Md[0][0][i] = 1;
-		}
+		this.Mw = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
 	}
 	
-	private void transposeDataMatrix() {
-		this.MdT = new double[this.numMovies+1][1][this.sizeSoftmax]; 
-		for (int x=0; x<this.numMovies+1; x++) {
-			for(int z=0; z<this.sizeSoftmax; z++) {
-				this.MdT[x][0][z]=this.Md[0][x][z];
-			}
+	//////////////////////
+	public void RBM_CD_phases(int numOfCD){
+		// RBM Contrastive Divergence
+		for (int i=1; i<=numOfCD; i++){ 
+			System.out.println("\n-------\nCD: "+i);
+			// positive CD phase
+			this.getPhaMatrixOrNhaMatrix_oneUser(true);
+			this.getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(true);
+			this.getPositiveWeightMatrix_ForNextCD(true);
+			
+			// negative CD phase
+			this.getTheNvaMatrix_oneUser();
+			this.getTheNvpMatrix_oneUser();
+			this.getPhaMatrixOrNhaMatrix_oneUser(false);
+			this.getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(false);
+			this.getPositiveWeightMatrix_ForNextCD(false);
 		}
-		
-		System.out.println("\n Transpose matrix of Data Matrix -> One User");
-		this.printMatrix(this.numMovies+1, 1, this.sizeSoftmax, "transposeDataMatrix");
 	}
 
-	private void transposeWeightMatrix() {
-		this.MdT = new double[this.numMovies+1][1][this.sizeSoftmax]; 
-		for (int x=0; x<this.numMovies+1; x++) {
-			for(int z=0; z<this.sizeSoftmax; z++) {
-				this.MdT[x][0][z]=this.Md[0][x][z];
-			}
-		}
-		
-		System.out.println("\n Transpose matrix of Data Matrix -> One User");
-		this.printMatrix(this.numMovies+1, 1, this.sizeSoftmax, "transposeDataMatrix");
-	}
 	//////////////////////
-	private void initializeWeightMatrix() {
+	public void initializeWeightMatrix() {
 		this.setBiasUnitsToZeros_WeightMatrix();
 		for (int i=1; i<=this.numMovies; i++) {
 			for (int y=1; y<=this.sizeHiddenUnits; y++) {
@@ -95,77 +82,236 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		for (int i=0; i<sizeOfRatedMovies; i++) {
 			this.Md[0][ratedMoviesIndices.get(i).getFirst()][ratedMoviesIndices.get(i).getSecond()] = 1;
 		}
-		this.setBiasUnitsToOnes_DataMatrix();
+		this.setBiasUnitsToOnes_DataMatrix(true);
 
 		System.out.println("\n3D Data Matrix -> One User");
 		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "dataMatrix");
 	}
 
-	public void getThePhaMatrix_oneUser() {
-		this.Mpha = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+	//////////////////////
+	private void getPhaMatrixOrNhaMatrix_oneUser(boolean isPositiveCD) {
+		if (isPositiveCD) {
+			this.Mpha = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		} else {
+			this.Mnha = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		}
 		double temp;
 		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
 			for (int z=0; z<this.sizeSoftmax; z++) {
 				temp = 0;
 				for (int i=0; i<=this.numMovies; i++) {
-					temp += this.Md[0][i][z]*this.Mw[i][y][z]; 
-					//System.out.println(0+" "+i+" "+z+" "+this.Md[0][i][z]+"--"+i+" "+y+" "+z+" "+this.Mw[i][y][z]+"--"+this.Md[0][i][z]*this.Mw[i][y][z]+" "+temp);
+					if (isPositiveCD) {
+						temp += this.Md[0][i][z]*this.Mw[i][y][z]; 
+						//System.out.println(0+" "+i+" "+z+" "+this.Md[0][i][z]+"--"+i+" "+y+" "+z+" "+this.Mw[i][y][z]+"--"+this.Md[0][i][z]*this.Mw[i][y][z]+" "+temp);
+					} else {
+						temp += this.Mnvp[0][i][z]*this.Mw[i][y][z]; 
+					}
 				}
-				this.Mpha[0][y][z] = temp;
+				if (isPositiveCD) {
+					this.Mpha[0][y][z] = temp;
+				} else {
+					this.Mnha[0][y][z] = temp;
+				}
 			}
 		}
 
-		System.out.println("\n3D positive hidden associations matrix -> One User");
-		this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "phaMatrix");
+		if (isPositiveCD) {
+			System.out.println("\n3D positive hidden associations matrix -> One User");
+			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "phaMatrix");
+		} else {
+			System.out.println("\n3D negative hidden associations matrix -> One User");
+			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "nhaMatrix");
+		}
 	}
 
-	public void getThePhpMatrix_oneUser() {
-		//Mpha->p(u(i)s(β)h(j))->Mphp
-		this.Mphp = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
-		double currentSumOfSoftmax;
+	private void getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(boolean isPositiveCD) {
+		if (isPositiveCD) {
+			//Mpha->p(u(i)s(β)h(j))->Mphp
+			// Get the Mphp and Mphs matrices at the same time
+			// for the Mphs matrix, only one unit in a softmax is 1, the rest are all zeros
+			// therefore in a softmax only unit with the largest probability will be set as 1, the rest are all zeros
+			this.Mphp = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+			this.Mphs = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		} else {
+			this.Mnhp = new double[1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		}
+		double currentSumOfSoftmax, maxProb, curProb;
+		int maxProbIdx;
+		
 		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
-			currentSumOfSoftmax = 0;
+			currentSumOfSoftmax = 0; 
+			maxProb = -1; 
+			curProb = -1;
+			maxProbIdx=-1;
 			for (int z=0; z<this.sizeSoftmax; z++) {
-				currentSumOfSoftmax += Math.exp(this.Mpha[0][y][z]);
+				if (isPositiveCD) {
+					curProb = Math.exp(this.Mpha[0][y][z]); 
+					if (curProb > maxProb) {  //@ Special cases: what if every unit in a softmax has the same probability? e.g: 0.25, 0.25, 0.25, 0.25 in a 4-way softmax
+						maxProb = curProb;
+						maxProbIdx = z;
+					}
+				} else {
+					curProb = Math.exp(this.Mnha[0][y][z]); 
+				}
+				currentSumOfSoftmax += curProb;
 			}
 			for (int z=0; z<this.sizeSoftmax; z++) {
 //				System.out.println(0+" "+y+" "+z+" "+Math.pow(Math.E, this.Mpha[0][y][z])+" "+currentSumOfSoftmax);
-				this.Mphp[0][y][z] = Math.exp(this.Mpha[0][y][z]) / currentSumOfSoftmax;
+				if (isPositiveCD) {
+					this.Mphp[0][y][z] = Math.exp(this.Mpha[0][y][z]) / currentSumOfSoftmax;
+					if (z == maxProbIdx) {
+						this.Mphs[0][y][z] = 1;
+					}
+				} else {
+					this.Mnhp[0][y][z] = Math.exp(this.Mnha[0][y][z]) / currentSumOfSoftmax;
+				}
 			}
 		}
-		System.out.println("\n3D positive hidden probabilities matrix -> One User");
-		this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "phpMatrix");
+		
+		if (isPositiveCD) {
+			System.out.println("\n3D positive hidden probabilities matrix -> One User");
+			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "phpMatrix");
+			System.out.println("\n3D positive hidden states matrix -> One User");
+			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "phsMatrix");
+		} else {
+			System.out.println("\n3D negative hidden probabilities matrix -> One User");
+			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "nhpMatrix");
+		}
 	}
 	
-	public void getNewWeightMatrix_nextStep() {
-		this.transposeDataMatrix();
+	private void getPositiveWeightMatrix_ForNextCD(boolean isPositiveCD) {
+		if (isPositiveCD) {
+			this.transposeDataMatrix(true);
+			this.Mwpos = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		} else {
+			this.transposeDataMatrix(false);
+			this.Mwneg = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		}
 		
 		for (int x=0; x<this.numMovies+1; x++) {
 			for (int y=0; y<this.sizeHiddenUnits+1; y++) {
 				for (int z=0; z<this.sizeSoftmax; z++) {
-					this.Mw[x][y][z] = this.MdT[x][0][z]*this.Mphp[0][y][z]; 
+					if (isPositiveCD) {
+						this.Mwpos[x][y][z] = this.MdT[x][0][z]*this.Mphp[0][y][z]; 
+					} else {
+						this.Mwneg[x][y][z] = this.MnvpT[x][0][z]*this.Mnhp[0][y][z]; 
+					}
 				}
 			}
 		}
 
-		System.out.println("\n new Weight Matrix --> next iteration");
-		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix");
+		if (isPositiveCD) { 
+			System.out.println("\n positive Weight Matrix --> next iteration");
+			this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix_positive");
+		} else {
+			System.out.println("\n negative Weight Matrix --> next iteration");
+			this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix_negative");
+		}
+	}
+	
+	private void getTheNvaMatrix_oneUser() {
+		this.transposeWeightMatrix();
+		this.Mnva = new double[1][this.numMovies+1][this.sizeSoftmax];
+		double productSum;
+		for (int y=0; y<this.numMovies+1; y++) {
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				productSum = 0;
+				for (int i=0; i<this.sizeHiddenUnits+1; i++) {
+					productSum += this.Mphs[0][i][z]*this.MwT[i][y][z]; 
+				}
+				this.Mnva[0][y][z] = productSum; 
+			}
+		}
 		
+		System.out.println("\n3D Negtive visible activations Matrix -> One User");
+		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "nvaMatrix");
+	}
+	
+	private void getTheNvpMatrix_oneUser() {
+		//Mnva->p(u(i)s(β)h(j))->Mnvp
+		this.Mnvp = new double[1][this.numMovies+1][this.sizeSoftmax];
+		double currentSumOfSoftmax;
+		
+		for (int y=0; y<this.numMovies+1; y++) {
+			currentSumOfSoftmax = 0; 
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				currentSumOfSoftmax += Math.exp(this.Mnva[0][y][z]);
+			}
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				this.Mnvp[0][y][z] = Math.exp(this.Mnva[0][y][z]) / currentSumOfSoftmax;
+			}
+		}
+		
+		System.out.println("\n3D negative visible probabilities matrix -> One User");
+		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "nvpMatrix");
+		
+		this.setBiasUnitsToOnes_DataMatrix(false);
+		System.out.println("\n3D negative visible probabilities matrix (fixed bias units) -> One User");
+		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "nvpMatrix");
+	}
+	
+	//////////////////////
+	private void setBiasUnitsToZeros_WeightMatrix() {
+		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				this.Mw[0][y][z] = 0;
+			}
+		}
+
+		for (int i=1; i<=this.numMovies; i++) {
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				this.Mw[i][0][z] = 0;
+			}
+		}
 	}
 
-	//////////////////////
-	public void RBM_CD_phases(int numOfCD){
-		// RBM Contrastive Divergence
-		for (int i=1; i<=numOfCD; i++){ 
-			System.out.println("\n-------\nCD: "+i);
-			// positive CD phase
-			this.getThePhaMatrix_oneUser();
-			this.getThePhpMatrix_oneUser();
-			this.getNewWeightMatrix_nextStep();
-			
-			// negative CD phase
-			
+	private void setBiasUnitsToOnes_DataMatrix(boolean isForPositivePhase) {
+		for (int i=0; i<this.sizeSoftmax; i++) {
+			if (isForPositivePhase) {
+				this.Md[0][0][i] = 1;
+			} else {
+				this.Mnvp[0][0][i] = 1;
+			}
 		}
+	}
+	
+	private void transposeDataMatrix(boolean isPositiveCD) {
+		if (isPositiveCD) {
+			this.MdT = new double[this.numMovies+1][1][this.sizeSoftmax]; 
+		} else {
+			this.MnvpT = new double[this.numMovies+1][1][this.sizeSoftmax]; 
+		}
+		for (int x=0; x<this.numMovies+1; x++) {
+			for(int z=0; z<this.sizeSoftmax; z++) {
+				if (isPositiveCD) {
+					this.MdT[x][0][z]=this.Md[0][x][z];
+				} else {
+					this.MnvpT[x][0][z]=this.Mnvp[0][x][z];
+				}
+			}
+		}
+		
+		if (isPositiveCD) {
+			System.out.println("\n Transpose matrix of positive Data Matrix Md -> One User");
+			this.printMatrix(this.numMovies+1, 1, this.sizeSoftmax, "transposeDataMatrix_Positive");
+		} else {
+			System.out.println("\n Transpose matrix of negative Data Matrix Mnvp -> One User");
+			this.printMatrix(this.numMovies+1, 1, this.sizeSoftmax, "transposeDataMatrix_Negative");
+		}
+	}
+
+	private void transposeWeightMatrix() {
+		this.MwT = new double[this.sizeHiddenUnits+1][this.numMovies+1][this.sizeSoftmax]; 
+		for (int x=0; x<this.sizeHiddenUnits+1; x++) {
+			for (int y=0; y<this.numMovies+1; y++) {
+				for(int z=0; z<this.sizeSoftmax; z++) {
+					this.MwT[x][y][z]=this.Mw[y][x][z];
+				}
+			}
+		}
+		
+		System.out.println("\n Transpose matrix of Weight Matrix");
+		this.printMatrix(this.sizeHiddenUnits+1, this.numMovies+1, this.sizeSoftmax, "transposeWeightMatrix");
 	}
 	
 	//////////////////////
@@ -178,7 +324,16 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 					case "dataMatrix": System.out.print(" "+this.Md[x][y][z]); break;
 					case "phaMatrix": System.out.print(" "+this.Mpha[x][y][z]); break; 
 					case "phpMatrix": System.out.print(" "+this.Mphp[x][y][z]); break;
-					case "transposeDataMatrix": System.out.print(" "+this.MdT[x][y][z]); 
+					case "phsMatrix": System.out.print(" "+this.Mphs[x][y][z]); break;
+					case "transposeDataMatrix_Positive": System.out.print(" "+this.MdT[x][y][z]); break; 
+					case "transposeDataMatrix_Negative": System.out.print(" "+this.MnvpT[x][y][z]); break; 
+					case "transposeWeightMatrix": System.out.print(" "+this.MwT[x][y][z]); break;
+					case "nvaMatrix": System.out.print(" "+this.Mnva[x][y][z]); break;
+					case "nvpMatrix": System.out.print(" "+this.Mnvp[x][y][z]); break;
+					case "nhaMatrix": System.out.print(" "+this.Mnha[x][y][z]); break; 
+					case "nhpMatrix": System.out.print(" "+this.Mnhp[x][y][z]); break;  
+					case "weightMatrix_positive": System.out.print(" "+this.Mwpos[x][y][z]); break;
+					case "weightMatrix_negative": System.out.print(" "+this.Mwneg[x][y][z]); 
 					}
 				}
 				System.out.println(" softmax "); 
@@ -207,7 +362,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		ratedMoviesIndices.add(new Tuple<Integer, Integer>(6,0));
 		rbmSoftmax.updateTheDataMatrix_oneUser(ratedMoviesIndices);
 		
-		rbmSoftmax.RBM_CD_phases(100);
+		rbmSoftmax.RBM_CD_phases(1);
 	}
 
 }
