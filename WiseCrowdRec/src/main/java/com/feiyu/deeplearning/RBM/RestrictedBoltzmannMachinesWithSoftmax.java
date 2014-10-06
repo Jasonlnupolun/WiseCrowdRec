@@ -7,15 +7,16 @@ import com.feiyu.springmvc.model.Tuple;
 
 public class RestrictedBoltzmannMachinesWithSoftmax {
 	// movie rating is rated from 0 to 10, therefore the softmax in this model is an 11-way softmax
-	private int sizeSoftmax;
 	private int numMovies;
+	private int sizeSoftmax;
 	private int sizeHiddenUnits;
 	private double learningRate;
+	private int numSteps; 
 
-	private double[][][] Md; // 3D data matrix, users X movies X softmax (users X movies X rating), m-by-n-by-k
 	private double[][][] Mw; // 3D weight matrix, movies X hidden units X softmax , n-by-l-by-k
-	private double[][][] MdT; // transpose data matrix, movies X users X softmax , n-by-1-by-k
 	private double[][][] MwT; // transpose weight matrix, hidden units X movies X softmax , l-by-n-by-k
+	private double[][][] Md; // 3D data matrix, users X movies X softmax (users X movies X rating), m-by-n-by-k
+	private double[][][] MdT; // transpose data matrix, movies X users X softmax , n-by-1-by-k
 
 	private double[][][] Mpha; // 3D positive hidden associations matrix, oneUser X hidden X softmax units, 1-by-l-by-k
 	private double[][][] Mphp; // 3D positive hidden probabilities matrix, oneUser X hidden units X softmax, 1-by-l-by-k; Mpha->p(u(i)s(β)h(j))->Mphp
@@ -37,18 +38,24 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	private Random randomN = new Random();
 
 	public RestrictedBoltzmannMachinesWithSoftmax(
-			int sizeSoftmax, int numMovies, int sizeHiddenUnits, double learningRate
+			int numMovies, int sizeSoftmax, int sizeHiddenUnits, double learningRate, int numSteps
 			) {
-		this.sizeSoftmax = sizeSoftmax;
 		this.numMovies = numMovies;
+		this.sizeSoftmax = sizeSoftmax;
 		this.sizeHiddenUnits = sizeHiddenUnits;
 		this.learningRate = learningRate;
-		this.Mw = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		this.numSteps = numSteps;
+		this.initializeWeightMatrix();
 	}
 	
 	//////////////////////
-	public void trainRBMWeightMatrix(int steps){
-		for (int i=1; i<=steps; i++){ 
+	public void trainRBMWeightMatrix(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices){
+		System.out.println("\n----------------------------\n----------------------------\nNew Person .. ");
+		this.updateTheDataMatrix_oneUser(ratedMoviesIndices);
+		System.out.println("\n Recent 3D Weight Matrix");
+		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix");
+		
+		for (int i=1; i<=this.numSteps; i++){ 
 			System.out.println("\n-------\nStep: "+i);
 			// positive Contrastive Divergence(CD) phase
 			this.getPhaMatrixOrNhaMatrix_oneUser(true);
@@ -66,9 +73,14 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			this.getWeightMatrix_ForNextStep();
 		}
 	}
+	
+	public void predictUserPreference() {
+		
+	}
 
 	//////////////////////
-	public void initializeWeightMatrix() {
+	private void initializeWeightMatrix() {
+		this.Mw = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
 		this.setBiasUnitsToZeros_WeightMatrix();
 		for (int i=1; i<=this.numMovies; i++) {
 			for (int y=1; y<=this.sizeHiddenUnits; y++) {
@@ -79,11 +91,11 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			}
 		}
 
-		System.out.println("\n3D Weight Matrix");
+		System.out.println("\n Initialized 3D Weight Matrix");
 		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix");
 	}	
 
-	public void updateTheDataMatrix_oneUser(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
+	private void updateTheDataMatrix_oneUser(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
 		this.Md = new double[1][this.numMovies+1][this.sizeSoftmax]; // one layer in the 3D data matrix is for bias unit
 		int sizeOfRatedMovies = ratedMoviesIndices.size();
 		for (int i=0; i<sizeOfRatedMovies; i++) {
@@ -361,29 +373,41 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			System.out.println(" layer "); 
 		}
 	}
-
+	
+	public void printTrainedWeightMatrix_RBM() {
+		System.out.println("\n----------------------------\n----------------------------\nThe finally trained Weight Matrix of this RBM model:");
+		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix");
+	}
+	
+	public ArrayList<Tuple<Integer,Integer>> insertTraningData_OneUser(int a, int b, int c, int d, int e, int f) {
+		ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices = new ArrayList<Tuple<Integer,Integer>>();
+		ratedMoviesIndices.add(new Tuple<Integer, Integer>(1,a));
+		ratedMoviesIndices.add(new Tuple<Integer, Integer>(2,b));
+		ratedMoviesIndices.add(new Tuple<Integer, Integer>(3,c));
+		ratedMoviesIndices.add(new Tuple<Integer, Integer>(4,d));
+		ratedMoviesIndices.add(new Tuple<Integer, Integer>(5,e));
+		ratedMoviesIndices.add(new Tuple<Integer, Integer>(6,f));
+		return ratedMoviesIndices;
+	}
+	
 	public static void main(String[] argv) {
-		int sizeSoftmax = 2; //rating from 0 to 10
 		int numMovies = 6;
+		int sizeSoftmax = 2; //rating from 0 to 10
 		int sizeHiddenUnits = 2;
 		double learningRate = 0.1;
+		int numSteps = 30;
 
 		RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax = new RestrictedBoltzmannMachinesWithSoftmax(
-				sizeSoftmax, numMovies, sizeHiddenUnits, learningRate
+				numMovies, sizeSoftmax, sizeHiddenUnits, learningRate, numSteps
 				);
 		
-		rbmSoftmax.initializeWeightMatrix();
-
-		ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices = new ArrayList<Tuple<Integer,Integer>>();
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(1,1));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(2,1));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(3,1));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(4,0));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(5,0));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(6,0));
-		rbmSoftmax.updateTheDataMatrix_oneUser(ratedMoviesIndices);
+		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
+		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,0,1,0,0,0));
+		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
+		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
+		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,0,0));
+		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
 		
-		rbmSoftmax.trainRBMWeightMatrix(30);
+		rbmSoftmax.printTrainedWeightMatrix_RBM();
 	}
-
 }
