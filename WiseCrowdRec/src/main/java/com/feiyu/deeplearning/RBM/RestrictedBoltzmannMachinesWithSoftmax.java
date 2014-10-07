@@ -1,4 +1,8 @@
 package com.feiyu.deeplearning.RBM;
+/**
+ * reference: https://github.com/echen/restricted-boltzmann-machines/blob/master/rbm.py by Edwin Chen
+ * @author feiyu
+ */
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -74,8 +78,11 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		}
 	}
 	
-	public void predictUserPreference() {
-		
+	public void predictUserPreference_VisibleToHidden(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
+		System.out.println("\n----------------------------\n----------------------------\nPredict User Preference..");
+		this.updateTheDataMatrix_oneUser(ratedMoviesIndices);
+		this.getPhaMatrixOrNhaMatrix_oneUser(true);
+		this.getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(true);
 	}
 
 	//////////////////////
@@ -395,7 +402,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		int sizeSoftmax = 2; //rating from 0 to 10
 		int sizeHiddenUnits = 2;
 		double learningRate = 0.1;
-		int numSteps = 30;
+		int numSteps = 60;
 
 		RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax = new RestrictedBoltzmannMachinesWithSoftmax(
 				numMovies, sizeSoftmax, sizeHiddenUnits, learningRate, numSteps
@@ -409,5 +416,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
 		
 		rbmSoftmax.printTrainedWeightMatrix_RBM();
+		
+		rbmSoftmax.predictUserPreference_VisibleToHidden(rbmSoftmax.insertTraningData_OneUser(0,0,0,1,1,0));
 	}
 }
