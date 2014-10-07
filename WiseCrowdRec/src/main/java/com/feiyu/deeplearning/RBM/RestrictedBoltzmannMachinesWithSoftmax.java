@@ -16,6 +16,8 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	private int sizeHiddenUnits;
 	private double learningRate;
 	private int numSteps; 
+	private int numTestUsers;
+	private double RMSERBMModel;
 
 	private double[][][] Mw;
 	private double[][][] MwT; 
@@ -37,13 +39,15 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	private Random randomN;
 
 	public RestrictedBoltzmannMachinesWithSoftmax(
-			int numMovies, int sizeSoftmax, int sizeHiddenUnits, double learningRate, int numSteps
+			int numMovies, int sizeSoftmax, int sizeHiddenUnits, double learningRate, int numSteps, int numTestUsers
 			) {
 		this.numMovies = numMovies;
 		this.sizeSoftmax = sizeSoftmax;
 		this.sizeHiddenUnits = sizeHiddenUnits;
 		this.learningRate = learningRate;
 		this.numSteps = numSteps;
+		this.numTestUsers = numTestUsers;
+		this.RMSERBMModel = 0;
 
 		this.Mw = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax]; // 3D weight matrix, movies X hidden units X softmax , n-by-l-by-k
 		this.MwT = new double[this.sizeHiddenUnits+1][this.numMovies+1][this.sizeSoftmax]; // transpose weight matrix, hidden units X movies X softmax , l-by-n-by-k
@@ -107,7 +111,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		}
 	}
 	
-	public void predictUserPreference_VisibleToHidden(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
+	public void predictUserPreference_VisibleToHiddenToVisible(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
 		System.out.println("\n----------------------------\n----------------------------\nPredict User Preference..");
 		boolean isForTrain = false;
 		boolean isPositiveCD = true;
@@ -118,18 +122,41 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		
 		isPositiveCD = false;
 		this.getTheNvaMatrix_oneUser(isForTrain);
-		this.getTheNvpMatrix_oneUser(isForTrain);		
+		this.getTheNvpMatrix_oneUser(isForTrain);
+		
+		// get the root mean squared error for correctness testing
+		this.testCorrectnessOfRBMModel_oneUser();
 	}
 	
-	public void testCorrectnessOfRBMModel() {
-		System.out.println("\n----------------------------\n----------------------------\nCorrectness Testing..");
+	public void averageRMSEOfRBMModel() {
+		System.out.println("\n----------------------------"
+				+ "\n----------------------------"
+				+ "\n Root Mean Squared Error (RMSE) of this RBM Model: "+ this.RMSERBMModel/this.numTestUsers);
+	}
+	
+	private void testCorrectnessOfRBMModel_oneUser() {
 		// use Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
-		
-		
-	}
-	
-	private void RootMeanSquaredError {
-		
+		int curRealRating, curPredRating;
+		boolean findRealRating, findPredRating;
+		double rmse=0; // Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
+		for (int y=1; y<this.numMovies+1; y++) {
+			curRealRating=-1; curPredRating=-1;
+			findRealRating = false; findPredRating = false;
+			for (int z=0; z<this.sizeSoftmax && (!findRealRating || !findPredRating); z++) {
+				if (this.Md[0][y][z] == 1) {
+					curRealRating = z;
+					findRealRating = true;
+				}
+				if (this.Mnvs[0][y][z] == 1) {
+					curPredRating = z;
+					findPredRating = true;
+				}
+			}
+			rmse += Math.pow(curRealRating-curPredRating, 2);
+		}
+		rmse = Math.sqrt(rmse/this.numMovies);
+		System.out.println("rmse for current user: "+rmse);
+		this.RMSERBMModel += rmse;
 	}
 
 	//////////////////////
@@ -470,9 +497,10 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		int sizeHiddenUnits = 2;
 		double learningRate = 0.1;
 		int numSteps = 30;
+		int numTestUsers = 5;
 
 		RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax = new RestrictedBoltzmannMachinesWithSoftmax(
-				numMovies, sizeSoftmax, sizeHiddenUnits, learningRate, numSteps
+				numMovies, sizeSoftmax, sizeHiddenUnits, learningRate, numSteps, numTestUsers
 				);
 		
 		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
@@ -484,10 +512,12 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		
 		rbmSoftmax.getTrainedWeightMatrix_RBM();
 		
-		rbmSoftmax.predictUserPreference_VisibleToHidden(rbmSoftmax.insertTraningData_OneUser(0,0,0,1,1,0));
-		rbmSoftmax.predictUserPreference_VisibleToHidden(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
-		rbmSoftmax.predictUserPreference_VisibleToHidden(rbmSoftmax.insertTraningData_OneUser(1,0,1,0,0,0));
-		rbmSoftmax.predictUserPreference_VisibleToHidden(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
-		rbmSoftmax.predictUserPreference_VisibleToHidden(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,0,0));
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(0,0,0,1,1,0));
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(1,0,1,0,0,0));
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,0,0));
+		
+		rbmSoftmax.averageRMSEOfRBMModel();
 	}
 }
