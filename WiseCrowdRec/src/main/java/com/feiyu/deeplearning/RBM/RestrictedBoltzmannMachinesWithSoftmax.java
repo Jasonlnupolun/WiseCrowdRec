@@ -4,6 +4,8 @@ package com.feiyu.deeplearning.RBM;
  * @author feiyu
  */
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,9 +17,10 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	private int sizeSoftmax;
 	private int sizeHiddenUnits;
 	private double learningRate;
-	private int numSteps; 
-	private int numTestUsers;
+	private int numEpochs; 
 	private double RMSERBMModel;
+	private int numRMSERecords;
+	private BufferedWriter bufferedWriter;
 
 	private double[][][] Mw;
 	private double[][][] MwT; 
@@ -36,18 +39,21 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	private double[][][] Mnhp;
 	private double[][][] Mwrbm;
 	private double[][][] MwrbmT;
+
 	private Random randomN;
 
 	public RestrictedBoltzmannMachinesWithSoftmax(
-			int numMovies, int sizeSoftmax, int sizeHiddenUnits, double learningRate, int numSteps, int numTestUsers
+			int numMovies, int sizeSoftmax, int sizeHiddenUnits, double learningRate, int numEpochs, BufferedWriter bufferedWriter
 			) {
 		this.numMovies = numMovies;
 		this.sizeSoftmax = sizeSoftmax;
 		this.sizeHiddenUnits = sizeHiddenUnits;
 		this.learningRate = learningRate;
-		this.numSteps = numSteps;
-		this.numTestUsers = numTestUsers;
+		this.numEpochs = numEpochs;
+		this.bufferedWriter = bufferedWriter;
+
 		this.RMSERBMModel = 0;
+		this.numRMSERecords = 0;
 
 		this.Mw = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax]; // 3D weight matrix, movies X hidden units X softmax , n-by-l-by-k
 		this.MwT = new double[this.sizeHiddenUnits+1][this.numMovies+1][this.sizeSoftmax]; // transpose weight matrix, hidden units X movies X softmax , l-by-n-by-k
@@ -76,28 +82,28 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		this.MwrbmT = new double[this.sizeHiddenUnits+1][this.numMovies+1][this.sizeSoftmax]; // transpose final trained weight matrix;
 
 		this.randomN = new Random();
-		
+
 		this.initializeWeightMatrix();
 	}
-	
-	//////////////////////
+
+	////////////////////// main training, predicting, and testing process
 	public void trainRBMWeightMatrix(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices){
 		System.out.println("\n----------------------------\n----------------------------\nNew Person .. ");
 		this.updateTheDataMatrix_oneUser(ratedMoviesIndices);
 		System.out.println("\n Recent 3D Weight Matrix");
 		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix");
-		
+
 		boolean isForTrain = true;
 		boolean isPositiveCD;
-		
-		for (int i=1; i<=this.numSteps; i++){ 
+
+		for (int i=1; i<=this.numEpochs; i++){ 
 			System.out.println("\n-------\nStep: "+i);
 			// positive Contrastive Divergence(CD) phase
 			isPositiveCD = true;
 			this.getPhaMatrixOrNhaMatrix_oneUser(isPositiveCD, isForTrain);
 			this.getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(isPositiveCD);
 			this.getPositiveOrNegativeWeightMatrix_ForNextStep(isPositiveCD);
-			
+
 			// negative CD phase
 			isPositiveCD = false;
 			this.getTheNvaMatrix_oneUser(isForTrain);
@@ -105,61 +111,45 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			this.getPhaMatrixOrNhaMatrix_oneUser(isPositiveCD, isForTrain);
 			this.getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(isPositiveCD);
 			this.getPositiveOrNegativeWeightMatrix_ForNextStep(isPositiveCD);
-			
+
 			// get the weight matrix of next step
 			this.getWeightMatrix_ForNextStep();
 		}
 	}
-	
+
 	public void predictUserPreference_VisibleToHiddenToVisible(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
 		System.out.println("\n----------------------------\n----------------------------\nPredict User Preference..");
 		boolean isForTrain = false;
 		boolean isPositiveCD = true;
-		
+
 		this.updateTheDataMatrix_oneUser(ratedMoviesIndices);
 		this.getPhaMatrixOrNhaMatrix_oneUser(isPositiveCD, isForTrain);
 		this.getPhpMatrixAndThePhsMatrixOrNhpMatrix_oneUser(isPositiveCD);
-		
+
 		isPositiveCD = false;
 		this.getTheNvaMatrix_oneUser(isForTrain);
 		this.getTheNvpMatrix_oneUser(isForTrain);
-		
-		// get the root mean squared error for correctness testing
-		this.testCorrectnessOfRBMModel_oneUser();
-	}
-	
-	public void averageRMSEOfRBMModel() {
-		System.out.println("\n----------------------------"
-				+ "\n----------------------------"
-				+ "\n Root Mean Squared Error (RMSE) of this RBM Model: "+ this.RMSERBMModel/this.numTestUsers);
-	}
-	
-	private void testCorrectnessOfRBMModel_oneUser() {
-		// use Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
-		int curRealRating, curPredRating;
-		boolean findRealRating, findPredRating;
-		double rmse=0; // Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
-		for (int y=1; y<this.numMovies+1; y++) {
-			curRealRating=-1; curPredRating=-1;
-			findRealRating = false; findPredRating = false;
-			for (int z=0; z<this.sizeSoftmax && (!findRealRating || !findPredRating); z++) {
-				if (this.Md[0][y][z] == 1) {
-					curRealRating = z;
-					findRealRating = true;
-				}
-				if (this.Mnvs[0][y][z] == 1) {
-					curPredRating = z;
-					findPredRating = true;
-				}
-			}
-			rmse += Math.pow(curRealRating-curPredRating, 2);
-		}
-		rmse = Math.sqrt(rmse/this.numMovies);
-		System.out.println("rmse for current user: "+rmse);
-		this.RMSERBMModel += rmse;
+
+		// get the root mean squared error of current user for correctness testing
+		this.getRMSE_oneUser();
 	}
 
-	//////////////////////
+	public void getRMSEOfRBMModel() throws IOException {
+		this.RMSERBMModel /= this.numRMSERecords;
+		this.bufferedWriter.write(this.numEpochs+" "+this.RMSERBMModel+"\n");
+
+		System.out.println("\n----------------------------"
+				+ "\n----------------------------"
+				+ "\nRoot Mean Squared Error (RMSE) of this RBM Model: "+ this.RMSERBMModel);
+		// please refer to the method getRMSE_oneUser() for details 
+	}
+
+	public void getTrainedWeightMatrix_RBM() {
+		System.out.println("\n----------------------------\n----------------------------\nThe finally trained Weight Matrix of this RBM model:");
+		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix_RBM");
+	}
+
+	////////////////////// for initialization of Data Matrix and Weight Matrix
 	private void initializeWeightMatrix() {
 		this.setBiasUnitsToZeros_WeightMatrix();
 		for (int i=1; i< this.numMovies+1; i++) {
@@ -179,7 +169,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		// one layer in the 3D data matrix is for bias unit
 		this.Md = new double[1][this.numMovies+1][this.sizeSoftmax];
 		int sizeOfRatedMovies = ratedMoviesIndices.size();
-		
+
 		for (int i=0; i<sizeOfRatedMovies; i++) {
 			this.Md[0][ratedMoviesIndices.get(i).getFirst()][ratedMoviesIndices.get(i).getSecond()] = 1;
 		}
@@ -189,7 +179,31 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "dataMatrix");
 	}
 
-	//////////////////////
+	private void setBiasUnitsToZeros_WeightMatrix() {
+		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				this.Mw[0][y][z] = 0;
+			}
+		}
+
+		for (int i=1; i<=this.numMovies; i++) {
+			for (int z=0; z<this.sizeSoftmax; z++) {
+				this.Mw[i][0][z] = 0;
+			}
+		}
+	}
+
+	private void setBiasUnitsToOnes_DataMatrix(boolean isForPositivePhase) {
+		for (int i=0; i<this.sizeSoftmax; i++) {
+			if (isForPositivePhase) {
+				this.Md[0][0][i] = 1;
+			} else {
+				this.Mnvp[0][0][i] = 1;
+			}
+		}
+	}
+
+	////////////////////// For the Contrastive Divergence(CD) part
 	private void getPhaMatrixOrNhaMatrix_oneUser(boolean isPositiveCD, boolean isForTrain) {
 		double temp, curWeight;
 		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
@@ -231,7 +245,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		}
 		double currentSumOfSoftmax, maxProb, curProb;
 		int maxProbIdx;
-		
+
 		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
 			currentSumOfSoftmax = 0; 
 			maxProb = -1; 
@@ -250,7 +264,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 				currentSumOfSoftmax += curProb;
 			}
 			for (int z=0; z<this.sizeSoftmax; z++) {
-//				System.out.println(0+" "+y+" "+z+" "+Math.pow(Math.E, this.Mpha[0][y][z])+" "+currentSumOfSoftmax);
+				//				System.out.println(0+" "+y+" "+z+" "+Math.pow(Math.E, this.Mpha[0][y][z])+" "+currentSumOfSoftmax);
 				if (isPositiveCD) {
 					this.Mphp[0][y][z] = Math.exp(this.Mpha[0][y][z]) / currentSumOfSoftmax;
 					if (z == maxProbIdx) {
@@ -261,7 +275,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 				}
 			}
 		}
-		
+
 		if (isPositiveCD) {
 			System.out.println("\n3D positive hidden probabilities matrix -> One User");
 			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "phpMatrix");
@@ -272,14 +286,14 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			this.printMatrix(1, this.sizeHiddenUnits+1, this.sizeSoftmax, "nhpMatrix");
 		}
 	}
-	
+
 	private void getPositiveOrNegativeWeightMatrix_ForNextStep(boolean isPositiveCD) {
 		if (isPositiveCD) {
 			this.transposeDataMatrix(true);
 		} else {
 			this.transposeDataMatrix(false);
 		}
-		
+
 		for (int x=0; x<this.numMovies+1; x++) {
 			for (int y=0; y<this.sizeHiddenUnits+1; y++) {
 				for (int z=0; z<this.sizeSoftmax; z++) {
@@ -300,7 +314,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix_negative");
 		}
 	}
-	
+
 	private void getTheNvaMatrix_oneUser(boolean isForTrain) {
 		this.transposeWeightMatrix(isForTrain);
 		double productSum, curWeight;
@@ -314,20 +328,20 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 				this.Mnva[0][y][z] = productSum; 
 			}
 		}
-		
+
 		System.out.println("\n3D Negtive visible activations Matrix -> One User");
 		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "nvaMatrix");
 	}
-	
+
 	private void getTheNvpMatrix_oneUser(boolean isForTrain) {
 		//Mnva->p(u(i)s(β)h(j))->Mnvp
 		double currentSumOfSoftmax, maxProb, curProb;
 		int maxProbIdx;
-		
+
 		if (!isForTrain) {
 			this.Mnvs = new double[1][this.numMovies+1][this.sizeSoftmax]; // used for show the predicted user preference
 		}
-		
+
 		for (int y=0; y<this.numMovies+1; y++) {
 			currentSumOfSoftmax = 0;
 			maxProb = -1; 
@@ -336,9 +350,9 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			for (int z=0; z<this.sizeSoftmax; z++) {
 				curProb = Math.exp(this.Mnva[0][y][z]);
 				if ((!isForTrain) && curProb > maxProb) {
-					 //@ Special cases: what if every unit in a softmax has the same probability? e.g: 0.25, 0.25, 0.25, 0.25 in a 4-way softmax
-						maxProb = curProb;
-						maxProbIdx = z;
+					//@ Special cases: what if every unit in a softmax has the same probability? e.g: 0.25, 0.25, 0.25, 0.25 in a 4-way softmax
+					maxProb = curProb;
+					maxProbIdx = z;
 				} 
 				currentSumOfSoftmax += curProb;
 			}
@@ -349,10 +363,10 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 				}
 			}
 		}
-		
+
 		System.out.println("\n3D negative visible probabilities matrix -> One User");
 		this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "nvpMatrix");
-		
+
 		if (isForTrain) {
 			this.setBiasUnitsToOnes_DataMatrix(false);
 			System.out.println("\n3D negative visible probabilities matrix (fixed bias units) -> One User");
@@ -362,7 +376,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			this.printMatrix(1, this.numMovies+1, this.sizeSoftmax, "nvsMatrix");
 		}
 	}
-	
+
 	private void getWeightMatrix_ForNextStep() {
 		for (int i=0; i<this.numMovies+1; i++) {
 			for (int y=0; y<this.sizeHiddenUnits+1; y++) {
@@ -376,32 +390,8 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		System.out.println("\n New Weight Matrix for the next step");
 		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix");
 	}
-	
-	//////////////////////
-	private void setBiasUnitsToZeros_WeightMatrix() {
-		for (int y=0; y<this.sizeHiddenUnits+1; y++) {
-			for (int z=0; z<this.sizeSoftmax; z++) {
-				this.Mw[0][y][z] = 0;
-			}
-		}
 
-		for (int i=1; i<=this.numMovies; i++) {
-			for (int z=0; z<this.sizeSoftmax; z++) {
-				this.Mw[i][0][z] = 0;
-			}
-		}
-	}
-
-	private void setBiasUnitsToOnes_DataMatrix(boolean isForPositivePhase) {
-		for (int i=0; i<this.sizeSoftmax; i++) {
-			if (isForPositivePhase) {
-				this.Md[0][0][i] = 1;
-			} else {
-				this.Mnvp[0][0][i] = 1;
-			}
-		}
-	}
-	
+	//////////////////////	Utilities
 	private void transposeDataMatrix(boolean isPositiveCD) {
 		for (int x=0; x<this.numMovies+1; x++) {
 			for(int z=0; z<this.sizeSoftmax; z++) {
@@ -412,7 +402,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 				}
 			}
 		}
-		
+
 		if (isPositiveCD) {
 			System.out.println("\n Transpose matrix of positive Data Matrix Md -> One User");
 			this.printMatrix(this.numMovies+1, 1, this.sizeSoftmax, "transposeDataMatrix_Positive");
@@ -441,10 +431,9 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		} else {
 			this.printMatrix(this.sizeHiddenUnits+1, this.numMovies+1, this.sizeSoftmax, "transposeWeightMatrix_RBM");
 		}
-		
+
 	}
-	
-	//////////////////////
+
 	private void printMatrix(int sizeX, int sizeY, int sizeZ, String matrixName) {
 		for (int x=0; x<sizeX; x++) {
 			for (int y=0; y<sizeY; y++) {
@@ -473,51 +462,32 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 			}
 			System.out.println(" layer "); 
 		}
-	}
-	
-	public void getTrainedWeightMatrix_RBM() {
-		System.out.println("\n----------------------------\n----------------------------\nThe finally trained Weight Matrix of this RBM model:");
-		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix_RBM");
-	}
-	
-	public ArrayList<Tuple<Integer,Integer>> insertTraningData_OneUser(int a, int b, int c, int d, int e, int f) {
-		ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices = new ArrayList<Tuple<Integer,Integer>>();
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(1,a));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(2,b));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(3,c));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(4,d));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(5,e));
-		ratedMoviesIndices.add(new Tuple<Integer, Integer>(6,f));
-		return ratedMoviesIndices;
-	}
-	
-	public static void main(String[] argv) {
-		int numMovies = 6;
-		int sizeSoftmax = 2; //rating from 0 to 10
-		int sizeHiddenUnits = 2;
-		double learningRate = 0.1;
-		int numSteps = 30;
-		int numTestUsers = 5;
+	}	
 
-		RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax = new RestrictedBoltzmannMachinesWithSoftmax(
-				numMovies, sizeSoftmax, sizeHiddenUnits, learningRate, numSteps, numTestUsers
-				);
-		
-		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
-		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,0,1,0,0,0));
-		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
-		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
-		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,0,0));
-		rbmSoftmax.trainRBMWeightMatrix(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
-		
-		rbmSoftmax.getTrainedWeightMatrix_RBM();
-		
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(0,0,0,1,1,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(1,1,1,0,0,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(1,0,1,0,0,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,1,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(rbmSoftmax.insertTraningData_OneUser(0,0,1,1,0,0));
-		
-		rbmSoftmax.averageRMSEOfRBMModel();
+	private void getRMSE_oneUser() {
+		// use Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
+		int curRealRating, curPredRating;
+		boolean findRealRating, findPredRating;
+		double rmse=0; // Root Mean Squared Error (RMSE) for current user https://www.kaggle.com/wiki/RootMeanSquaredError
+		for (int y=1; y<this.numMovies+1; y++) {
+			this.numRMSERecords++;
+			curRealRating=-1; curPredRating=-1;
+			findRealRating = false; findPredRating = false;
+			for (int z=0; z<this.sizeSoftmax && (!findRealRating || !findPredRating); z++) {
+				if (this.Md[0][y][z] == 1) {
+					curRealRating = z;
+					findRealRating = true;
+				}
+				if (this.Mnvs[0][y][z] == 1) {
+					curPredRating = z;
+					findPredRating = true;
+				}
+			}
+			rmse += Math.pow(curRealRating-curPredRating, 2);
+		}
+		this.RMSERBMModel += rmse;
+
+		rmse = Math.sqrt(rmse/this.numMovies);
+		System.out.println("rmse for current user: "+rmse);
 	}
 }
