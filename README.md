@@ -1,41 +1,45 @@
 WiseCrowdRec
 ============
 
-- [x] Streaming processing - Storm   
-- [x] nosql - Cassandra   
-- [ ] data search - Elasticsearch   
-- [ ] Zookeeper  
-- [x] Hadoop 2.2.0   
-- [x] Machine learning lib - Mahout  
+- [x] Streaming processing   
+    - [x] Storm   
+    - [x] Spark Streaming (Apache Spark 0.9.1)     
+- [x] Deap learning  
+    - [x] Restricted Boltzmann Machines (RBM) for Collaborative Filtering     
+- [x] Machine learning lib 
+    - [x] Mahout on Hadoop (Collaborative Filtering)         
 - [x] nlp  
-    - [x] core NLP  
+    - [x] Stanford CoreNLP    
     - [x] Calais      
-- [x] Tomcat  
-- [x] Spring MVC  
-- [x] REST API  
-- [ ] Ajax  
-- [x] Google Compute Engine  
-- [x] Google Web Toolkit (GWT)  
-- [ ] D3 Force-Directed Graph  
-- [ ] Apache Spark 0.9.1   
-- [ ] Jetty  
+- [ ] Multithreading (in Java)    
 - [x] Rabbitmq    
 - [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
+- [x] Freebase  
+- [x] nosql - Cassandra   
+- [x] data search - Elasticsearch   
+- [x] Hadoop 2.2.0   
+- [x] Tomcat 7    
+- [x] Spring MVC  
+- [x] REST API  
+- [x] Google Compute Engine  
+- [x] Google Web Toolkit (GWT)  
+- [x] D3.js Force-Directed Graph  
+- [x] Jetty  
+- [ ] kafka  
 - [ ] Apache Camel -> from(“file://xxxx").to("activemq://xxxx") (to ActiveMQ's JMS)  
     - $ `netstat -a` -> to check if the activemq process has started    
     - $ `bin/activemq start`   
     - $ `lsof -i:<port>`    
     - $ `kill -9 {PID}`    
     - $ `sudo lsof -i -n -P | grep TCP`  
-- [x] Freebase  
+- [ ] Akka  
+- [ ] Zookeeper  
+- [ ] Ajax  
 - [ ] node.js  
 
 
 To do list:  
-- [ ] java.lang.OutOfMemoryError: PermGen space  
 - [ ] Cassandra - asynchronous -> Astyanax feature      
-- [ ] Allow users access their twitter info (oauth)     
-    - since when multiple user search twitter, they should use their own oauth  
 - [ ] kill storm topology  
 - [ ] Log  
 - [ ] Click "Start Background Topology", if cassandra doesn't open, show info  

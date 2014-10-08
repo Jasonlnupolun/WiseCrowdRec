@@ -74,6 +74,7 @@ public class TestRestrictedBoltzmannMachinesWithSoftmax {
 		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,1,1,1,0));
 		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,1,1,0,0));
 
+		rbmSoftmax.getTrainedWeightMatrix_RBM();
 		rbmSoftmax.getRMSEOfRBMModel();
 	}
 
