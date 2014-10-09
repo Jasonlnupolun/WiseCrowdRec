@@ -88,6 +88,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 						// Get Metadata
 						String lang = tweetStatus.getIsoLanguageCode();
 						if (lang.equals("en")) {
+							_t.setUserId(tweetStatus.getUser().getId());
 							_t.setLang(lang);
 							_t.setTime(tweetStatus.getCreatedAt());
 							_t.setText(tweetStatus.getText().replaceAll("[^a-zA-Z0-9]"," ").toLowerCase());
@@ -128,7 +129,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 									category =  pairs.getValue();
 									EntityInfo eInfo = new EntityInfo(entity, category, 
 											tweet.getSentiment(), GlobalVariables.SENTI_CSS, 
-											tweet.getTime().toString(), tweet.getText());
+											tweet.getTime().toString(), tweet.getText(), tweet.getUserId());
 									it.remove(); // avoids a ConcurrentModificationException
 									return eInfo;
 								} 
@@ -181,10 +182,26 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 
 					@Override
 					public String call(EntityInfo entityInfo) throws Exception {
+						JSONObject jsonObject;
+						jsonObject = new JSONObject();
+						try {
+							jsonObject.put("userid", String.valueOf(entityInfo.getUserid()));
+							jsonObject.put("candidateactor", entityInfo.getEntity());
+							jsonObject.put("rating", String.valueOf(entityInfo.getSentitment())); //sentiment
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						String json = jsonObject.toString();
+						log.info("\n-------------------\n-------------------\ntriple(userid, candidateactor, rating):\n"+json);
+						
+						// rabbitmq, sending training/testing to RBM
+						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, null, json.getBytes());
+						System.out.println(" [x] RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION: Message Sent to queue buffer.");
+
 						return entityInfo.getEntity();
 					}
 				});
-		//		entitiesWithEntityInfo.print();
 
 		JavaPairDStream<String, Integer> entityTuples = entitiesWithEntityInfo.mapToPair(
 				new PairFunction<String, String, Integer>() {
@@ -256,7 +273,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 							// send message to the RabbitMQ queue
 							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, json.getBytes());
 							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
-							
+
 							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART, null, json.getBytes());
 							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART: Message Sent to queue buffer.");
 						}

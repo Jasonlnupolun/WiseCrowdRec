@@ -14,7 +14,9 @@ WiseCrowdRec
 - [ ] Multithreading (in Java)    
 - [x] Rabbitmq    
 - [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
+- [x] WebSocket  
 - [x] Freebase  
+- [x] Twitter4J  
 - [x] nosql - Cassandra   
 - [x] data search - Elasticsearch   
 - [x] Hadoop 2.2.0   

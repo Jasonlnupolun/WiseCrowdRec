@@ -27,7 +27,7 @@ public class TestJavaApiElasticsearchManipulator {
 
 	@Test
 	public void testIndexAJsonFile() throws JsonGenerationException, JsonMappingException, IOException {
-		EntityInfo entityInfo = new EntityInfo("Ann", "People", 1, "alert alert-success", "time","text");
+		EntityInfo entityInfo = new EntityInfo("Ann", "People", 1, "alert alert-success", "time","text",12);
 		String json = serBean2Json.serializeBeans2JSON(entityInfo);
 		IndexResponse idxResponse = esm.indexJson(_idxName, _typeName, json);
 
@@ -44,7 +44,7 @@ public class TestJavaApiElasticsearchManipulator {
 
 	@Test
 	public void testIndexAJsonFileWithDocId() throws JsonGenerationException, JsonMappingException, IOException {
-		EntityInfo entityInfo = new EntityInfo("Bob", "People", 3, "alert alert-success", "time","text");
+		EntityInfo entityInfo = new EntityInfo("Bob", "People", 3, "alert alert-success", "time","text", 26);
 		String json = serBean2Json.serializeBeans2JSON(entityInfo);
 		IndexResponse idxResponse = esm.indexJsonSetId(_idxName, _typeName,json, "6");
 

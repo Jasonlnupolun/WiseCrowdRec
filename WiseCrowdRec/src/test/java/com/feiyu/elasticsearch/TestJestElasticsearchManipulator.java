@@ -21,7 +21,7 @@ public class TestJestElasticsearchManipulator {
 	@Test
 	public void a_TestbuilderIndex_OneRecord() throws JsonGenerationException, JsonMappingException, IOException {
 		//		JestElasticsearchManipulator _jesm = new JestElasticsearchManipulator("wcresidx","dynamicsearchestype");
-		EntityInfo entityInfo = new EntityInfo("SF","city",3,"css","time","text the movie");
+		EntityInfo entityInfo = new EntityInfo("SF","city",3,"css","time","text the movie",12);
 		Entity entity = new Entity();
 		entity.setEntityID("102");
 		entity.setCount(6);
@@ -37,14 +37,14 @@ public class TestJestElasticsearchManipulator {
 		Entity entity1 = new Entity();
 		entity1.setEntityID("100");
 		entity1.setCount(10);
-		entity1.setEntityInfo(new EntityInfo("ann","people",2,"css1","time1","text1 movie"));
+		entity1.setEntityInfo(new EntityInfo("ann","people",2,"css1","time1","text1 movie",26));
 
 		entityList.add(entity1);
 
 		Entity entity2 = new Entity();
 		entity1.setEntityID("101");
 		entity1.setCount(16);
-		entity1.setEntityInfo(new EntityInfo("bob","people",3,"css2","time2","teeeeeeeeeext2 the"));
+		entity1.setEntityInfo(new EntityInfo("bob","people",3,"css2","time2","teeeeeeeeeext2 the", 8));
 
 		entityList.add(entity2);
 

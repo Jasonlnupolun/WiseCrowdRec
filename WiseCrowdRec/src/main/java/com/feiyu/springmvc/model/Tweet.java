@@ -16,17 +16,19 @@ public class Tweet implements java.io.Serializable {
 	private HashMap<String, String> _entities;
 	private int _sentiment;
 	private String _text;
+	private long _userid;
 
 	public Tweet() {
 	}
 
 	public Tweet(Date time, String lang, HashMap<String, String> entities, 
-			String text, int sentiment) {
+			String text, int sentiment, long userid) {
 		_time = time;
 		_lang = lang;
 		_entities = entities;
 		_sentiment = sentiment;
 		_text = text;
+		_userid = userid;
 	}
 
 	public Date getTime() {
@@ -68,6 +70,14 @@ public class Tweet implements java.io.Serializable {
 	public void setText(String text) {
 		_text = text;
 	}
+	
+	public long getUserId() {
+		return _userid;
+	}
+	
+	public void setUserId(long userid) {
+		_userid = userid;
+	}
 
 	@Override
 	public String toString() {
@@ -77,6 +87,7 @@ public class Tweet implements java.io.Serializable {
 				+",sentiment:"+_sentiment
 				+",entities:"+ _entities
 				+",text:"+_text
+				+",userid:"+_userid
 				+"}";
 	}
 }

@@ -99,6 +99,7 @@ public class InitializeWCR implements java.io.Serializable{
 		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, false, false, false, null);
 		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_STORMHISTOGRAMCHART, false, false, false, null);
 		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART, false, false, false, null);
+		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, false, false, false, null);
 	}
 	
 	public void getFreebaseInfo(){

@@ -9,15 +9,17 @@ public class EntityInfo implements java.io.Serializable {
 	private String sentimentCSS;
 	private String time;
 	private String text;
+	private long userid;
 
 	public EntityInfo(String entity, String category, int sentiment, 
-			String sentimentCSS, String time, String text) {
+			String sentimentCSS, String time, String text, long userid) {
 		this.entity = entity;
 		this.category = category;
 		this.sentiment = sentiment;
 		this.sentimentCSS = sentimentCSS;
 		this.time = time;
 		this.text = text;
+		this.userid = userid;
 	}
 
 	public String getEntity() {
@@ -43,6 +45,10 @@ public class EntityInfo implements java.io.Serializable {
 	public String getText() {
 		return text;
 	}
+	
+	public long getUserid() {
+		return userid;
+	}
 
 	@Override
 	public String toString() {
@@ -53,6 +59,7 @@ public class EntityInfo implements java.io.Serializable {
 				+",sentimentCSS:" + sentimentCSS
 				+",time:" + time
 				+",text:" + text
+				+",userid:" + userid
 				+ "}";
 	}
 }
