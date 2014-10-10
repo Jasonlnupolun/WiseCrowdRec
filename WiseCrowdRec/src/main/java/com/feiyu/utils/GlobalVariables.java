@@ -1,5 +1,6 @@
 package com.feiyu.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Properties;
@@ -12,6 +13,8 @@ import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.MovieWithCountComparable;
+import com.feiyu.springmvc.model.RBMMovieInfo;
+import com.feiyu.springmvc.model.RBMUserInfo;
 import com.feiyu.storm.streamingdatacollection.bolt.MovieCounter;
 import com.netflix.astyanax.Keyspace;
 import com.omertron.themoviedbapi.TheMovieDbApi;
@@ -57,4 +60,11 @@ public class GlobalVariables {
 	public static final HashMap<String, MovieCounter> STORM_MOVIELIST_HM = new HashMap<String, MovieCounter>();
 	
 	public static String FREEBASE_API_KEY;
+	
+	public static HashMap<String, RBMUserInfo> RBM_USER_HASHMAP;
+	public static HashMap<String, RBMMovieInfo> RBM_MOVIE_HASHMAP;
+	public static ArrayList<String> RBM_USER_LIST;
+	public static ArrayList<String> RBM_MOVIE_LIST;
+	public static int RBM_USER_MAX_IDX;
+	public static int RBM_MOVIE_MAX_IDX;
 }

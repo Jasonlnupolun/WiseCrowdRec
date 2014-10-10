@@ -37,7 +37,20 @@ public class GetActorMovieGenreSubgraphVectorNEdge {
 		url.put("key", GlobalVariables.FREEBASE_API_KEY); 
 	}
 
-	public void getMovieListByActorName(String actorName) throws IOException, ParseException {
+	public String getMovieListByActorName(String actorName) throws IOException, ParseException {
+		this.init();
+		System.out.println("-----Actor Name: "+actorName+"------getMovieListByActorName");
+		String query = "[{\"starring\": [{\"actor\": \""
+				+ actorName 
+				+"\"}],\"type\": \"/film/film\",\"name\": null,\"mid\": null}]";
+		url.put("query", query);
+		HttpRequest request = requestFactory.buildGetRequest(url);
+		HttpResponse httpResponse = request.execute();
+
+		return httpResponse.parseAsString();
+	}
+
+	public void getMovieListByActorName_printResult(String actorName) throws IOException, ParseException {
 		this.init();
 		System.out.println("-----Actor Name: "+actorName+"------getMovieListByActorName");
 		String query = "[{\"starring\": [{\"actor\": \""
@@ -121,9 +134,9 @@ public class GetActorMovieGenreSubgraphVectorNEdge {
 			initWCR.getFreebaseInfo();
 
 			initWCR.themoviedbOrgInitial();
-
+	
 			GetActorMovieGenreSubgraphVectorNEdge getAMGSubGraphVE = new GetActorMovieGenreSubgraphVectorNEdge();
-			getAMGSubGraphVE.getMovieListByActorName("River Phoenix");
+			getAMGSubGraphVE.getMovieListByActorName_printResult("River Phoenix");
 			getAMGSubGraphVE.getActorNamesByMovieName("Stand by Me");
 			getAMGSubGraphVE.getActorNamesByIMDbMovieID("tt0109830");
 			getAMGSubGraphVE.getFilmGenreByActorNMovieName("Kiefer Sutherland", "Flatliners");

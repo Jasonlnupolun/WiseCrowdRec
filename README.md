@@ -11,7 +11,10 @@ WiseCrowdRec
 - [x] nlp  
     - [x] Stanford CoreNLP    
     - [x] Calais      
-- [ ] Multithreading (in Java)    
+- [ ] Multithreaded, Parallel, and Distributed    
+    - [x] Multithreading (in Java)    
+    - [x] Parallel      
+    - [ ] Distributed      
 - [x] Rabbitmq    
 - [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
 - [x] WebSocket  
