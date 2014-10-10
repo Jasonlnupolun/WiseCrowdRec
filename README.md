@@ -2,46 +2,52 @@ WiseCrowdRec
 ============
 
 - [x] Streaming processing   
-    - [x] Storm   
-    - [x] Spark Streaming (Apache Spark 0.9.1)     
+    - [x] [Storm](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/storm/streamingdatacollection)       
+    - [x] [Spark Streaming (Apache Spark 0.9.1)](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/spark)        
 - [x] Deap learning  
-    - [x] Restricted Boltzmann Machines (RBM) for Collaborative Filtering     
+    - [x] [Restricted Boltzmann Machines (RBM) for Collaborative Filtering](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/deeplearning/RBM)        
 - [x] Machine learning lib 
-    - [x] Mahout on Hadoop (Collaborative Filtering)         
-- [x] nlp  
+    - [x] [Mahout on Hadoop (Collaborative Filtering)](https://github.com/faustineinsun/MahoutHadoopUseCase)           
+- [x] [nlp](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/nlp)    
     - [x] Stanford CoreNLP    
     - [x] Calais      
 - [ ] Multithreaded, Parallel, and Distributed    
     - [x] Multithreading (in Java)    
     - [x] Parallel      
     - [ ] Distributed      
-- [x] Rabbitmq    
-- [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
-- [x] WebSocket  
-- [x] Freebase  
-- [x] Twitter4J  
-- [x] nosql - Cassandra   
-- [x] data search - Elasticsearch   
-- [x] Hadoop 2.2.0   
-- [x] Tomcat 7    
-- [x] Spring MVC  
-- [x] REST API  
-- [x] Google Compute Engine  
-- [x] Google Web Toolkit (GWT)  
-- [x] D3.js Force-Directed Graph  
-- [x] Jetty  
-- [ ] kafka  
-- [ ] Apache Camel -> from(“file://xxxx").to("activemq://xxxx") (to ActiveMQ's JMS)  
+- [x] [WebSocket](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/websocket)    
+- [x] [Rabbitmq](https://github.com/faustineinsun/WiseCrowdRec/search?p=1&q=rabbitmq&utf8=%E2%9C%93)        
+- [x] [ActiveMQ](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/storm/streamingdatacollection/stormmsg2websockets)    
+- [x] [Apache Camel](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/resources/SpringApplicationContext.xml) -> from(“file://xxxx").to("activemq://xxxx") (to ActiveMQ's JMS)  
     - $ `netstat -a` -> to check if the activemq process has started    
     - $ `bin/activemq start`   
     - $ `lsof -i:<port>`    
     - $ `kill -9 {PID}`    
     - $ `sudo lsof -i -n -P | grep TCP`  
+- [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
+- [x] [Freebase](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/semanticweb/freebase/GetActorMovieGenreSubgraphVectorNEdge.java)    
+- [x] [Twitter4J](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/twitter/FollowingWhom.java)    
+- [x] [Sign in with Twitter](https://github.com/faustineinsun/WiseCrowdRec/blob/c2eb79b360ade0aae0b9b44b6c54221110ad05d9/WiseCrowdRec/src/main/java/com/feiyu/springmvc/controller/TweetsAnalyzerController.java)    
+- [x] [nosql - Cassandra](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/Cassandra)     
+- [x] [data search - Elasticsearch](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/elasticsearch)     
+- [x] Hadoop 2.2.0   
+- [x] [Tomcat 7](https://github.com/faustineinsun/WiseCrowdRec/tree/master/bin)      
+- [x] [Spring MVC](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/springmvc)    
+- [x] REST API  
+- [x] Google Compute Engine  
+- [x] Google Web Toolkit (GWT)  
+- [x] [D3.js Force-Directed Graph](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/webapp/resources/js/wisecrowdrec)    
+- [x] Jetty  
+- [ ] kafka  
 - [ ] Akka  
 - [ ] Zookeeper  
 - [ ] Ajax  
 - [ ] node.js  
-
+- [x] [Scripts for running this project automatically](https://github.com/faustineinsun/WiseCrowdRec/tree/master/scripts)  
+- [x] [Unit Test](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/test/java/com/feiyu)  
+- [x] [log4j](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/resources/log4j.properties)    
+- [x] [Maven](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/pom.xml)    
+- [x] [WebApp](https://github.com/faustineinsun/WiseCrowdRec/tree/c2eb79b360ade0aae0b9b44b6c54221110ad05d9/WiseCrowdRec/src/main/webapp)    
 
 To do list:  
 - [ ] Cassandra - asynchronous -> Astyanax feature      
