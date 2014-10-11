@@ -1,4 +1,7 @@
 package com.feiyu.springmvc.model;
+/**
+ * @author feiyu
+ */
 
 public class RBMUserMovieRatingTriple {
 	private int userIdx;

@@ -1,6 +1,9 @@
 package com.feiyu.springmvc.model;
 
 import java.util.HashMap;
+/**
+ * @author feiyu
+ */
 
 public class RBMUserInfo {
 	private int userIdx;
@@ -14,7 +17,7 @@ public class RBMUserInfo {
 	public int getUserIdx() {
 		return this.userIdx;
 	}
-	
+
 	public HashMap<Integer,Integer> getRatedMovies() {
 		// HashMap<Integer, Integer>(movieIdx, rating)
 		return this.ratedMovies;
@@ -23,7 +26,7 @@ public class RBMUserInfo {
 	@Override
 	public String toString() {
 		return "RBMUserInfo:{"
-				+",userIdx:" + Integer.toString(this.userIdx) 
+				+"userIdx:" + Integer.toString(this.userIdx) 
 				+",ratedMovies:" + this.ratedMovies 
 				+ "}";
 	}

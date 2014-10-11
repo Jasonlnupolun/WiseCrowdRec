@@ -1,8 +1,9 @@
 package com.feiyu.deeplearning.RBM;
+
+import com.feiyu.utils.GlobalVariables;
+
 /**
- * 
  * @author feiyu
- *
  */
 
 public class PredictUserPreferences {
@@ -10,19 +11,21 @@ public class PredictUserPreferences {
 	long trianingDataCollectionDurationEach; 
 	long testingDataCollectionDurationEach; 
 	long overhead;
-	
+
 	public PredictUserPreferences(long dataCollectionDuration, long trianingDataCollectionDurationEach,
 			long testingDataCollectionDurationEach, long overhead) {
 		this.dataCollectionDuration = dataCollectionDuration; 
 		this.trianingDataCollectionDurationEach = trianingDataCollectionDurationEach; 
 		this.testingDataCollectionDurationEach = testingDataCollectionDurationEach; 
 		this.overhead = overhead;
+
+		GlobalVariables.KTH_RBM = 0;
 	}
-	
+
 	public void startCollectingData() {
 		System.out.println("\n------------>Start Collecting Data");
 		String dataCollectionThreadName = "RBMDataCollectionThread"; 
-		Runnable collectingData = new RBMDataCollectionThread(dataCollectionThreadName, this.trianingDataCollectionDurationEach, 
+		Runnable collectingData = new ThreadRBMDataCollection(dataCollectionThreadName, this.trianingDataCollectionDurationEach, 
 				this.testingDataCollectionDurationEach, this.dataCollectionDuration);
 		Thread collectingDataThread = new Thread(collectingData);
 
@@ -39,20 +42,20 @@ public class PredictUserPreferences {
 		collectingDataThread.interrupt();
 		System.out.println(collectingDataThread+ " ends at "+System.currentTimeMillis());
 	}
-	
+
 	public void wholeProcess_RBM() {
 	}
-	
-	
+
+
 	public static void main(String[] argv) {
 		long dataCollectionDuration = 30*1000; 
 		long trianingDataCollectionDurationEach = 8000; 
 		long testingDataCollectionDurationEach = 2000; 
 		long overhead = 10000;
-		
+
 		final PredictUserPreferences predictUserPref = new PredictUserPreferences(dataCollectionDuration, trianingDataCollectionDurationEach,
 				testingDataCollectionDurationEach, overhead);
-	
+
 		// Collecting Data
 		Thread collectingDataThread = new Thread () {
 			public void run () {
@@ -60,7 +63,7 @@ public class PredictUserPreferences {
 			}
 		};
 		collectingDataThread.start();
-		
+
 		// 
 	}
 }
