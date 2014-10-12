@@ -17,6 +17,7 @@ import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.MovieWithCountComparable;
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
+import com.feiyu.springmvc.model.RBMUserInfo;
 import com.feiyu.storm.streamingdatacollection.bolt.MovieCounter;
 import com.netflix.astyanax.Keyspace;
 import com.omertron.themoviedbapi.TheMovieDbApi;
@@ -65,10 +66,11 @@ public class GlobalVariables {
 
 	public static int KTH_RBM = -1;
 	public static final Queue<RBMDataQueueElementInfo> RBM_DATA_QUEUE = new LinkedList<RBMDataQueueElementInfo>(); // for the whole RBMs process
+	public static RBMDataQueueElementInfo RBM_DATA_QUEUE_ELEMENT; 
 	public static HashMap<String, RBMMovieInfo> RBM_MOVIE_HASHMAP;
 	public static ArrayList<String> RBM_MOVIE_LIST;
 	public static int RBM_MOVIE_MAX_IDX;
-	//	public static HashMap<String, RBMUserInfo> RBM_USER_HASHMAP;
-	//	public static ArrayList<String> RBM_USER_LIST;
-	//	public static int RBM_USER_MAX_IDX;
+	public static HashMap<String, RBMUserInfo> RBM_USER_HASHMAP;
+	public static ArrayList<String> RBM_USER_LIST;
+	public static int RBM_USER_MAX_IDX;
 }

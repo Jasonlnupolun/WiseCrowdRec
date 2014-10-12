@@ -75,7 +75,6 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 		Authorization auth = new OAuthAuthorization(GlobalVariables.TWT_CONF_BUILDER_DYNA.build());
 		JavaDStream<Status> tweets = TwitterUtils.createStream(ssc, auth, keywords);
 
-		log.debug("<Debug>------start spark");
 		log.info("<Info>------start spark");
 		JavaDStream<Tweet> tweetsInfo = tweets.map(
 				new Function<Status, Tweet>() {

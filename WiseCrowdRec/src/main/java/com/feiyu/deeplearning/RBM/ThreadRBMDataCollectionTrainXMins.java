@@ -3,14 +3,18 @@ package com.feiyu.deeplearning.RBM;
  * @author feiyu
  */
 
+import org.apache.log4j.Logger;
 import org.json.simple.parser.ParseException;
 
-public class ThreadRBMTrainingDataCollection implements Runnable {
+import com.feiyu.spark.SparkTwitterStreaming;
+
+public class ThreadRBMDataCollectionTrainXMins implements Runnable {
+	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
 	private String threadName;
 
-	public ThreadRBMTrainingDataCollection(String threadName) {
+	public ThreadRBMDataCollectionTrainXMins(String threadName) {
 		this.threadName = threadName;
-		System.out.println("Creating " +  this.threadName + " at " +System.currentTimeMillis());
+		log.info("Creating " +  this.threadName + " at " +System.currentTimeMillis());
 	}
 
 	public void run() {
@@ -19,7 +23,7 @@ public class ThreadRBMTrainingDataCollection implements Runnable {
 			rabbitmqServer.rbmRabbitMQServerSide(this.threadName, true); 
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
-			System.out.println(this.threadName+" is interrupted at " + System.currentTimeMillis());
+			log.info(this.threadName+" is interrupted at " + System.currentTimeMillis());
 			//			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();

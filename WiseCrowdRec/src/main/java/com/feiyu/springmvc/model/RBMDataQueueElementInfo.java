@@ -6,34 +6,60 @@ import java.util.HashMap;
  */
 
 public class RBMDataQueueElementInfo {
-	boolean isForTrain;
-	int kthRBM;
-	HashMap<String, RBMUserInfo> userHashMap;
+	private int kthRBM;
+	private	HashMap<String, RBMMovieInfo> movieHashMap;
+	private	HashMap<String, RBMUserInfo> userHashMapTrain;
+	private	HashMap<String, RBMUserInfo> userHashMapTest;
 
-	public RBMDataQueueElementInfo(boolean isForTrain, int kthRBM, HashMap<String, RBMUserInfo> userHashMap) {
-		this.isForTrain = isForTrain;
+	public RBMDataQueueElementInfo(
+			int kthRBM, HashMap<String, RBMMovieInfo> movieHashMap, 
+			HashMap<String, RBMUserInfo> userHashMapTrain, HashMap<String,RBMUserInfo> userHashMapTest) {
 		this.kthRBM = kthRBM;
-		this.userHashMap = userHashMap;
+		this.movieHashMap = movieHashMap;
+		this.userHashMapTrain = userHashMapTrain;
+		this.userHashMapTest = userHashMapTest;
 	}
 
-	public boolean getIsForTrain() {
-		return this.isForTrain;
+	public void setKthRBM(int kthRBM) {
+		this.kthRBM = kthRBM;
+	}
+
+	public void setMovieHashMap(HashMap<String, RBMMovieInfo> movieHashMap) {
+		this.movieHashMap = movieHashMap;
+	}
+
+	public void setUserHashMapTrain(HashMap<String, RBMUserInfo> userHashMapTrain) {
+		this.userHashMapTrain = userHashMapTrain;
+	}
+
+	public void setUserHashMapTest(HashMap<String,RBMUserInfo> userHashMapTest) {
+		this.userHashMapTest = userHashMapTest;
 	}
 
 	public int getKthRBM() {
 		return this.kthRBM;
 	}
 
-	public HashMap<String, RBMUserInfo> getUserHashMap() {
-		return this.userHashMap;
+	public HashMap<String, RBMMovieInfo> getMovieHashMap() {
+		return this.movieHashMap;
 	}
+
+	public HashMap<String, RBMUserInfo> getUserHashMapTrain() {
+		return this.userHashMapTrain;
+	}
+
+	public HashMap<String, RBMUserInfo> getUserHashMapTest() {
+		return this.userHashMapTest;
+	}
+
 
 	@Override
 	public String toString() {
 		return "RBMDataQueueElementInfo:{"
-				+"isForTrain:"+ this.isForTrain
-				+",kthRBM:"+ this.kthRBM
-				+",userHashMap:" + this.userHashMap
+				+"kthRBM:"+ this.kthRBM
+				+",movieHashMap:" + this.movieHashMap
+				+",userHashMapTrain:"+ this.userHashMapTrain
+				+",userHashMapTest:"+ this.userHashMapTest
 				+ "}";
 	}
 }

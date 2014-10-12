@@ -3,6 +3,9 @@ package com.feiyu.deeplearning.RBM;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
+import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.utils.GlobalVariables;
 
@@ -11,6 +14,7 @@ import com.feiyu.utils.GlobalVariables;
  */
 
 public class GetTrainingTestingDataCurrentKMins {
+	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
 
 	public GetTrainingTestingDataCurrentKMins() {
 		GlobalVariables.RBM_MOVIE_HASHMAP= new HashMap<String, RBMMovieInfo>();
@@ -19,43 +23,44 @@ public class GetTrainingTestingDataCurrentKMins {
 	}
 
 	public void startRBMDataCollection(long durationTrain, long durationTest) {
+		// Collecting Training and Testing Data, as well as push each train/test user-ratedMovies-List into DataQueue(FIFO)
 		this.startCollectTrainingData(durationTrain);
 		this.startCollectTestingData(durationTest);
 	}	
 
 	private void startCollectTrainingData(long duration) {
-		System.out.println("\n------------>startCollectTrainingData");
+		log.info("\n------------>startCollectTrainingData");
 		String trainingDataThreadName = "RBMTrainingDataCollectionThread"; 
-		Runnable collectTrainingData = new ThreadRBMTrainingDataCollection(trainingDataThreadName);
+		Runnable collectTrainingData = new ThreadRBMDataCollectionTrainXMins(trainingDataThreadName);
 		Thread collectTrainingDataThread = new Thread(collectTrainingData);
 
-		System.out.println("Starting "+ trainingDataThreadName+" at "+System.currentTimeMillis());
+		log.info("Starting "+ trainingDataThreadName+" at "+System.currentTimeMillis());
 		collectTrainingDataThread.start();
 
 		try {
 			Thread.sleep(duration);
 		} catch (InterruptedException e) {
 			//			e.printStackTrace();
-			System.out.println("startRBMDataCollection() sleep thread is interrupted at "+ System.currentTimeMillis());
+			log.info("startRBMDataCollection() sleep thread is interrupted at "+ System.currentTimeMillis());
 		}
 
 		collectTrainingDataThread.interrupt();
 	}
 
 	private void startCollectTestingData(long duration) {
-		System.out.println("\n------------>startCollectTestingData");
+		log.info("\n------------>startCollectTestingData");
 		String testingDataThreadName = "RBMTestingDataCollectionThread"; 
-		Runnable collectTestingData = new ThreadRBMTestingDataCollection(testingDataThreadName);
+		Runnable collectTestingData = new ThreadRBMDataCollectionTestYMins(testingDataThreadName);
 		Thread collectTestingDataThread = new Thread(collectTestingData);
 
-		System.out.println("Starting "+ testingDataThreadName +" at "+System.currentTimeMillis());
+		log.info("Starting "+ testingDataThreadName +" at "+System.currentTimeMillis());
 		collectTestingDataThread.start();
 
 		try {
 			Thread.sleep(duration);
 		} catch (InterruptedException e) {
 			//					e.printStackTrace();
-			System.out.println("startRBMDataCollection() sleep thread is interrupted at "+System.currentTimeMillis());
+			log.info("startRBMDataCollection() sleep thread is interrupted at "+System.currentTimeMillis());
 		}
 
 		collectTestingDataThread.interrupt();
