@@ -105,4 +105,16 @@ public class InitializeWCR implements java.io.Serializable{
 	public void getFreebaseInfo(){
 		GlobalVariables.FREEBASE_API_KEY = GlobalVariables.WCR_PROPS.getProperty("freebase.api.key");
 	}
+	
+	public void initializeRBM() {
+//		GlobalVariables.RBM_OVERHEAD = 10000;
+//		GlobalVariables.RBM_DATA_COLLECTION_DURATION = 30*1000; 
+		GlobalVariables.RBM_EACH_TRAIN_DURATION = 8*4*1000; 
+		GlobalVariables.RBM_EACH_TEST_DURATION = 2*4*1000; 
+		GlobalVariables.RBM_SIZE_SOFTMAX = 5; // Sentiment(5-point scale/5-way softmax): "Very negative(0)", "Negative(1)", "Neutral(2)", "Positive(3)", "Very positive(4)"
+		GlobalVariables.RBM_SIZE_HIDDEN_UNITS = 6; // http://en.wikipedia.org/wiki/List_of_genres
+		GlobalVariables.RBM_LEARNING_RATE = 0.1;
+		GlobalVariables.RBM_NUM_EPOCHS = 2;
+		GlobalVariables.RBM_DRAW_CHART = true; // true
+	}
 }

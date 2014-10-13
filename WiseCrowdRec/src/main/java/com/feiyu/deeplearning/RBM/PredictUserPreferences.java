@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.utils.GlobalVariables;
+import com.feiyu.utils.InitializeWCR;
 
 /**
  * @author feiyu
@@ -11,37 +12,24 @@ import com.feiyu.utils.GlobalVariables;
 
 public class PredictUserPreferences {
 	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
-	private long overhead;
-	private long eachTrainDuration;
-	private long eachTestDuration;
-	private long dataCollectionDuration;
-	private int sizeSoftmax;
-	private int sizeHiddenUnits;
-	private double learningRate;
-	private int numEpochs;
-	private boolean drawChart;
 
-	public PredictUserPreferences(long overhead,long eachTrainDuration, long eachTestDuration, long dataCollectionDuration,
-			int sizeSoftmax, int sizeHiddenUnits, double learningRate, int numEpochs, boolean drawChart) {
-		this.overhead = overhead;
-		this.eachTrainDuration = eachTrainDuration;
-		this.eachTestDuration = eachTestDuration;
-		this.dataCollectionDuration = dataCollectionDuration;
-		this.sizeSoftmax = sizeSoftmax;
-		this.sizeHiddenUnits = sizeHiddenUnits;
-		this.learningRate = learningRate;
-		this.numEpochs = numEpochs;
-		this.drawChart = drawChart;
-
+	public PredictUserPreferences() {
 		GlobalVariables.KTH_RBM = 0;
 	}
+	
+	public void startPredictUserPreferences() {
+		Thread predictUserPrefThread = new Thread () {
+			public void run () {
+				GlobalVariables.RBM_PREDICT_USER_PREF.startRBMWholeProcess();
+			}
+		};
+		predictUserPrefThread.start();
+	}
 
-	public void start() {
+	private void startRBMWholeProcess() {
 		log.info("\n------------>Start Collecting Data");
 		String rbmWholeProcessThreadName = "rbmWholeProcessThread"; 
-		Runnable rbmWholeProcessRunnable = new ThreadRBMWholeProcess(
-				rbmWholeProcessThreadName, this.eachTrainDuration, this.eachTestDuration, this.dataCollectionDuration,
-				this.sizeSoftmax, this.sizeHiddenUnits, this.learningRate, this.numEpochs, this.drawChart);
+		Runnable rbmWholeProcessRunnable = new ThreadRBMWholeProcess(rbmWholeProcessThreadName);
 		Thread rbmWholeProcessThread = new Thread(rbmWholeProcessRunnable);
 
 		log.info("Starting "+ rbmWholeProcessThreadName +" at time "+System.currentTimeMillis());
@@ -49,35 +37,29 @@ public class PredictUserPreferences {
 
 		// run collecting data within duration this.dataCollectionDuration + this.overhead
 		// contains multiple trainingDataCollection+testingDataCollection cycles
-		try {
-			Thread.sleep(this.dataCollectionDuration + this.overhead);
-		} catch (InterruptedException e) {
-			log.info("PredictUserPreferences is interrupted at " + System.currentTimeMillis());
-		}
-		rbmWholeProcessThread.interrupt();
-		log.info(rbmWholeProcessThreadName + " ends at "+System.currentTimeMillis());
+//		try {
+//			Thread.sleep(GlobalVariables.RBM_DATA_COLLECTION_DURATION + GlobalVariables.RBM_OVERHEAD);
+//		} catch (InterruptedException e) {
+//			log.info("PredictUserPreferences is interrupted at " + System.currentTimeMillis());
+//		}
+//		rbmWholeProcessThread.interrupt();
+//		log.info(rbmWholeProcessThreadName + " ends at "+System.currentTimeMillis());
 	}
 
 	public static void main(String[] argv) {
-		long overhead = 10000;
-		long dataCollectionDuration = 30*1000; 
-		long eachTrainDuration = 8000; 
-		long eachTestDuration = 2000; 
-		int sizeSoftmax = 5; // Sentiment(5-point scale/5-way softmax): "Very negative(0)", "Negative(1)", "Neutral(2)", "Positive(3)", "Very positive(4)"
-		int sizeHiddenUnits = 6; // http://en.wikipedia.org/wiki/List_of_genres
-		double learningRate = 0.1;
-		int numEpochs = 1;
-		boolean drawChart = false; // true
+//		GlobalVariables.RBM_OVERHEAD = 10000;
+//		GlobalVariables.RBM_DATA_COLLECTION_DURATION = 30*1000; 
+//		GlobalVariables.RBM_EACH_TRAIN_DURATION = 8000; 
+//		GlobalVariables.RBM_EACH_TEST_DURATION = 2000; 
+//		GlobalVariables.RBM_SIZE_SOFTMAX = 5; // Sentiment(5-point scale/5-way softmax): "Very negative(0)", "Negative(1)", "Neutral(2)", "Positive(3)", "Very positive(4)"
+//		GlobalVariables.RBM_SIZE_HIDDEN_UNITS = 6; // http://en.wikipedia.org/wiki/List_of_genres
+//		GlobalVariables.RBM_LEARNING_RATE = 0.1;
+//		GlobalVariables.RBM_NUM_EPOCHS = 1;
+//		GlobalVariables.RBM_DRAW_CHART = false; // true
 
-		final PredictUserPreferences predictUserPref = new PredictUserPreferences(
-				overhead, eachTrainDuration, eachTestDuration, dataCollectionDuration,
-				sizeSoftmax, sizeHiddenUnits, learningRate, numEpochs, drawChart);
+		InitializeWCR initWCR = new InitializeWCR();
+		initWCR.initializeRBM();
 
-		Thread predictUserPrefThread = new Thread () {
-			public void run () {
-				predictUserPref.start();
-			}
-		};
-		predictUserPrefThread.start();
+		GlobalVariables.RBM_PREDICT_USER_PREF.startPredictUserPreferences();
 	}
 }

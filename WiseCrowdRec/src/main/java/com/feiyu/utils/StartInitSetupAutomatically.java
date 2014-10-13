@@ -27,6 +27,7 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
 			initWcr.rabbitmqInit();
+			initWcr.initializeRBM();
 			
 			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
 

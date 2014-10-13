@@ -27,24 +27,12 @@ import com.feiyu.utils.GlobalVariables;
 public class ThreadRBMTrainingKMins  implements Runnable {
 	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
 	private String threadName;
-	private int sizeSoftmax; 
-	private int sizeHiddenUnits;
-	private double learningRate;
-	private int numEpochs;
-	private boolean drawChart;
 	private RBMDataQueueElementInfo currentData;
 	private int numMovies; // move list size changes in each RBM Model 
 	private boolean successfullyTrainedThisRBM;
 
-	public ThreadRBMTrainingKMins(
-			String threadName, int sizeSoftmax, int sizeHiddenUnits,
-			double learningRate, int numEpochs, boolean drawChart, RBMDataQueueElementInfo currentData) {
+	public ThreadRBMTrainingKMins( String threadName , RBMDataQueueElementInfo currentData) {
 		this.threadName = threadName;
-		this.sizeSoftmax = sizeSoftmax;
-		this.sizeHiddenUnits = sizeHiddenUnits; 
-		this.learningRate =learningRate;
-		this.numEpochs = numEpochs;
-		this.drawChart = drawChart; 
 		this.currentData = new RBMDataQueueElementInfo(
 				currentData.getKthRBM(),
 				new HashMap<String, RBMMovieInfo>(currentData.getMovieHashMap()),
@@ -79,20 +67,21 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		// Train Model
-		if (this.drawChart) {
-			for (int i=1; i<=this.numEpochs; i++) {
+		if (GlobalVariables.RBM_DRAW_CHART) {
+			for (int i=1; i<=GlobalVariables.RBM_NUM_EPOCHS; i++) {
 				this.trainRBMWithCertainEpoch(i, bw);
 			}
 			bw.close();
 			log.info("Saved rmse-by-epoch to src/main/resources/"+RMSEfileName+".txt!!");
 		} else {
-			this.trainRBMWithCertainEpoch(this.numEpochs, bw);
+			this.trainRBMWithCertainEpoch(GlobalVariables.RBM_NUM_EPOCHS, bw);
 		}
 	}
 
 	private void trainRBMWithCertainEpoch(int epochs, BufferedWriter bw) throws IOException {			
 		RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax = new RestrictedBoltzmannMachinesWithSoftmax(
-				this.numMovies, this.sizeSoftmax, this.sizeHiddenUnits, this.learningRate, epochs, bw
+				this.numMovies, GlobalVariables.RBM_SIZE_SOFTMAX, GlobalVariables.RBM_SIZE_HIDDEN_UNITS, 
+				GlobalVariables.RBM_LEARNING_RATE, epochs, bw
 				);
 		// Train RBM
 		this.trainOrTestRBM(rbmSoftmax, true);
@@ -149,11 +138,11 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 					+"cuz this newly weight matrix didn't trained curretly or it's null!!");
 		} else if (GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT == null 
 				|| GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getKthRBM() < this.currentData.getKthRBM()) {
-			double[][][] trainedMwrbm = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+			double[][][] trainedMwrbm = new double[this.numMovies+1][GlobalVariables.RBM_SIZE_HIDDEN_UNITS+1][GlobalVariables.RBM_SIZE_SOFTMAX];
 			double[][][] curMwrbm = rbmSoftmax.getTrainedWeightMatrix_RBM();
 			for (int x=0; x<this.numMovies+1; x++) {
-				for (int y=0; y<this.sizeHiddenUnits+1; y++) {
-					for (int z=0; z<this.sizeSoftmax; z++) {
+				for (int y=0; y<GlobalVariables.RBM_SIZE_HIDDEN_UNITS+1; y++) {
+					for (int z=0; z<GlobalVariables.RBM_SIZE_SOFTMAX; z++) {
 						trainedMwrbm[x][y][z] = curMwrbm[x][y][z];
 					}
 				}
@@ -164,14 +153,15 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 					new HashMap<String, RBMMovieInfo>(this.currentData.getMovieHashMap()),
 					trainedMwrbm
 					);
+			
+			log.info("********Get client weight matrix for prediction..");
+			rbmSoftmax.printMatrix(this.numMovies+1, GlobalVariables.RBM_SIZE_HIDDEN_UNITS+1, GlobalVariables.RBM_SIZE_SOFTMAX, "clientWeightMatrix_RBM");
 		} else if (GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getKthRBM() > this.currentData.getKthRBM()) {
 			log.debug("Didn't update the client weight matix for prediction, "
 					+ "cuz it took long time for training the weight matirx for the "+this.currentData.getKthRBM()+"-th RBM");
 		} else {
 			log.error("updateClientWeightMatixForPrediction: error happened!!");
 		}
-		log.info("********Get client weight matrix for prediction..");
-		rbmSoftmax.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "clientWeightMatrix_RBM");
 	}
 
 	private void showTrainingTestingData(RBMDataQueueElementInfo currentData) {

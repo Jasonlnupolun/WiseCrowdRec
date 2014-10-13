@@ -12,6 +12,7 @@ import mx.bigdata.jcalais.CalaisClient;
 
 import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
 import com.feiyu.Cassandra.AstyanaxCassandraUserList;
+import com.feiyu.deeplearning.RBM.PredictUserPreferences;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.MovieWithCountComparable;
@@ -64,6 +65,17 @@ public class GlobalVariables {
 	public static final HashMap<String, MovieCounter> STORM_MOVIELIST_HM = new HashMap<String, MovieCounter>();
 
 	public static String FREEBASE_API_KEY;
+	
+	public static final PredictUserPreferences RBM_PREDICT_USER_PREF = new PredictUserPreferences();
+//	public static long RBM_OVERHEAD;
+	public static long RBM_EACH_TRAIN_DURATION;
+	public static long RBM_EACH_TEST_DURATION;
+//	public static long RBM_DATA_COLLECTION_DURATION;
+	public static int RBM_SIZE_SOFTMAX;
+	public static int RBM_SIZE_HIDDEN_UNITS;
+	public static double RBM_LEARNING_RATE;
+	public static int RBM_NUM_EPOCHS;
+	public static boolean RBM_DRAW_CHART;
 
 	public static int KTH_RBM = -1;
 	public static final Queue<RBMDataQueueElementInfo> RBM_DATA_QUEUE = new LinkedList<RBMDataQueueElementInfo>(); // for the whole RBMs process

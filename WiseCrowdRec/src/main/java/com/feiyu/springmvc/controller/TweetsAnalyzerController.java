@@ -61,6 +61,7 @@ public class TweetsAnalyzerController {
 		//		}
 
 		GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
+		GlobalVariables.RBM_PREDICT_USER_PREF.startPredictUserPreferences();
 	}
 
 	@RequestMapping(value = "signinwithtwitter/login", params = {"callbackURL"} , method = RequestMethod.GET)
