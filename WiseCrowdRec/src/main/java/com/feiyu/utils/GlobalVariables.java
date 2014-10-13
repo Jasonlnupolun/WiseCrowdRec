@@ -15,6 +15,7 @@ import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.MovieWithCountComparable;
+import com.feiyu.springmvc.model.RBMClientWeightMatixForPredict;
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.springmvc.model.RBMUserInfo;
@@ -73,4 +74,5 @@ public class GlobalVariables {
 	public static HashMap<String, RBMUserInfo> RBM_USER_HASHMAP;
 	public static ArrayList<String> RBM_USER_LIST;
 	public static int RBM_USER_MAX_IDX;
+	public static RBMClientWeightMatixForPredict RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT;
 }

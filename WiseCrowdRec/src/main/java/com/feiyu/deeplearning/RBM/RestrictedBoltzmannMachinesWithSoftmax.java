@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.Tuple;
+import com.feiyu.utils.GlobalVariables;
 
 public class RestrictedBoltzmannMachinesWithSoftmax {
 	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
@@ -148,9 +149,19 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		// please refer to the method getRMSE_oneUser() for details 
 	}
 
-	public void getTrainedWeightMatrix_RBM() {
+	public double[][][] getTrainedWeightMatrix_RBM() {
 		log.info("\n----------------------------\n----------------------------\nGet the finally trained Weight Matrix of this RBM model..");
 		this.printMatrix(this.numMovies+1, this.sizeHiddenUnits+1, this.sizeSoftmax, "weightMatrix_RBM");
+		
+		double[][][] trainedMwrbm = new double[this.numMovies+1][this.sizeHiddenUnits+1][this.sizeSoftmax];
+		for (int x=0; x<this.numMovies+1; x++) {
+			for (int y=0; y<this.sizeHiddenUnits+1; y++) {
+				for (int z=0; z<this.sizeSoftmax; z++) {
+					trainedMwrbm[x][y][z] = this.Mwrbm[x][y][z];
+				}
+			}
+		}
+		return trainedMwrbm;
 	}
 
 	////////////////////// for initialization of Data Matrix and Weight Matrix
@@ -438,7 +449,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 
 	}
 
-	private void printMatrix(int sizeX, int sizeY, int sizeZ, String matrixName) {
+	public void printMatrix(int sizeX, int sizeY, int sizeZ, String matrixName) {
 		
 		for (int x=0; x<sizeX; x++) {
 			for (int y=0; y<sizeY; y++) {
@@ -461,7 +472,8 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 					case "weightMatrix_positive": str +=" "+this.Mwpos[x][y][z]; break;
 					case "weightMatrix_negative": str +=" "+this.Mwneg[x][y][z]; break;
 					case "weightMatrix_RBM": str +=" "+this.Mwrbm[x][y][z]; break;
-					case "transposeWeightMatrix_RBM": str +=" "+this.MwrbmT[x][y][z]; 
+					case "transposeWeightMatrix_RBM": str +=" "+this.MwrbmT[x][y][z]; break; 
+					case "clientWeightMatrix_RBM": str +=" "+ GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getWeightMatrixCurrentRBM()[x][y][z]; 
 					}
 				}
 				log.debug(str+" softmax "); 

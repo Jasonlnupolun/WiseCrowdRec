@@ -23,7 +23,7 @@ public class TestRestrictedBoltzmannMachinesWithSoftmax {
 
 		// create a file for collecting the RMSE of Epochs from 1 to numEpochs
 		String RMSEfileName = "RMSEByEpochs_TrainedRBMModel";
-		File file = new File("src/main/resources/"+RMSEfileName+".txt");
+		File file = new File("src/main/resources/RBM/"+RMSEfileName+".txt");
 		if (!file.exists()) {
 			file.createNewFile();
 		}
