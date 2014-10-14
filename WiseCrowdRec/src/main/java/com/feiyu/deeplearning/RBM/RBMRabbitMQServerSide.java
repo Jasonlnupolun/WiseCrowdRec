@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.feiyu.semanticweb.freebase.GetActorMovieGenreSubgraphVectorNEdge;
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
@@ -38,7 +37,7 @@ public class RBMRabbitMQServerSide {
 		GlobalVariables.RBM_USER_MAX_IDX = -1;
 	}
 
-	public void rbmRabbitMQServerSide(String threadName, boolean isForTrain) throws ParseException {
+	public void rbmRabbitMQServerSide(String threadName, boolean isForTrain) throws ParseException  {
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setHost("localhost");
@@ -56,16 +55,16 @@ public class RBMRabbitMQServerSide {
 				try {
 					delivery = consumer.nextDelivery();
 					String message = new String(delivery.getBody());
-					log.info(" [...x...] "+ threadName +"server received '" + message.replaceAll("\\s+","") + "'");
+					log.info(" [...x...] "+ threadName +" server received '" + message.replaceAll("\\s+","") + "'");
 
 					// triple(userid, candidateactor, rating)
 					JSONParser parser = new JSONParser();
 					JSONObject jsonTipleUCR = (JSONObject)parser.parse(message);
 
-					GetActorMovieGenreSubgraphVectorNEdge getActorMovies = new GetActorMovieGenreSubgraphVectorNEdge();
-					String actorMovieList = getActorMovies.getMovieListByActorName(jsonTipleUCR.get("candidateactor").toString());
+					String actorMovieList = GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(jsonTipleUCR.get("candidateactor").toString());
 					JSONObject jsonActorMovieList= (JSONObject)parser.parse(actorMovieList);
 					JSONArray jsonArrayMovieList = (JSONArray)jsonActorMovieList.get("result");
+					log.info("%%%%%% " + jsonArrayMovieList.size() +" movies of the actor named " + jsonTipleUCR.get("candidateactor").toString());
 					for (Object result : jsonArrayMovieList) {
 						this.storeTripleIntoRBMDataMatix(jsonTipleUCR.get("userid").toString(), 
 								JsonPath.read(result,"$.name").toString(), //@ java.lang.NullPointerException 
@@ -73,18 +72,34 @@ public class RBMRabbitMQServerSide {
 								isForTrain);
 						log.info(jsonTipleUCR.get("userid")+" -- "+JsonPath.read(result,"$.name").toString()+" -- "+jsonTipleUCR.get("rating"));
 					}
-				} catch (ShutdownSignalException | ConsumerCancelledException e) {
+					
+					int numUsers = GlobalVariables.RBM_USER_HASHMAP.size(); 
+					if (isForTrain) {
+						if ( numUsers >= GlobalVariables.RBM_USER_MAX_NUMBER_TRAIN) {
+							GlobalVariables.RBM_COLLECT_TRAINING_DATA_THREAD.interrupt();
+							log.info("%%%%%%%%%%%%%%%%%% numUsers for train " + numUsers
+									+ " RBM_COLLECT_TRAINING_DATA_THREAD.interrupt()");
+							GlobalVariables.RBM_DATA_QUEUE.add(
+									new RBMDataQueueElementInfo(
+											++GlobalVariables.KTH_RBM,
+											new HashMap<String, RBMMovieInfo>(),
+											new HashMap<String, RBMUserInfo>(GlobalVariables.RBM_USER_HASHMAP),
+											new HashMap<String, RBMUserInfo>()
+											));
+							break;
+						}
+					} else {
+						if ( numUsers >= GlobalVariables.RBM_USER_MAX_NUMBER_TEST) {
+							GlobalVariables.RBM_COLLECT_TESTING_DATA_THREAD.interrupt();
+							log.info("%%%%%%%%%%%%%%%%%% numUsers for test " + numUsers
+									+ " RBM_COLLECT_TESTING_DATA_THREAD.interrupt()");
+							break;
+						}
+					}
+				} catch (ShutdownSignalException | ConsumerCancelledException e ) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					if (isForTrain) {
-						GlobalVariables.RBM_DATA_QUEUE.add(
-								new RBMDataQueueElementInfo(
-										++GlobalVariables.KTH_RBM,
-										new HashMap<String, RBMMovieInfo>(),
-										new HashMap<String, RBMUserInfo>(GlobalVariables.RBM_USER_HASHMAP),
-										new HashMap<String, RBMUserInfo>()
-								));
-					} 
+					log.debug("rbmRabbitMQServerSide is interrupted, isForTrain:" + isForTrain);
 				}
 			}
 		} catch (IOException e1) {

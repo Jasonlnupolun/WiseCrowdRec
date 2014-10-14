@@ -29,10 +29,7 @@ public class ThreadRBMWholeProcess implements Runnable {
 			while (true) {
 				// Data Collection
 				GetTrainingTestingDataCurrentKMins getData = new GetTrainingTestingDataCurrentKMins();
-				getData.startRBMDataCollection(
-						GlobalVariables.RBM_EACH_TRAIN_DURATION, 
-						GlobalVariables.RBM_EACH_TEST_DURATION
-						);
+				getData.startRBMDataCollection();
 
 				// Training RBMs
 				log.info("\n------------>Start train RBMs");

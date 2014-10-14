@@ -188,7 +188,7 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 			itUserTrain.remove(); // avoids a ConcurrentModificationException
 		}
 		log.info(">>>>>>>>numUsersForTest "+ currentData.getUserHashMapTest().size());
-		Iterator<Entry<String, RBMUserInfo>> itUserTest = currentData.getUserHashMapTrain().entrySet().iterator();
+		Iterator<Entry<String, RBMUserInfo>> itUserTest = currentData.getUserHashMapTest().entrySet().iterator();
 		while (itUserTest.hasNext()) {
 			Map.Entry<String, RBMUserInfo> pairs = (Map.Entry<String, RBMUserInfo>)itUserTest.next();
 			log.info(">>>>>>>>"+pairs.getKey() + " = " + pairs.getValue());

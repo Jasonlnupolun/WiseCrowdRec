@@ -18,6 +18,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
 import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
+import com.google.api.client.http.GenericUrl;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.rabbitmq.client.ConnectionFactory;
@@ -102,19 +103,23 @@ public class InitializeWCR implements java.io.Serializable{
 		GlobalVariables.RABBITMQ_CHANNEL.queueDeclare(GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, false, false, false, null);
 	}
 	
-	public void getFreebaseInfo(){
-		GlobalVariables.FREEBASE_API_KEY = GlobalVariables.WCR_PROPS.getProperty("freebase.api.key");
-	}
-	
 	public void initializeRBM() {
 //		GlobalVariables.RBM_OVERHEAD = 10000;
 //		GlobalVariables.RBM_DATA_COLLECTION_DURATION = 30*1000; 
-		GlobalVariables.RBM_EACH_TRAIN_DURATION = 8*4*1000; 
-		GlobalVariables.RBM_EACH_TEST_DURATION = 2*4*1000; 
+//		GlobalVariables.RBM_EACH_TRAIN_DURATION = 8*8*1000; 
+//		GlobalVariables.RBM_EACH_TEST_DURATION = 2*8*1000; 
+		GlobalVariables.RBM_USER_MAX_NUMBER_TRAIN = 3;
+		GlobalVariables.RBM_USER_MAX_NUMBER_TEST = 2;
 		GlobalVariables.RBM_SIZE_SOFTMAX = 5; // Sentiment(5-point scale/5-way softmax): "Very negative(0)", "Negative(1)", "Neutral(2)", "Positive(3)", "Very positive(4)"
 		GlobalVariables.RBM_SIZE_HIDDEN_UNITS = 6; // http://en.wikipedia.org/wiki/List_of_genres
 		GlobalVariables.RBM_LEARNING_RATE = 0.1;
-		GlobalVariables.RBM_NUM_EPOCHS = 2;
+		GlobalVariables.RBM_NUM_EPOCHS = 5;
 		GlobalVariables.RBM_DRAW_CHART = true; // true
+	}
+	
+	public void getFreebaseInfo(){
+		GlobalVariables.FREEBASE_URL = new GenericUrl("https://www.googleapis.com/freebase/v1/mqlread");
+		// http://wiki.freebase.com/wiki/How_to_obtain_an_API_key
+		GlobalVariables.FREEBASE_URL.put("key", GlobalVariables.WCR_PROPS.getProperty("freebase.api.key")); 
 	}
 }

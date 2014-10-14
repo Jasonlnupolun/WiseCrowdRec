@@ -46,7 +46,7 @@ public class PredictUserPreferences {
 //		log.info(rbmWholeProcessThreadName + " ends at "+System.currentTimeMillis());
 	}
 
-	public static void main(String[] argv) {
+	public static void main(String[] argv) throws Exception {
 //		GlobalVariables.RBM_OVERHEAD = 10000;
 //		GlobalVariables.RBM_DATA_COLLECTION_DURATION = 30*1000; 
 //		GlobalVariables.RBM_EACH_TRAIN_DURATION = 8000; 
@@ -58,7 +58,16 @@ public class PredictUserPreferences {
 //		GlobalVariables.RBM_DRAW_CHART = false; // true
 
 		InitializeWCR initWCR = new InitializeWCR();
+		initWCR.getWiseCrowdRecConfigInfo();
+//		initWCR.coreNLPInitial();
+//		initWCR.calaisNLPInitial();
+		initWCR.twitterInitDyna();
+		initWCR.elasticsearchInitial();
+
 		initWCR.initializeRBM();
+		initWCR.getFreebaseInfo();
+		initWCR.themoviedbOrgInitial();
+		initWCR.rabbitmqInit();
 
 		GlobalVariables.RBM_PREDICT_USER_PREF.startPredictUserPreferences();
 	}

@@ -14,6 +14,7 @@ import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
 import com.feiyu.Cassandra.AstyanaxCassandraUserList;
 import com.feiyu.deeplearning.RBM.PredictUserPreferences;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
+import com.feiyu.semanticweb.freebase.GetActorMovieGenreSubgraphVectorNEdge;
 import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.MovieWithCountComparable;
 import com.feiyu.springmvc.model.RBMClientWeightMatixForPredict;
@@ -21,6 +22,7 @@ import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.springmvc.model.RBMUserInfo;
 import com.feiyu.storm.streamingdatacollection.bolt.MovieCounter;
+import com.google.api.client.http.GenericUrl;
 import com.netflix.astyanax.Keyspace;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 
@@ -64,18 +66,24 @@ public class GlobalVariables {
 	public static final PriorityQueue<MovieWithCountComparable> STORM_MOVIELIST_HEAP = new PriorityQueue<MovieWithCountComparable>();
 	public static final HashMap<String, MovieCounter> STORM_MOVIELIST_HM = new HashMap<String, MovieCounter>();
 
-	public static String FREEBASE_API_KEY;
+	public static final GetActorMovieGenreSubgraphVectorNEdge FREEBASE_GET_ACTOR_MOVIES = new GetActorMovieGenreSubgraphVectorNEdge();
+	public static GenericUrl FREEBASE_URL;
 	
 	public static final PredictUserPreferences RBM_PREDICT_USER_PREF = new PredictUserPreferences();
 //	public static long RBM_OVERHEAD;
-	public static long RBM_EACH_TRAIN_DURATION;
-	public static long RBM_EACH_TEST_DURATION;
 //	public static long RBM_DATA_COLLECTION_DURATION;
+//	public static long RBM_EACH_TRAIN_DURATION;
+//	public static long RBM_EACH_TEST_DURATION;
+	public static int RBM_USER_MAX_NUMBER_TRAIN;
+	public static int RBM_USER_MAX_NUMBER_TEST;
 	public static int RBM_SIZE_SOFTMAX;
 	public static int RBM_SIZE_HIDDEN_UNITS;
 	public static double RBM_LEARNING_RATE;
 	public static int RBM_NUM_EPOCHS;
 	public static boolean RBM_DRAW_CHART;
+	
+	public static Thread RBM_COLLECT_TRAINING_DATA_THREAD;
+	public static Thread RBM_COLLECT_TESTING_DATA_THREAD;
 
 	public static int KTH_RBM = -1;
 	public static final Queue<RBMDataQueueElementInfo> RBM_DATA_QUEUE = new LinkedList<RBMDataQueueElementInfo>(); // for the whole RBMs process
