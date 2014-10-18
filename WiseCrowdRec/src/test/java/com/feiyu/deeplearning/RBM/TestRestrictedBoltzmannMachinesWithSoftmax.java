@@ -16,7 +16,7 @@ public class TestRestrictedBoltzmannMachinesWithSoftmax {
 	int sizeHiddenUnits = 2;
 	double learningRate = 0.1;
 	int numEpochs = 5;
-	boolean drawChart = false; // true
+	boolean drawChart = true; // true
 
 	@Test
 	public void testRBMModel() throws IOException {

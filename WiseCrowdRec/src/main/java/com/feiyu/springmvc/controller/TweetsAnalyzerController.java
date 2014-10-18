@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpException;
 import org.apache.log4j.Logger;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import twitter4j.TwitterException;
 
 import com.feiyu.springmvc.service.SignInWithTwitterService;
-import com.feiyu.twitter.FollowingWhom;
+import com.feiyu.twitter.GetD3VerticesEdgesFromFollowingList;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 import com.feiyu.websocket.StartWebSocket;
@@ -95,9 +96,10 @@ public class TweetsAnalyzerController {
 
 	@RequestMapping(value = "smcSubGraphws", params = {"user_id"}, method = RequestMethod.GET)
 	@ResponseBody
-	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) throws NumberFormatException, ConnectionException, TwitterException, IOException {
-		FollowingWhom fw = new FollowingWhom();
-		fw.getFollowingWhomList(user_id);
+	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) 
+			throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {
+		GetD3VerticesEdgesFromFollowingList fw = new GetD3VerticesEdgesFromFollowingList();
+		fw.getVerticesEdgesInJson(user_id);
 		logger.info("controller smcSubGraphws");
 	}
 
@@ -105,9 +107,10 @@ public class TweetsAnalyzerController {
 
 	@RequestMapping(value = "/smcSubGraphSSEmessagebutton" )
 	@ResponseBody
-	public void smcSubGraphSSEmessagebutton() throws NumberFormatException, ConnectionException, TwitterException, IOException {
-		FollowingWhom fw = new FollowingWhom();
-		fw.getFollowingWhomList(userID);
+	public void smcSubGraphSSEmessagebutton() 
+			throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {
+		GetD3VerticesEdgesFromFollowingList fw = new GetD3VerticesEdgesFromFollowingList();
+		fw.getVerticesEdgesInJson(userID);
 		logger.info("controller welcome -> smcSubGraphSSEmessagebutton");
 	}
 

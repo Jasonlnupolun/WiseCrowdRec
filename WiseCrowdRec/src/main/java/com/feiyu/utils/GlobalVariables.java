@@ -68,6 +68,8 @@ public class GlobalVariables {
 
 	public static final GetActorMovieGenreSubgraphVectorNEdge FREEBASE_GET_ACTOR_MOVIES = new GetActorMovieGenreSubgraphVectorNEdge();
 	public static GenericUrl FREEBASE_URL;
+
+	public static int D3_MAX_IDX = -1; 
 	
 	public static final PredictUserPreferences RBM_PREDICT_USER_PREF = new PredictUserPreferences();
 //	public static long RBM_OVERHEAD;

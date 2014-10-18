@@ -1,10 +1,6 @@
 package com.feiyu.twitter;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.codehaus.jackson.map.ObjectMapper;
 
 import twitter4j.PagableResponseList;
 import twitter4j.Twitter;
@@ -17,10 +13,7 @@ import com.feiyu.utils.GlobalVariables;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 public class FollowingWhom {
-	public void getFollowingWhomList(String userID) throws ConnectionException, NumberFormatException, TwitterException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		Map<String,String> jsonMap = new TreeMap<String,String>();
-
+	public PagableResponseList<User> getFollowingWhomList(String userID) throws ConnectionException, NumberFormatException, TwitterException, IOException {
 		String[] oauthAry =  GlobalVariables.AST_CASSANDRA_UL.queryWithUserID(userID);
 
 		Twitter twitter = new TwitterFactory().getInstance();
@@ -38,27 +31,6 @@ public class FollowingWhom {
 		//			System.out.println("id->"+id);
 		//		}
 
-		System.out.println(twitter.getId()+" is following:");
-		PagableResponseList<User> friendList = twitter.getFriendsList(twitter.getId(), -1);
-		for (User user : friendList) {
-			System.out.println(
-					"user->"+user.getName()
-					+"---"+user.getScreenName()
-					+"---"+user.getId()
-					);
-			jsonMap.put(Long.toString(user.getId()),user.getName());
-
-			// send message to the RabbitMQ queue RABBITMQ_QUEUE_NAME_SMGSUBGRAPH
-			String message = user.getName(); // @ json
-
-//			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//			Date date = new Date();
-//			message = dateFormat.format(date).toString() + "-> " + message; 
-
-			GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, null, message.getBytes());
-			System.out.println(" [x] RABBITMQ_QUEUE_NAME_SMCSUBGRAPH: message Sent to queue buffer: " + message);
-		}
-		String json = mapper.writeValueAsString(jsonMap);
-		System.out.println("Following whom list: " + json);
+		return twitter.getFriendsList(twitter.getId(), -1);
 	}
 }

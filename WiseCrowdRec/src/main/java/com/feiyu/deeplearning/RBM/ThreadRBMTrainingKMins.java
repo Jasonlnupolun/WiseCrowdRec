@@ -47,6 +47,16 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 
 	public void run() {
 		try {
+			// send message to the RabbitMQ queue
+			log.info("^^^^^^show movie list to client");
+			Iterator<Entry<String, RBMMovieInfo>> itMovie = currentData.getMovieHashMap().entrySet().iterator();
+			while (itMovie.hasNext()) {
+				Map.Entry<String, RBMMovieInfo> pairs = (Map.Entry<String, RBMMovieInfo>)itMovie.next();
+				itMovie.remove(); // avoids a ConcurrentModificationException
+				GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, pairs.getKey().getBytes());
+				System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer: "+ pairs.getKey());
+			}
+
 			this.trainRBM();
 			Thread.sleep(1);
 		} catch (InterruptedException e) {

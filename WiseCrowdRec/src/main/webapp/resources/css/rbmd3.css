@@ -1,0 +1,43 @@
+rect {
+  fill: none;
+  pointer-events: all;
+}
+
+.linkactormovie {
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+.linkmoviegenre {
+    stroke: #e01b66;
+    stroke-width: 2px;
+}
+.nodetext {
+    pointer-events: none;
+}
+.node.typegenre {
+    fill:#DF01A5;
+}
+.node.typemovie {
+    fill:#58D3F7;
+}
+.node.typeactor {
+    fill:#9A2EFE;
+}
+.node.typeothernode {
+    fill:#FFFFFF;
+    stroke:#1695A3;
+    stroke-width: 3px;
+}
+.node.type5 {
+    fill:#1BC9E0;
+}
+.node.type6 {
+    fill:#E01B98;
+}
+.node.typedislikegenre {
+    fill:#000000;
+}
+.node.typedislikemovie {
+    fill:#808080;
+}
+

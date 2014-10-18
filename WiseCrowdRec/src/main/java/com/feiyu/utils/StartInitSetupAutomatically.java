@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 
 import com.feiyu.storm.streamingdatacollection.BackgroundTopology;
 import com.feiyu.utils.InitializeWCR;
+import com.feiyu.websocket.LikeOrNotWSHandler;
 import com.feiyu.websocket.SparkHistogramWebSocketHandler;
 import com.feiyu.websocket.SparkWebSocketHandler;
 import com.feiyu.websocket.StormHistogramChartWebSocketHandler;
@@ -23,11 +24,14 @@ public class StartInitSetupAutomatically extends HttpServlet {
 			initWcr.twitterInitDyna();
 			initWcr.twitterInitBack();
 			initWcr.coreNLPInitial();
+			initWcr.calaisNLPInitial();
 			initWcr.cassandraInitial();
 			initWcr.elasticsearchInitial();
 			initWcr.themoviedbOrgInitial();
 			initWcr.rabbitmqInit();
 			initWcr.initializeRBM();
+			initWcr.getFreebaseInfo();
+			initWcr.signInWithTwitterGetAppOauth();
 			
 			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
 
@@ -77,6 +81,18 @@ public class StartInitSetupAutomatically extends HttpServlet {
 				}
 			};
 			StormThread.start();
+			
+			Thread LikeOrNotWSHandlerThread = new Thread () {
+				public void run () {
+					try {
+						LikeOrNotWSHandler.start();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				}
+			};
+			LikeOrNotWSHandlerThread.start();
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

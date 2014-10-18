@@ -270,8 +270,8 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 
 						if (i>0) {
 							// send message to the RabbitMQ queue
-							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, json.getBytes());
-							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
+//							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, json.getBytes());
+//							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
 
 							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART, null, json.getBytes());
 							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART: Message Sent to queue buffer.");

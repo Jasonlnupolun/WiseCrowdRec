@@ -17,6 +17,7 @@
 
 	<script src="resources/js/codrops/modernizr.custom.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
 	<!-- Classie - class helper functions by @desandro https://github.com/desandro/classie -->
 	<script src="resources/js/codrops/classie.js"></script>
 	
@@ -37,12 +38,14 @@
 	<!-- scroll bar end-->
 	
 	<!-- start social graph from http://bl.ocks.org/mbostock/929623  modified by feiyu-->
-    <link href="resources/css/social-graph.css" rel="stylesheet" type="text/css">
     <!-- link href="resources/css/ftest.css" rel="stylesheet" type="text/css"-->
-	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="resources/js/wisecrowdrec/WCRD3.js"></script>
+	<!-- script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script-->
+	<!--  script type="text/javascript" src="resources/js/wisecrowdrec/WCRD3.js"></script-->
 	<!-- end http://bl.ocks.org/mbostock/929623  -->
 	
+	<script src="http://d3js.org/d3.v2.js?2.9.1"></script>
+    <link href="resources/css/rbmd3.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="resources/js/wisecrowdrec/RBMD3.js"></script>
 	<script type="text/javascript" src="resources/js/wisecrowdrec/menu.js"></script>
 	<script type="text/javascript" src="resources/js/wisecrowdrec/HistogramD3.js"></script>
 
@@ -53,7 +56,6 @@
     </script>
      
    </head>
-    
     <body class="cbp-spmenu-push">
     	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
     		<h3>Left Menu</h3>
@@ -71,7 +73,6 @@
 				<textarea class="form-control" rows="3"
 					placeholder="Text...  current time: ${serverTime}." id="text"
 					name="text"></textarea>
-				
 				<input type="submit" value="Search Phrases & Run Sentiment Analysis" id="submit" class="btn btn-success">
 			</div>
 		</div>
@@ -101,7 +102,6 @@
     <br>
     <br>
     <br>
-	
 	
 	<div class="container">
 	    <div id="Default" class="contentHolder">
@@ -139,7 +139,8 @@
 				window.open(redirect2url, '_blank');
 				});			
 			});
-		var wcrd3 = new WCRD3();
+		/* var wcrd3 = new WCRD3(); */
+		var rbmd3 = new RBMD3();
 		if (document.URL.indexOf("oauth_verifier=") > -1) {
 			$('#signinwithtwittershowmsg').text('Logged into Twitter!');
 			/* var freebase= require('freebase'); */
@@ -166,8 +167,8 @@
 				var stepTwo = function () {
 					console.log('stepTwo');
 					var r = $.Deferred();
-					wcrd3.smcSubGraphMsgWS(user_id);
-					wcrd3.sparkMsgWS();
+					rbmd3.smcSubGraphMsgWS(user_id);
+					rbmd3.sparkMsgWS();
 					renderChart();
 					setTimeout(function () {
 					    r.resolve();
