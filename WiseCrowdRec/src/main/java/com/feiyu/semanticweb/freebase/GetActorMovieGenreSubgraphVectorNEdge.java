@@ -8,7 +8,6 @@ package com.feiyu.semanticweb.freebase;
 
 import java.io.IOException;
 
-import com.feiyu.semanticweb.IMDbInfoQuery;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 import com.google.api.client.http.HttpRequest;
@@ -55,6 +54,7 @@ public class GetActorMovieGenreSubgraphVectorNEdge {
 		JSONArray results = (JSONArray)response.get("result");
 		for (Object result : results) {
 			System.out.println(JsonPath.read(result,"$.name").toString());
+//			System.out.println(JsonPath.read(result,"$.mid").toString());
 		}
 	}
 

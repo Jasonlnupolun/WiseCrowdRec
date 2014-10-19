@@ -16,6 +16,7 @@ public class LikeOrNotWS implements WebSocket.OnTextMessage {
 	@Override
 	public void onMessage(String s) {
 		System.out.println("LikeOrNowWS server got an message: this client dislikes "+ s);
+		
 	}
 
 	@Override

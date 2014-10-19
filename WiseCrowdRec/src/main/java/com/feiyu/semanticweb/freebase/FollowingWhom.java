@@ -1,4 +1,4 @@
-package com.feiyu.twitter;
+package com.feiyu.semanticweb.freebase;
 
 import java.io.IOException;
 

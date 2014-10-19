@@ -68,6 +68,7 @@ public class RBMRabbitMQServerSide {
 					for (Object result : jsonArrayMovieList) {
 						this.storeTripleIntoRBMDataMatix(jsonTipleUCR.get("userid").toString(), 
 								JsonPath.read(result,"$.name").toString(), //@ java.lang.NullPointerException 
+								JsonPath.read(result,"$.mid").toString(), 
 								jsonTipleUCR.get("rating").toString(),
 								isForTrain);
 						log.info(jsonTipleUCR.get("userid")+" -- "+JsonPath.read(result,"$.name").toString()+" -- "+jsonTipleUCR.get("rating"));
@@ -107,12 +108,15 @@ public class RBMRabbitMQServerSide {
 		}
 	}
 
-	private int getMovieIdx (String movieName) {
+	private int getMovieIdx (String movieName, String movieId) {
 		// put Movie into List and HashMap, as well as return movie index
 		if (!GlobalVariables.RBM_MOVIE_HASHMAP.containsKey(movieName)) {
 			GlobalVariables.RBM_MOVIE_HASHMAP.put(
 					movieName, 
-					new RBMMovieInfo(++GlobalVariables.RBM_MOVIE_MAX_IDX, 1));
+					new RBMMovieInfo(
+							++GlobalVariables.RBM_MOVIE_MAX_IDX, 
+							movieId,
+							1));
 			GlobalVariables.RBM_MOVIE_LIST.add(movieName);
 			return GlobalVariables.RBM_MOVIE_MAX_IDX;
 		}
@@ -122,12 +126,15 @@ public class RBMRabbitMQServerSide {
 		// update movie count
 		GlobalVariables.RBM_MOVIE_HASHMAP.put(
 				movieName, 
-				new RBMMovieInfo(movieIdx, movieCount+1));
+				new RBMMovieInfo(
+						movieIdx, 
+						movieId,
+						movieCount+1));
 		return movieIdx;
 	}
 
-	private void storeTripleIntoRBMDataMatix(String userid, String movieName, String rating, boolean isForTrain) {
-		int movieIdx = this.getMovieIdx(movieName);
+	private void storeTripleIntoRBMDataMatix(String userid, String movieName, String movieId, String rating, boolean isForTrain) {
+		int movieIdx = this.getMovieIdx(movieName, movieId);
 
 
 		if (!GlobalVariables.RBM_USER_HASHMAP.containsKey(userid)) {

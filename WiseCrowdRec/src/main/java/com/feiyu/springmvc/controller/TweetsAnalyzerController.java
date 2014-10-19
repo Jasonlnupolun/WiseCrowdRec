@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import twitter4j.TwitterException;
 
+import com.feiyu.semanticweb.freebase.GetD3VerticesEdgesFromFollowingList;
 import com.feiyu.springmvc.service.SignInWithTwitterService;
-import com.feiyu.twitter.GetD3VerticesEdgesFromFollowingList;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 import com.feiyu.websocket.StartWebSocket;

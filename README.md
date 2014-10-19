@@ -25,8 +25,8 @@ WiseCrowdRec
     - $ `kill -9 {PID}`    
     - $ `sudo lsof -i -n -P | grep TCP`  
 - [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
-- [x] [Freebase](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/semanticweb/freebase/GetActorMovieGenreSubgraphVectorNEdge.java)    
-- [x] [Twitter4J](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/twitter/FollowingWhom.java)    
+- [x] [Freebase](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/semanticweb/freebase)    
+- [x] [Twitter4J](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/semanticweb/freebase)    
 - [x] [Sign in with Twitter](https://github.com/faustineinsun/WiseCrowdRec/blob/c2eb79b360ade0aae0b9b44b6c54221110ad05d9/WiseCrowdRec/src/main/java/com/feiyu/springmvc/controller/TweetsAnalyzerController.java)    
 - [x] [nosql - Cassandra](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/Cassandra)     
 - [x] [data search - Elasticsearch](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/elasticsearch)     

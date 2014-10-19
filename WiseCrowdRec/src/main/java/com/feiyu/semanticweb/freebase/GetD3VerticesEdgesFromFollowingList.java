@@ -1,4 +1,4 @@
-package com.feiyu.twitter;
+package com.feiyu.semanticweb.freebase;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,13 +50,12 @@ public class GetD3VerticesEdgesFromFollowingList {
 			this.getD3VertexEdgeActorMovies(user.getName());
 		}
 		
-		log.info(d3Vertices);
-		log.info(d3Edges);
+		log.debug(d3Vertices);
+		log.debug(d3Edges);
 		d3Data.put("nodes", d3Vertices);
 		d3Data.put("links", d3Edges);
 
-		GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, null, d3Data.toString().getBytes());
-		log.info(" [x] RABBITMQ_QUEUE_NAME_SMCSUBGRAPH: message Sent to queue buffer: " + d3Data.toString());
+		this.sendMessage(d3Data.toString());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -75,7 +74,10 @@ public class GetD3VerticesEdgesFromFollowingList {
 			d3Vertex.put("entity", "actor");
 
 			++actorMaxIdx;
+			
 			d3Vertices.add(d3Vertex);
+//			this.sendMessage(d3Vertex.toString());
+			
 			this.actorIdxJson.put(personName, actorMaxIdx);
 		}
 
@@ -94,6 +96,8 @@ public class GetD3VerticesEdgesFromFollowingList {
 				
 				curMovieIdxInJson = ++movieMaxIdx;
 				d3Vertices.add(d3Vertex);
+//				this.sendMessage(d3Vertex.toString());
+
 				this.movieIdxJson.put(movieName, curMovieIdxInJson);
 			} else {
 				curMovieIdxInJson = this.movieIdxJson.get(movieName);
@@ -105,17 +109,18 @@ public class GetD3VerticesEdgesFromFollowingList {
 			d3Edge.put("target", curMovieIdxInJson);
 			d3Edge.put("type", "linkactormovie");
 			d3Edges.add(d3Edge);
+//			this.sendMessage(d3Edge.toString());
 			
 			this.getD3VertexEdgeMovieGenres(personName, movieName);
 			movieMaxIdx = this.d3Vertices.size()-1;	
 		}
 		actorMaxIdx = this.d3Vertices.size()-1;
 
-		log.info(d3Vertices);
-		log.info(d3Edges);
+		log.debug(d3Vertices);
+		log.debug(d3Edges);
 		d3Data.put("nodes", d3Vertices);
 		d3Data.put("links", d3Edges);
-		log.info(d3Data);
+		log.debug(d3Data);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -143,6 +148,7 @@ public class GetD3VerticesEdgesFromFollowingList {
 
 					curGenreIdxInJson = ++genreMaxIdx;
 					d3Vertices.add(d3Vertex);
+//					this.sendMessage(d3Vertex.toString());
 					this.genreIdxJson.put(genre, curGenreIdxInJson);
 				} else {
 					curGenreIdxInJson = this.genreIdxJson.get(genre);
@@ -154,8 +160,14 @@ public class GetD3VerticesEdgesFromFollowingList {
 				d3Edge.put("target", curGenreIdxInJson);
 				d3Edge.put("type", "linkmoviegenre");
 				d3Edges.add(d3Edge);
+//				this.sendMessage(d3Edge.toString());
 			}
 		}
+	}
+	
+	private void sendMessage(String msg) throws IOException {
+		GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SMCSUBGRAPH, null, msg.getBytes());
+		log.info(" [x] RABBITMQ_QUEUE_NAME_SMCSUBGRAPH: message Sent to queue buffer: " + msg);
 	}
 	
 	public static void main(String[] argv) throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {

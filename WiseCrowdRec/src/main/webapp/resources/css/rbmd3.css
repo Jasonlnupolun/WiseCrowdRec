@@ -1,8 +1,7 @@
 rect {
-  fill: none;
-  pointer-events: all;
+    fill: none;
+    pointer-events: all;
 }
-
 .linkactormovie {
     stroke: #ccc;
     stroke-width: 2px;
@@ -40,4 +39,118 @@ rect {
 .node.typedislikemovie {
     fill:#808080;
 }
+.genresDislikeButton {
+    -moz-box-shadow: -9px 9px 20px -2px #fbafe3;
+    -webkit-box-shadow: -9px 9px 20px -2px #fbafe3;
+    box-shadow: -9px 9px 20px -2px #fbafe3;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff5bb0), color-stop(1, #ef027d));
+    background:-moz-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
+    background:-webkit-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
+    background:-o-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
+    background:-ms-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
+    background:linear-gradient(to bottom, #ff5bb0 5%, #ef027d 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bb0', endColorstr='#ef027d', GradientType=0);
+    background-color:#ff5bb0;
+    -moz-border-radius:23px;
+    -webkit-border-radius:23px;
+    border-radius:23px;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Georgia;
+    font-size:12px;
+    padding:3px 20px;
+    text-decoration:none;
+    text-shadow:-4px 4px 3px #c70067;
+}
+.genresDislikeButton:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ef027d), color-stop(1, #ff5bb0));
+    background:-moz-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
+    background:-webkit-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
+    background:-o-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
+    background:-ms-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
+    background:linear-gradient(to bottom, #ef027d 5%, #ff5bb0 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ef027d', endColorstr='#ff5bb0', GradientType=0);
+    background-color:#ef027d;
+}
+.genresDislikeButton:active {
+    position:relative;
+    top:1px;
+}
+.waitProcessingButton {
+    -moz-box-shadow: -9px 9px 20px -2px #ffffff;
+    -webkit-box-shadow: -9px 9px 20px -2px #ffffff;
+    box-shadow: -9px 9px 20px -2px #ffffff;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf));
+    background:-moz-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
+    background:-webkit-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
+    background:-o-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
+    background:-ms-linear-gradient(top, #ededed 5%, #dfdfdf 100%);
+    background:linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf', GradientType=0);
+    background-color:#ededed;
+    -moz-border-radius:23px;
+    -webkit-border-radius:23px;
+    border-radius:23px;
+    display:inline-block;
+    cursor:pointer;
+    color:#777777;
+    font-family:Georgia;
+    font-size:12px;
+    padding:3px 20px;
+    text-decoration:none;
+    text-shadow:-4px 4px 3px #ffffff;
+}
+.waitProcessingButton:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed));
+    background:-moz-linear-gradient(top, #dfdfdf 5%, #ededed 100%);
+    background:-webkit-linear-gradient(top, #dfdfdf 5%, #ededed 100%);
+    background:-o-linear-gradient(top, #dfdfdf 5%, #ededed 100%);
+    background:-ms-linear-gradient(top, #dfdfdf 5%, #ededed 100%);
+    background:linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed', GradientType=0);
+    background-color:#dfdfdf;
+}
+.waitProcessingButton:active {
+    position:relative;
+    top:1px;
+}
 
+.moviesDislikeButton {
+    -moz-box-shadow: -9px 9px 20px -2px #f0f7fa;
+    -webkit-box-shadow: -9px 9px 20px -2px #f0f7fa;
+    box-shadow: -9px 9px 20px -2px #f0f7fa;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #33bdef), color-stop(1, #019ad2));
+    background:-moz-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+    background:-webkit-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+    background:-o-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+    background:-ms-linear-gradient(top, #33bdef 5%, #019ad2 100%);
+    background:linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#33bdef', endColorstr='#019ad2',GradientType=0);
+    background-color:#33bdef;
+    -moz-border-radius:23px;
+    -webkit-border-radius:23px;
+    border-radius:23px;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Georgia;
+    font-size:12px;
+    padding:3px 20px;
+    text-decoration:none;
+    text-shadow:-4px 4px 3px #5b6178;
+}
+.moviesDislikeButton:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #019ad2), color-stop(1, #33bdef));
+    background:-moz-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+    background:-webkit-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+    background:-o-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+    background:-ms-linear-gradient(top, #019ad2 5%, #33bdef 100%);
+    background:linear-gradient(to bottom, #019ad2 5%, #33bdef 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#019ad2', endColorstr='#33bdef',GradientType=0);
+    background-color:#019ad2;
+}
+.moviesDislikeButton:active {
+    position:relative;
+    top:1px;
+}

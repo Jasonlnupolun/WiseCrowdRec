@@ -715,6 +715,7 @@
                             <include>**/*.java</include>
                             <include>**/*.scala</include>
                         </includes>
+                        <skipTests>true</skipTests>
                     </configuration>
                 </plugin> 
             </plugins>

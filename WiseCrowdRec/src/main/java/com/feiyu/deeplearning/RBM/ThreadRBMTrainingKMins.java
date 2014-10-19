@@ -47,16 +47,7 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 
 	public void run() {
 		try {
-			// send message to the RabbitMQ queue
-			log.info("^^^^^^show movie list to client");
-			Iterator<Entry<String, RBMMovieInfo>> itMovie = currentData.getMovieHashMap().entrySet().iterator();
-			while (itMovie.hasNext()) {
-				Map.Entry<String, RBMMovieInfo> pairs = (Map.Entry<String, RBMMovieInfo>)itMovie.next();
-				itMovie.remove(); // avoids a ConcurrentModificationException
-				GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, pairs.getKey().getBytes());
-				System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer: "+ pairs.getKey());
-			}
-
+			this.showMoviesGenresToClient();
 			this.trainRBM();
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
@@ -95,7 +86,10 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 				);
 		// Train RBM
 		this.trainOrTestRBM(rbmSoftmax, true);
-
+		
+		// show movies&genres to client
+		this.showMoviesGenresToClient();
+		
 		// get trained RBM weight matrix
 		this.updateClientWeightMatixForPrediction(rbmSoftmax);
 
@@ -140,6 +134,20 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 				rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(ratedMoviesIndices);
 			}
 		}
+	}
+	
+	private void showMoviesGenresToClient() throws IOException {
+			// send message to the RabbitMQ queue
+			log.debug("^^^^^^show movie list to client");
+			Iterator<Entry<String, RBMMovieInfo>> itMovie = currentData.getMovieHashMap().entrySet().iterator();
+			String message = "";
+			while (itMovie.hasNext()) {
+				Map.Entry<String, RBMMovieInfo> pairs = (Map.Entry<String, RBMMovieInfo>)itMovie.next();
+				itMovie.remove(); // avoids a ConcurrentModificationException
+				message += "~~"+pairs.getValue().toString();
+			}
+			GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, message.getBytes());
+			System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer: "+ message);
 	}
 
 	private void updateClientWeightMatixForPrediction(RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax) {		

@@ -13,11 +13,11 @@ function RBMD3() {
     var w = 1500,
         h = 900;
 
-    var vis = d3.select("body").append("svg:svg")
+    var svg = d3.select("body").append("svg:svg")
         .attr("width", w)
         .attr("height", h);
 
-    vis.append("rect")
+    svg.append("rect")
         .attr("width", w)
         .attr("height", h);
 
@@ -27,12 +27,13 @@ function RBMD3() {
     .linkDistance(function (d) {
         return (10 * 12);
     })
-    //.friction(0.6) //@
+    //    .friction(0.6) 
     .charge(-300); //@  
 
-    var link = vis.selectAll("line.link");
-
-    var node = vis.selectAll("g.node");
+    var nodes = force.nodes(),
+        links = force.links(),
+        node = svg.selectAll("g.node"),
+        link = svg.selectAll("line.link");
 
     stormMessage();
 
@@ -72,11 +73,11 @@ function RBMD3() {
         };
         sparkws.onmessage = function (msg) {
             console.log(wsurl + " received message: " + msg.data);
-            //	        nodes.push({
-            //	        "name": msg.data,
-            //	            "count": 1
-            //	    });
-            //	restart();
+            var json = JSON.parse(msg.data);
+            json = {"entity":"movie",
+            		"name": "test",
+            		"fullname":"json"};
+            startShowRelationGraph(json);
         };
     };
 
@@ -97,8 +98,20 @@ function RBMD3() {
         };
     };
 
-    function startShowRelationGraph(data) {
-        link = link.data(data.links);
+    function startShowRelationGraph(json) {
+        if (json.hasOwnProperty('nodes')) {
+            link = link.data(json.links);
+            node = node.data(json.nodes);
+        } else {
+            if (json.hasOwnProperty('name')) {
+                nodes.push(json);
+            } else if (json.hasOwnProperty('source')) {
+                links.push(json);
+            }
+            link = link.data(links);
+            node = node.data(nodes);
+        }
+
         link.enter().append("svg:line")
             .attr("class", function (d) {
             return d.type;
@@ -116,7 +129,6 @@ function RBMD3() {
             return d.target.y;
         });
 
-        node = node.data(data.nodes);
         node.enter().append("svg:g")
             .attr("class", "node")
             .call(force.drag);
@@ -149,10 +161,11 @@ function RBMD3() {
             }
         });
 
-        force = force.nodes(data.nodes)
-            .links(data.links)
-            .start();
-
+        if (json.hasOwnProperty('nodes')) {
+            force = force.nodes(json.nodes)
+                .links(json.links);
+        }
+        force.start();
 
         node.on("click", function (d) {
             if (d.entity == "movie") {
@@ -262,8 +275,6 @@ function RBMD3() {
                 return "translate(" + d.x + "," + d.y + ")";
             });
         });
-
-
     }
 
     function likeornot() {
@@ -274,8 +285,13 @@ function RBMD3() {
                 console.log(wsurl + " is connecting...");
                 likeornotws.onopen = function () {
                     console.log(wsurl + " connected!");
-                    likeornotws.send(d.fullname);
-                    console.log("sent to server: dislike " + d.fullname);
+                    var dislikeObject = {
+                        "fullname": d.fullname,
+                            "entity": d.entity
+                    };
+                    var msgInfo = JSON.stringify(dislikeObject);
+                    likeornotws.send(msgInfo);
+                    console.log("sent to server: dislike " + msgInfo);
 
                 };
                 likeornotws.onclose = function () {
@@ -287,6 +303,4 @@ function RBMD3() {
             }
         };
     }
-
-
 }

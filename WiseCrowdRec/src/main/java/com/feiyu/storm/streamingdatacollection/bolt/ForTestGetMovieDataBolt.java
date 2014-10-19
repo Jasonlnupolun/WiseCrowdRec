@@ -19,7 +19,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
-import com.feiyu.semanticweb.IMDbInfoQuery;
+import com.feiyu.semanticweb.freebase.IMDbInfoQuery;
 import com.feiyu.springmvc.model.EntityWithSentiment;
 import com.feiyu.springmvc.model.Movie;
 import com.omertron.themoviedbapi.MovieDbException;
