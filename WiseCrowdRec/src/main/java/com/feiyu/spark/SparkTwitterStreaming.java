@@ -150,7 +150,7 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 						if (entityInfo == null || (!entityInfo.getCategory().equals("PERSON"))) {
 							return false;
 						}
-						log.info("entityInfo---------->"+entityInfo.toString());
+						log.debug("entityInfo---------->"+entityInfo.toString());
 
 						// Insert entityInfo into ES 
 						SerializeBeans2JSON sb2json = new SerializeBeans2JSON(); // ElasticSearch requires index data as JSON.
@@ -192,11 +192,11 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 						}
 
 						String json = jsonObject.toString();
-						log.info("\n-------------------\n-------------------\ntriple(userid, candidateactor, rating):\n"+json);
+						log.debug("\n-------------------\n-------------------\ntriple(userid, candidateactor, rating):\n"+json);
 						
 						// rabbitmq, sending training/testing to RBM
 						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, null, json.getBytes());
-						System.out.println(" [x] RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION: Message Sent to queue buffer.");
+						log.info(" [x] RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION: Message Sent to queue buffer: "+ json);
 
 						return entityInfo.getEntity();
 					}
@@ -266,15 +266,15 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 							i++;
 						}
 						String json = jsonArray.toString();
-						log.info("\n-------------------\n-------------------\nTop 7 entities:\n"+json);
+						log.debug("\n-------------------\n-------------------\nTop 7 entities:\n"+json);
 
 						if (i>0) {
 							// send message to the RabbitMQ queue
 //							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, json.getBytes());
-//							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer.");
+//							log.info(" [x] RABBITMQ_QUEUE_NAME_SPARK: Message Sent to queue buffer: "+json);
 
 							GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART, null, json.getBytes());
-							System.out.println(" [x] RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART: Message Sent to queue buffer.");
+							log.info(" [x] RABBITMQ_QUEUE_NAME_SPARKHISTOGRAMCHART: Message Sent to queue buffer: "+json);
 						}
 						return null;
 					}

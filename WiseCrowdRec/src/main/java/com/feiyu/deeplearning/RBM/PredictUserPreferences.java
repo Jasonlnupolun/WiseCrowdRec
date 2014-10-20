@@ -2,7 +2,6 @@ package com.feiyu.deeplearning.RBM;
 
 import org.apache.log4j.Logger;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 
@@ -11,7 +10,7 @@ import com.feiyu.utils.InitializeWCR;
  */
 
 public class PredictUserPreferences {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(PredictUserPreferences.class.getName());
 
 	public PredictUserPreferences() {
 		GlobalVariables.KTH_RBM = 0;

@@ -13,26 +13,25 @@ import twitter4j.PagableResponseList;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
 import com.jayway.jsonpath.JsonPath;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 public class GetD3VerticesEdgesFromFollowingList {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
-	JSONObject d3Data = new JSONObject();
-	JSONParser parser = new JSONParser();
-	JSONArray d3Vertices = new JSONArray();
-	JSONObject d3Vertex;	
-	JSONArray d3Edges = new JSONArray();
-	JSONObject d3Edge;	
-	int actorMaxIdx = -1;
-	int movieMaxIdx = -1;
-	int genreMaxIdx = -1;
-	HashMap<String, Integer> actorIdxJson = new HashMap<String, Integer>();
-	HashMap<String, Integer> movieIdxJson = new HashMap<String, Integer>();
-	HashMap<String, Integer> genreIdxJson = new HashMap<String, Integer>();
+	private static Logger log = Logger.getLogger(GetD3VerticesEdgesFromFollowingList.class.getName());
+	private JSONObject d3Data = new JSONObject();
+	private JSONParser parser = new JSONParser();
+	private JSONArray d3Vertices = new JSONArray();
+	private JSONObject d3Vertex;	
+	private JSONArray d3Edges = new JSONArray();
+	private JSONObject d3Edge;	
+	private int actorMaxIdx = -1;
+	private int movieMaxIdx = -1;
+	private int genreMaxIdx = -1;
+	private HashMap<String, Integer> actorIdxJson = new HashMap<String, Integer>();
+	private HashMap<String, Integer> movieIdxJson = new HashMap<String, Integer>();
+	private HashMap<String, Integer> genreIdxJson = new HashMap<String, Integer>();
 	
 	@SuppressWarnings("unchecked")
 	public void getVerticesEdgesInJson(String userID) 
@@ -61,7 +60,7 @@ public class GetD3VerticesEdgesFromFollowingList {
 	@SuppressWarnings("unchecked")
 	public void getD3VertexEdgeActorMovies(String personName) throws IOException, ParseException {
 		JSONObject response = (JSONObject)parser.parse(
-				GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(personName));
+				GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(personName, false));
 		JSONArray results = (JSONArray)response.get("result");
 
 		if (results.size() > 0 && !this.actorIdxJson.containsKey(personName)) {
@@ -126,7 +125,7 @@ public class GetD3VerticesEdgesFromFollowingList {
 	@SuppressWarnings("unchecked")
 	private void getD3VertexEdgeMovieGenres(String actorName, String movieName) throws ParseException, IOException {
 		JSONObject response = (JSONObject)parser.parse(
-				GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getFilmGenreByActorNMovieName(actorName, movieName));
+				GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getFilmGenresByActorNMovieName(actorName, movieName, false));
 		JSONArray results = (JSONArray)response.get("result");
 		for (Object result : results) {
 			//				System.out.println(JsonPath.read(result,"$.starring[*].actor").toString());

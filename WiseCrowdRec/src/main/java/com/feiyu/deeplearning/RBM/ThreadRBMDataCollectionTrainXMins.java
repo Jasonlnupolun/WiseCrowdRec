@@ -6,10 +6,8 @@ package com.feiyu.deeplearning.RBM;
 import org.apache.log4j.Logger;
 import org.json.simple.parser.ParseException;
 
-import com.feiyu.spark.SparkTwitterStreaming;
-
 public class ThreadRBMDataCollectionTrainXMins implements Runnable {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(ThreadRBMDataCollectionTrainXMins.class.getName());
 	private String threadName;
 
 	public ThreadRBMDataCollectionTrainXMins(String threadName) {

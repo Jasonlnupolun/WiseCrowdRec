@@ -3,7 +3,6 @@ package com.feiyu.deeplearning.RBM;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.springmvc.model.RBMUserInfo;
@@ -14,7 +13,7 @@ import com.feiyu.utils.GlobalVariables;
  */
 
 public class ThreadRBMWholeProcess implements Runnable {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(ThreadRBMWholeProcess.class.getName());
 	private String threadName;
 
 	public ThreadRBMWholeProcess( String threadName) {

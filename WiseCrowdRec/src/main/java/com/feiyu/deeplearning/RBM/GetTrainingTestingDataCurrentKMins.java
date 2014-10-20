@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
@@ -15,7 +14,7 @@ import com.feiyu.utils.InitializeWCR;
  */
 
 public class GetTrainingTestingDataCurrentKMins {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(GetTrainingTestingDataCurrentKMins.class.getName());
 
 	public GetTrainingTestingDataCurrentKMins() {
 		GlobalVariables.RBM_MOVIE_HASHMAP= new HashMap<String, RBMMovieInfo>();

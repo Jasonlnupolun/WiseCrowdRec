@@ -11,7 +11,7 @@ function RBMD3() {
     }
 
     var w = 1500,
-        h = 900;
+        h = 1200;
 
     var svg = d3.select("body").append("svg:svg")
         .attr("width", w)
@@ -20,20 +20,6 @@ function RBMD3() {
     svg.append("rect")
         .attr("width", w)
         .attr("height", h);
-
-    var force = d3.layout.force()
-        .size([w, h])
-    //	      .nodes([{}]) // initialize with a single node
-    .linkDistance(function (d) {
-        return (10 * 12);
-    })
-    //    .friction(0.6) 
-    .charge(-300); //@  
-
-    var nodes = force.nodes(),
-        links = force.links(),
-        node = svg.selectAll("g.node"),
-        link = svg.selectAll("line.link");
 
     stormMessage();
 
@@ -74,9 +60,6 @@ function RBMD3() {
         sparkws.onmessage = function (msg) {
             console.log(wsurl + " received message: " + msg.data);
             var json = JSON.parse(msg.data);
-            json = {"entity":"movie",
-            		"name": "test",
-            		"fullname":"json"};
             startShowRelationGraph(json);
         };
     };
@@ -99,6 +82,23 @@ function RBMD3() {
     };
 
     function startShowRelationGraph(json) {
+//        d3.select("svg").remove();
+        d3.selectAll("svg > *").remove();
+
+        var force = d3.layout.force()
+            .size([w, h])
+        //	      .nodes([{}]) // initialize with a single node
+        .linkDistance(function (d) {
+            return (10 * 12);
+        })
+        //    .friction(0.6) 
+        .charge(-300); //@  
+
+        var nodes = force.nodes(),
+            links = force.links(),
+            node = svg.selectAll("g.node"),
+            link = svg.selectAll("line.link");
+
         if (json.hasOwnProperty('nodes')) {
             link = link.data(json.links);
             node = node.data(json.nodes);
@@ -290,6 +290,7 @@ function RBMD3() {
                             "entity": d.entity
                     };
                     var msgInfo = JSON.stringify(dislikeObject);
+                    //                    var msgInfo = jQuery.parseJSON(dislikeObject);
                     likeornotws.send(msgInfo);
                     console.log("sent to server: dislike " + msgInfo);
 

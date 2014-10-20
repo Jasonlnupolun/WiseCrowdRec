@@ -2,6 +2,7 @@ package com.feiyu.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Properties;
@@ -69,13 +70,11 @@ public class GlobalVariables {
 	public static final GetActorMovieGenreSubgraphVectorNEdge FREEBASE_GET_ACTOR_MOVIES = new GetActorMovieGenreSubgraphVectorNEdge();
 	public static GenericUrl FREEBASE_URL;
 
-	public static int D3_MAX_IDX = -1; 
-	
 	public static final PredictUserPreferences RBM_PREDICT_USER_PREF = new PredictUserPreferences();
-//	public static long RBM_OVERHEAD;
-//	public static long RBM_DATA_COLLECTION_DURATION;
-//	public static long RBM_EACH_TRAIN_DURATION;
-//	public static long RBM_EACH_TEST_DURATION;
+	//	public static long RBM_OVERHEAD;
+	//	public static long RBM_DATA_COLLECTION_DURATION;
+	//	public static long RBM_EACH_TRAIN_DURATION;
+	//	public static long RBM_EACH_TEST_DURATION;
 	public static int RBM_USER_MAX_NUMBER_TRAIN;
 	public static int RBM_USER_MAX_NUMBER_TEST;
 	public static int RBM_SIZE_SOFTMAX;
@@ -83,7 +82,7 @@ public class GlobalVariables {
 	public static double RBM_LEARNING_RATE;
 	public static int RBM_NUM_EPOCHS;
 	public static boolean RBM_DRAW_CHART;
-	
+
 	public static Thread RBM_COLLECT_TRAINING_DATA_THREAD;
 	public static Thread RBM_COLLECT_TESTING_DATA_THREAD;
 
@@ -96,5 +95,9 @@ public class GlobalVariables {
 	public static HashMap<String, RBMUserInfo> RBM_USER_HASHMAP;
 	public static ArrayList<String> RBM_USER_LIST;
 	public static int RBM_USER_MAX_IDX;
+
+	public static final HashSet<String> RBM_CLIENT_DISLIKED_GENRES = new HashSet<String>();
+	public static final HashSet<String> RBM_CLIENT_DISLIKED_MOVIES = new HashSet<String>();
+	public static HashMap<Integer, Integer> RBM_CLIENT_RATED_MOVIES_CUR_RBM;
 	public static RBMClientWeightMatixForPredict RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT;
 }

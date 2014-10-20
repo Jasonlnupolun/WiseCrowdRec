@@ -11,12 +11,11 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.Tuple;
 import com.feiyu.utils.GlobalVariables;
 
 public class RestrictedBoltzmannMachinesWithSoftmax {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(RestrictedBoltzmannMachinesWithSoftmax.class.getName());
 	// movie rating is rated from 0 to 10, therefore the softmax in this model is an 11-way softmax
 	private int numMovies;
 	private int sizeSoftmax;

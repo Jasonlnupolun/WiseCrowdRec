@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.feiyu.spark.SparkTwitterStreaming;
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.springmvc.model.RBMUserInfo;
@@ -28,7 +27,7 @@ import org.json.simple.parser.ParseException;
  */
 
 public class RBMRabbitMQServerSide {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(RBMRabbitMQServerSide.class.getName());
 	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION;
 
 	public RBMRabbitMQServerSide() {
@@ -61,13 +60,14 @@ public class RBMRabbitMQServerSide {
 					JSONParser parser = new JSONParser();
 					JSONObject jsonTipleUCR = (JSONObject)parser.parse(message);
 
-					String actorMovieList = GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(jsonTipleUCR.get("candidateactor").toString());
+					String actorMovieList = GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(jsonTipleUCR.get("candidateactor").toString(), false);
 					JSONObject jsonActorMovieList= (JSONObject)parser.parse(actorMovieList);
 					JSONArray jsonArrayMovieList = (JSONArray)jsonActorMovieList.get("result");
 					log.info("%%%%%% " + jsonArrayMovieList.size() +" movies of the actor named " + jsonTipleUCR.get("candidateactor").toString());
 					for (Object result : jsonArrayMovieList) {
-						this.storeTripleIntoRBMDataMatix(jsonTipleUCR.get("userid").toString(), 
-								JsonPath.read(result,"$.name").toString(), //@ java.lang.NullPointerException 
+						this.storeTripleIntoRBMDataMatix(
+								jsonTipleUCR.get("userid").toString(), 
+								JsonPath.read(result,"$.name").toString(), // @ java.lang.NullPointerException 
 								JsonPath.read(result,"$.mid").toString(), 
 								jsonTipleUCR.get("rating").toString(),
 								isForTrain);

@@ -142,7 +142,7 @@
                                     document.getElementById("waitprocessing").style.display = "none";
                                     document.getElementById("moviesdislike").style.display = "none";
                                     $('#infoBarTwitter').text('Logged into Twitter! ');
-                                    $('#infoBarRBM').text('Click Genres You Dislike.');
+                                    $('#infoBarRBM').text('Click Genres/Movies You Dislike');
                                     /* var freebase= require('freebase'); */
                                     var curURL = document.URL;
                                     var oauth_token = curURL.substring(curURL.indexOf("oauth_token=") + 12, curURL.indexOf("&oauth_verifier="));

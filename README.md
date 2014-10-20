@@ -176,4 +176,7 @@ local
 mvn versions:display-plugin-updates      
 mvn eclipse:clean eclipse:eclipse -Dwtpversion=2.0    
   
+---
+
+Eclipse VM: -XX:MaxPermSize=1024M -Xms1024m -Xmx1024m -Dlog4j.debug=true  
 

@@ -2,14 +2,12 @@ package com.feiyu.deeplearning.RBM;
 
 import org.apache.log4j.Logger;
 import org.json.simple.parser.ParseException;
-
-import com.feiyu.spark.SparkTwitterStreaming;
 /**
  * @author feiyu
  */
 
 public class ThreadRBMDataCollectionTestYMins implements Runnable {
-	private static Logger log = Logger.getLogger(SparkTwitterStreaming.class.getName());
+	private static Logger log = Logger.getLogger(ThreadRBMDataCollectionTestYMins.class.getName());
 	private String threadName;
 
 	public ThreadRBMDataCollectionTestYMins(String threadName) {

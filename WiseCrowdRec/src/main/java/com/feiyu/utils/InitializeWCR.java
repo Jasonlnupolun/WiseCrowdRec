@@ -113,7 +113,7 @@ public class InitializeWCR implements java.io.Serializable{
 		GlobalVariables.RBM_SIZE_SOFTMAX = 5; // Sentiment(5-point scale/5-way softmax): "Very negative(0)", "Negative(1)", "Neutral(2)", "Positive(3)", "Very positive(4)"
 		GlobalVariables.RBM_SIZE_HIDDEN_UNITS = 6; // http://en.wikipedia.org/wiki/List_of_genres
 		GlobalVariables.RBM_LEARNING_RATE = 0.1;
-		GlobalVariables.RBM_NUM_EPOCHS = 5;
+		GlobalVariables.RBM_NUM_EPOCHS = 6; //50
 		GlobalVariables.RBM_DRAW_CHART = true; // true
 	}
 	
