@@ -41,7 +41,8 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 				currentData.getKthRBM(),
 				new HashMap<String, RBMMovieInfo>(currentData.getMovieHashMap()),
 				new HashMap<String, RBMUserInfo>(currentData.getUserHashMapTrain()),
-				new HashMap<String, RBMUserInfo>(currentData.getUserHashMapTest()));
+				new HashMap<String, RBMUserInfo>(currentData.getUserHashMapTest()),
+				new ArrayList<String>(currentData.getMovieNameWithIdx()));
 
 		this.numMovies = currentData.getMovieHashMap().size();
 		this.successfullyTrainedThisRBM = false;
@@ -64,19 +65,6 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		}
 	}
 
-	private void createFileForRMSE() throws IOException {
-		// create a file for collecting the RMSE of Epochs from 1 to numEpochs
-		this.RMSEfileName = "RMSEByEpochs_TrainedRBMModel+"+this.currentData.getKthRBM();
-		File file = new File("/Library/Tomcat/logs/"+RMSEfileName+".txt");
-		//		File file = new File("src/main/resources/RBM/"+RMSEfileName+".txt");
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		bw = new BufferedWriter(fw);
-
-	}
-
 	private void trainRBM() throws ParseException, IOException {
 		this.createFileForRMSE();
 
@@ -95,6 +83,18 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		bw.close();
 		log.info("Saved rmse-by-epoch to /Library/Tomcat/logs/"+RMSEfileName+".txt!!");
 		//		log.info("Saved rmse-by-epoch to src/main/resources/"+RMSEfileName+".txt!!");
+	}
+
+	private void createFileForRMSE() throws IOException {
+		// create a file for collecting the RMSE of Epochs from 1 to numEpochs
+		this.RMSEfileName = "RMSEByEpochs_TrainedRBMModel+"+this.currentData.getKthRBM();
+		File file = new File("/Library/Tomcat/logs/"+RMSEfileName+".txt");
+		//		File file = new File("src/main/resources/RBM/"+RMSEfileName+".txt");
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		bw = new BufferedWriter(fw);
 	}
 
 	private void trainRBMWithCertainEpoch(int epochs, boolean showDataNWeightMatrix2Client) throws IOException, ParseException {			
@@ -151,7 +151,7 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 				rbmSoftmax.trainRBMWeightMatrix(ratedMoviesIndices);
 				this.successfullyTrainedThisRBM = true;
 			} else {
-				rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(ratedMoviesIndices);
+				rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(ratedMoviesIndices, false);
 			}
 		}
 	}
@@ -185,7 +185,8 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 				System.currentTimeMillis(),
 				new HashMap<String, RBMMovieInfo>(this.currentData.getMovieHashMap()),
 				trainedMwrbm,
-				this.successfullyTrainedThisRBM
+				this.successfullyTrainedThisRBM,
+				new ArrayList<String>(this.currentData.getMovieNameWithIdx())
 				);
 	}
 
@@ -242,6 +243,7 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		HashMap<String, RBMMovieInfo> movie = new HashMap<String, RBMMovieInfo>();
 		HashMap<String, RBMUserInfo> userTrain = new HashMap<String, RBMUserInfo>();
 		HashMap<String, RBMUserInfo> userTest = new HashMap<String, RBMUserInfo>();
+		ArrayList<String> movieList = new ArrayList<String>();
 		HashMap<Integer,Integer> rate;
 
 
@@ -251,6 +253,8 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		movie.put("Superman Returns", new RBMMovieInfo(
 				1, "/m/044g_k", 2
 				));
+		movieList.add(0, "The Weekend");
+		movieList.add(1, "Superman Returns");
 
 		rate = new HashMap<Integer,Integer>();
 		rate.put(0, 1);
@@ -282,12 +286,14 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		userTest.put("116", new RBMUserInfo(
 				0, new HashMap<Integer,Integer>(rate)
 				));
+		
 
 		RBMDataQueueElementInfo curData = new RBMDataQueueElementInfo (
 				0,
 				new HashMap<String, RBMMovieInfo>(movie),
 				new HashMap<String, RBMUserInfo>(userTrain),
-				new HashMap<String, RBMUserInfo>(userTest)
+				new HashMap<String, RBMUserInfo>(userTest),
+				new ArrayList<String>(movieList)
 				);
 
 		ThreadRBMTrainingKMins t = new ThreadRBMTrainingKMins("testThread",
@@ -295,7 +301,9 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 						curData.getKthRBM(),
 						new HashMap<String, RBMMovieInfo>(curData.getMovieHashMap()),
 						new HashMap<String, RBMUserInfo>(curData.getUserHashMapTrain()),
-						new HashMap<String, RBMUserInfo>(curData.getUserHashMapTest()))
+						new HashMap<String, RBMUserInfo>(curData.getUserHashMapTest()),
+						new ArrayList<String>(curData.getMovieNameWithIdx())
+						)
 				);
 		t.printTrainingTestingData();
 	}

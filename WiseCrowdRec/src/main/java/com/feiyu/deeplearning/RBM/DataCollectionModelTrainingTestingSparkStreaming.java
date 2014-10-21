@@ -6,7 +6,7 @@ import com.feiyu.utils.InitializeWCR;
 import com.feiyu.websocket.SparkHistogramWebSocketHandler;
 import com.feiyu.websocket.SparkWebSocketHandler;
 
-public class PredictUserPreferencesSparkStreaming implements java.io.Serializable {
+public class DataCollectionModelTrainingTestingSparkStreaming implements java.io.Serializable {
 	private static final long serialVersionUID = 7231112414625079948L;
 
 	public void init() throws Exception {
@@ -49,13 +49,13 @@ public class PredictUserPreferencesSparkStreaming implements java.io.Serializabl
 	}
 
 	public static void main(String[] argv) throws Exception {
-		PredictUserPreferencesSparkStreaming rbmSpark = new PredictUserPreferencesSparkStreaming();
+		DataCollectionModelTrainingTestingSparkStreaming rbmSpark = new DataCollectionModelTrainingTestingSparkStreaming();
 		rbmSpark.init();
 
 		SparkTwitterStreaming sts = new SparkTwitterStreaming();
 		sts.sparkInit();
 		sts.startSpark("movie");
 
-		GlobalVariables.RBM_PREDICT_USER_PREF.startPredictUserPreferences();
+		GlobalVariables.RBM_DATA_CLC_MDL_TRN_TST.start();
 	}
 }

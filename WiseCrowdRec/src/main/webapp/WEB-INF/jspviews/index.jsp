@@ -119,11 +119,12 @@
                         <nav>
                             <!-- http://tympanus.net/Blueprints/QuotesRotator/ -->
                             <img id="signinwithtwitter" src="resources/images/sign-in-with-twitter-gray.png" data-info="Sign in with twitter." />
-                            <div id="genresdislike" class="genresDislikeButton">Click Here If Selection Is Finished</div>
-                            <div id="waitprocessing" class="waitProcessingButton">Click Here If Selection Is Finished</div>
-                            <div id="moviesdislike" class="moviesDislikeButton">Click Here If Selection Is Finished</div>
-                            <div id="infoBarTwitter"></div>
+                            <div id="genresdislike" class="genresDislikeButton">Genre</div>
+                            <div id="moviesdislike" class="moviesDislikeButton">Movie</div>
+                            <div id="infoBarGM"></div>
+                            <div id="recRBM" class="recButton">Rec &#38; Predi</div>
                             <div id="infoBarRBM"></div>
+                            <div id="infoBarTwitter"></div>
                             <script type="text/javascript">
                                 $('#signinwithtwitter').click(function() {
                                     var callbackURL = document.URL;
@@ -139,10 +140,10 @@
                                 var rbmd3 = new RBMD3();
                                 if (document.URL.indexOf("oauth_verifier=") > -1) {
                                     document.getElementById("signinwithtwitter").style.display = "none";
-                                    document.getElementById("waitprocessing").style.display = "none";
-                                    document.getElementById("moviesdislike").style.display = "none";
+                                    document.getElementById("recRBM").style.display = "none";
+                                    $('#infoBarGM').text('Click Genres(Red)/Movies(Blue) You Dislike');
+                                    $('#infoBarRBM').text('You also can search any pharses you like in the text box!');
                                     $('#infoBarTwitter').text('Logged into Twitter! ');
-                                    $('#infoBarRBM').text('Click Genres/Movies You Dislike');
                                     /* var freebase= require('freebase'); */
                                     var curURL = document.URL;
                                     var oauth_token = curURL.substring(curURL.indexOf("oauth_token=") + 12, curURL.indexOf("&oauth_verifier="));
@@ -195,14 +196,18 @@
                                     });
 
                                     $('#genresdislike').click(function() {
-                                        document.getElementById("genresdislike").style.display = "none";
-                                        document.getElementById("waitprocessing").style.display = "block";
-                                        console.info("wait processing");
-                                        $('#infoBarRBM').text('Now you can search any pharses you like in the text box!');
+                                        $('#infoBarGM').text('Click Genres(Red nodes) You Dislike');
+                                    });
+                                    $('#moviesdislike').click(function() {
+                                        $('#infoBarGM').text('Click Movies(Blue nodes) You Dislike');
+                                    });
+                                    $('#recRBM').click(function() {
+                                    	$.get('${pageContext.request.contextPath}/rbmRecPredic', function() {});
+                                        $('#infoBarRBM').text('Wait Please. Recommended movies will be shown to you..');
                                     });
                                 } else {
                                     document.getElementById("genresdislike").style.display = "none";
-                                    document.getElementById("waitprocessing").style.display = "none";
+                                    document.getElementById("recRBM").style.display = "none";
                                     document.getElementById("moviesdislike").style.display = "none";
                                     $('#infoBarTwitter').text('Click and get the magic!!');
                                 }

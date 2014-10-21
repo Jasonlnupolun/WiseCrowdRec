@@ -68,11 +68,11 @@ public class TestRestrictedBoltzmannMachinesWithSoftmax {
 
 		rbmSoftmax.getTrainedWeightMatrix_RBM();
 
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,0,1,1,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(1,1,1,0,0,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(1,0,1,0,0,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,1,1,1,0));
-		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,1,1,0,0));
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,0,1,1,0), false);
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(1,1,1,0,0,0), false);
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(1,0,1,0,0,0), false);
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,1,1,1,0), false);
+		rbmSoftmax.predictUserPreference_VisibleToHiddenToVisible(insertTraningData_OneUser(0,0,1,1,0,0), false);
 
 		rbmSoftmax.getTrainedWeightMatrix_RBM();
 		rbmSoftmax.getRMSEOfRBMModel();

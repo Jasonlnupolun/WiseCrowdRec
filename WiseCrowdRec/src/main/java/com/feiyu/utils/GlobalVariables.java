@@ -13,7 +13,7 @@ import mx.bigdata.jcalais.CalaisClient;
 
 import com.feiyu.Cassandra.AstyanaxCassandraManipulator;
 import com.feiyu.Cassandra.AstyanaxCassandraUserList;
-import com.feiyu.deeplearning.RBM.PredictUserPreferences;
+import com.feiyu.deeplearning.RBM.RBMDataCollectionModelTrainingTesting;
 import com.feiyu.elasticsearch.JestElasticsearchManipulator;
 import com.feiyu.semanticweb.freebase.GetActorMovieGenreSubgraphVectorNEdge;
 import com.feiyu.spark.SparkTwitterStreaming;
@@ -70,7 +70,7 @@ public class GlobalVariables {
 	public static final GetActorMovieGenreSubgraphVectorNEdge FREEBASE_GET_ACTOR_MOVIES = new GetActorMovieGenreSubgraphVectorNEdge();
 	public static GenericUrl FREEBASE_URL;
 
-	public static final PredictUserPreferences RBM_PREDICT_USER_PREF = new PredictUserPreferences();
+	public static final RBMDataCollectionModelTrainingTesting RBM_DATA_CLC_MDL_TRN_TST = new RBMDataCollectionModelTrainingTesting();
 	//	public static long RBM_OVERHEAD;
 	//	public static long RBM_DATA_COLLECTION_DURATION;
 	//	public static long RBM_EACH_TRAIN_DURATION;
@@ -100,4 +100,5 @@ public class GlobalVariables {
 	public static final HashSet<String> RBM_CLIENT_DISLIKED_MOVIES = new HashSet<String>();
 	public static HashMap<Integer, Integer> RBM_CLIENT_RATED_MOVIES_CUR_RBM;
 	public static RBMClientWeightMatixForPredict RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT;
+	public static double[][][] RBM_Client_PREDICTED_PREFERENCE;
 }

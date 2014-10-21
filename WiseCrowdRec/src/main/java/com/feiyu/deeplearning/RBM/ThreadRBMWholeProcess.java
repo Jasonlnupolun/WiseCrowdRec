@@ -1,6 +1,8 @@
 package com.feiyu.deeplearning.RBM;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
@@ -40,7 +42,8 @@ public class ThreadRBMWholeProcess implements Runnable {
 								GlobalVariables.KTH_RBM,
 								new HashMap<String, RBMMovieInfo>(GlobalVariables.RBM_MOVIE_HASHMAP),
 								new HashMap<String, RBMUserInfo>(pollElement.getUserHashMapTrain()),
-								new HashMap<String, RBMUserInfo>(GlobalVariables.RBM_USER_HASHMAP))
+								new HashMap<String, RBMUserInfo>(GlobalVariables.RBM_USER_HASHMAP),
+								new ArrayList<String>(GlobalVariables.RBM_MOVIE_LIST))	
 						);
 				Thread trainRBMsThread = new Thread(trainRBMsRunnable);
 				log.info("Starting "+ trainRBMsName +" at time "+System.currentTimeMillis());

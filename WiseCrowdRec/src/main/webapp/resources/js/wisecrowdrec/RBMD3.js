@@ -9,9 +9,9 @@ function RBMD3() {
     if (!window.WebSocket) {
         window.alert("WebSocket is not supported by this browser!!! Use other browsers like Chrome instead please.");
     }
-
+    
     var w = 1500,
-        h = 1200;
+        h = 900;
 
     var svg = d3.select("body").append("svg:svg")
         .attr("width", w)
@@ -20,7 +20,7 @@ function RBMD3() {
     svg.append("rect")
         .attr("width", w)
         .attr("height", h);
-
+    
     stormMessage();
 
     function stormMessage() {
@@ -58,6 +58,9 @@ function RBMD3() {
             console.log(wsurl + " closed!");
         };
         sparkws.onmessage = function (msg) {
+        	document.getElementById("recRBM").style.display = "block";
+        	$('#infoBarRBM').text('Click the Yellow Button for Recommendation and Prediction');
+
             console.log(wsurl + " received message: " + msg.data);
             var json = JSON.parse(msg.data);
             startShowRelationGraph(json);

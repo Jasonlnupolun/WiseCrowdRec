@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import twitter4j.TwitterException;
 
+import com.feiyu.deeplearning.RBM.MovieRecommendation;
 import com.feiyu.semanticweb.freebase.GetD3VerticesEdgesFromFollowingList;
 import com.feiyu.springmvc.service.SignInWithTwitterService;
 import com.feiyu.utils.GlobalVariables;
@@ -62,7 +63,7 @@ public class TweetsAnalyzerController {
 		//		}
 
 		GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
-		GlobalVariables.RBM_PREDICT_USER_PREF.startPredictUserPreferences();
+		GlobalVariables.RBM_DATA_CLC_MDL_TRN_TST.start();
 	}
 
 	@RequestMapping(value = "signinwithtwitter/login", params = {"callbackURL"} , method = RequestMethod.GET)
@@ -103,7 +104,13 @@ public class TweetsAnalyzerController {
 		logger.info("controller smcSubGraphws");
 	}
 
-
+	@RequestMapping(value = "/rbmRecPredic" )
+	@ResponseBody
+	public void rbmRecommendationPrediction() throws IOException{
+		MovieRecommendation movieRec = new MovieRecommendation();
+		movieRec.startMovieRec();
+		logger.info("controller -> rbmRecommendationPrediction");
+	} 
 
 	@RequestMapping(value = "/smcSubGraphSSEmessagebutton" )
 	@ResponseBody

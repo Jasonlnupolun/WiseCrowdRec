@@ -1,6 +1,7 @@
 package com.feiyu.deeplearning.RBM;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,7 +61,8 @@ public class ThreadRBMShowDataToClientPMins implements Runnable {
 				GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getTimeTrained(),
 				new HashMap<String, RBMMovieInfo>(GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getMovieHashMap()),
 				this.Mw_rbm_client,
-				GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getSuccessfullyTrainedThisRBM()
+				GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getSuccessfullyTrainedThisRBM(),
+				new ArrayList<String>(GlobalVariables.RBM_CLIENT_WEIGHTMATIX_FOR_PREDICT.getMovieNameWithIdx())
 				);
 
 		log.info("Creating " +  this.threadName + " at " +System.currentTimeMillis());

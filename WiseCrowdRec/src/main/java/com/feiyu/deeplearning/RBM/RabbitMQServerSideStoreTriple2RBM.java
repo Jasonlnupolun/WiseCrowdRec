@@ -85,7 +85,8 @@ public class RabbitMQServerSideStoreTriple2RBM {
 											++GlobalVariables.KTH_RBM,
 											new HashMap<String, RBMMovieInfo>(),
 											new HashMap<String, RBMUserInfo>(GlobalVariables.RBM_USER_HASHMAP),
-											new HashMap<String, RBMUserInfo>()
+											new HashMap<String, RBMUserInfo>(),
+											new ArrayList<String>(GlobalVariables.RBM_MOVIE_LIST)
 											));
 							break;
 						}

@@ -121,7 +121,8 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		}
 	}
 
-	public void predictUserPreference_VisibleToHiddenToVisible(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) {
+	public void predictUserPreference_VisibleToHiddenToVisible(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices,
+			boolean isForClient) {
 		log.info("\n----------------------------\n----------------------------\nPredict User Preference..");
 		boolean isForTrain = false;
 		boolean isPositiveCD = true;
@@ -136,6 +137,20 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 
 		// get the root mean squared error of current user for correctness testing
 		this.getRMSE_oneUser();
+		
+		if (isForClient) {
+			log.info("********Get movies client might like..");
+			GlobalVariables.RBM_Client_PREDICTED_PREFERENCE = new double[1][this.numMovies+1][this.sizeSoftmax];
+			for (int y=0; y<this.numMovies+1; y++) {
+				String str = "";
+				for (int z=0; z<this.sizeSoftmax; z++) {
+					GlobalVariables.RBM_Client_PREDICTED_PREFERENCE[0][y][z] = this.Mnvs[0][y][z];
+					str += " "+ String.valueOf(GlobalVariables.RBM_Client_PREDICTED_PREFERENCE[0][y][z]);
+				}
+				log.info(str+" softmax "); 
+			}
+			log.info(" layer "); 
+		}
 	}
 
 	public void getRMSEOfRBMModel() throws IOException {
