@@ -17,7 +17,7 @@ public class ThreadRBMDataCollectionTestYMins implements Runnable {
 
 	public void run() {
 		try {
-			RBMRabbitMQServerSide rabbitmqServer = new RBMRabbitMQServerSide();
+			RabbitMQServerSideStoreTriple2RBM rabbitmqServer = new RabbitMQServerSideStoreTriple2RBM();
 			rabbitmqServer.rbmRabbitMQServerSide(this.threadName, false); 
 			Thread.sleep(1);
 		} catch (InterruptedException e) {

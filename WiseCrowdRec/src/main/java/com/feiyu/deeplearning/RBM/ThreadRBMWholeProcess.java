@@ -26,11 +26,11 @@ public class ThreadRBMWholeProcess implements Runnable {
 		try {
 			//			while (System.currentTimeMillis() - startTime < GlobalVariables.RBM_DATA_COLLECTION_DURATION) {
 			while (true) {
-				// Data Collection
+				// Data Collection: Training data and Testing data
 				GetTrainingTestingDataCurrentKMins getData = new GetTrainingTestingDataCurrentKMins();
 				getData.startRBMDataCollection();
 
-				// Training RBMs
+				// Training and Testing RBMs
 				log.info("\n------------>Start train RBMs");
 				String trainRBMsName= "ThreadRBMTrainingKMins"; 
 				RBMDataQueueElementInfo pollElement = GlobalVariables.RBM_DATA_QUEUE.poll();
@@ -43,7 +43,6 @@ public class ThreadRBMWholeProcess implements Runnable {
 								new HashMap<String, RBMUserInfo>(GlobalVariables.RBM_USER_HASHMAP))
 						);
 				Thread trainRBMsThread = new Thread(trainRBMsRunnable);
-
 				log.info("Starting "+ trainRBMsName +" at time "+System.currentTimeMillis());
 				trainRBMsThread.start();
 

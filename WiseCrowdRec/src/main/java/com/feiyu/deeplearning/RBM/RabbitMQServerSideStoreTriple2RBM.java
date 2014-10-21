@@ -26,11 +26,11 @@ import org.json.simple.parser.ParseException;
  * @author feiyu
  */
 
-public class RBMRabbitMQServerSide {
-	private static Logger log = Logger.getLogger(RBMRabbitMQServerSide.class.getName());
+public class RabbitMQServerSideStoreTriple2RBM {
+	private static Logger log = Logger.getLogger(RabbitMQServerSideStoreTriple2RBM.class.getName());
 	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION;
 
-	public RBMRabbitMQServerSide() {
+	public RabbitMQServerSideStoreTriple2RBM() {
 		GlobalVariables.RBM_USER_HASHMAP= new HashMap<String, RBMUserInfo>();
 		GlobalVariables.RBM_USER_LIST= new ArrayList<String>();
 		GlobalVariables.RBM_USER_MAX_IDX = -1;
