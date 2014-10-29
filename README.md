@@ -1,6 +1,11 @@
 WiseCrowdRec
 ============
 
+- Project video demo can be viewed by clicking the following image:  
+[![Project demo](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/WiseCrowdRecUI.png)](https://drive.google.com/file/d/0B-OcoMYLimAlZVRVcnlWQ1BEcDA/view?usp=sharing)     
+    
+
+- Check List:  
 - [x] Streaming processing   
     - [x] [Storm](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/storm/streamingdatacollection)       
     - [x] [Spark Streaming (Apache Spark 0.9.1)](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/spark)        
@@ -48,22 +53,33 @@ WiseCrowdRec
 - [x] [log4j](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/resources/log4j.properties)    
 - [x] [Maven](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/pom.xml)    
 - [x] [WebApp](https://github.com/faustineinsun/WiseCrowdRec/tree/c2eb79b360ade0aae0b9b44b6c54221110ad05d9/WiseCrowdRec/src/main/webapp)    
+   
+- Multithreading Parallel RBM   
+![Multithreading Parallel RBM](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/MultithreadingParallelRBM.png)
 
-To do list:  
-- [ ] Cassandra - asynchronous -> Astyanax feature      
-- [ ] kill storm topology  
-- [ ] Log  
-- [ ] Click "Start Background Topology", if cassandra doesn't open, show info  
-- [ ] Throw exception -> use Exception only        
-- [ ] local mode + distributive mode   
- 
+- RBM for CF With Softmax and Bias   
+![RBMcfSoftmaxWithBias](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/RBMcfSoftmaxWithBias.png)
+     
+- WiseCrowdRec UI: RealTime Histogram        
+![WiseCrowdRecUIRealTimeHistogram](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/WiseCrowdRecUIRealTimeHistogram.png)
 
+---
 
---- 
-[inspect WebSocket messages](http://www.websocket.org/echo.html)-> ws://0.0.0.0:9292/wcrstorm     
+Cassandra   
+  - ~~Pelops,Hector~~ -> [Astyanax](https://github.com/Netflix/astyanax): A Java client library for the Cassandra database    
+  - Open Cassandra -> $ bin/cassandra -f  
+  - Open CQL3 -> $ bin/cqlsh   
+  - chmod +x schemaCassandra.txt  
+  - Put schema into cassandra -> $ cat schemaCassandra.txt | bin/cassandra-cli -h localhost  
+  - run java code  
+  - $ bin/cassandra-cli -h localhost  
+      - [default@unknown] use wcrkeyspace;  
+      - [default@unknown] DESCRIBE wcrkeyspace;   
+      - [default@unknown] list backgroundsearch;   
+      - [default@unknown] list dynamicsearch;   
 
-[Shapeshifter](https://github.com/turn/shapeshifter): Protocol Buffers -> JSON    
-[JSON -> JavaScript](http://www.mkyong.com/javascript/how-to-access-json-object-in-javascript/)  
+"[NOTE: Transactional topologies have been deprecated -- use the Trident framework instead.](https://github.com/nathanmarz/storm/wiki/Transactional-topologies)"  
+[Trident tutorial](https://github.com/nathanmarz/storm/wiki/Trident-tutorial)    
 
 ---
 
@@ -74,23 +90,6 @@ Elasticsearch
 - $ curl -XDELETE 'http://localhost:9200/wcresidx/'  
 - $ curl http://localhost:9200/_aliases  (list all indexes)    
 
----
-
-- Cassandra   
-    - ~~Pelops,Hector~~ -> [Astyanax](https://github.com/Netflix/astyanax): A Java client library for the Cassandra database    
-    - Open Cassandra -> $ bin/cassandra -f  
-    - Open CQL3 -> $ bin/cqlsh   
-    - chmod +x schemaCassandra.txt  
-    - Put schema into cassandra -> $ cat schemaCassandra.txt | bin/cassandra-cli -h localhost  
-    - run java code  
-    - $ bin/cassandra-cli -h localhost  
-        - [default@unknown] use wcrkeyspace;  
-        - [default@unknown] DESCRIBE wcrkeyspace;   
-        - [default@unknown] list backgroundsearch;   
-        - [default@unknown] list dynamicsearch;   
-
-"[NOTE: Transactional topologies have been deprecated -- use the Trident framework instead.](https://github.com/nathanmarz/storm/wiki/Transactional-topologies)"  
-[Trident tutorial](https://github.com/nathanmarz/storm/wiki/Trident-tutorial)    
 
 ---
 
@@ -119,14 +118,6 @@ oauth.accessTokenSecret=********
 
 SEARCH_PHRASES=movie
 ```
-
----
-
-- `start_WiseCrowdRec.sh`    
-- `deployWCRonTomcat.sh`  
-- `startStreamCollection.sh`  
-- `beforeCommit.sh`  
-
 ---
 
 both on local and GCE    
@@ -155,7 +146,7 @@ local
 
 ---
 
-[GCE](https://cloud.google.com/products/compute-engine/)      
+[GCE (Google Compute Engine)](https://cloud.google.com/products/compute-engine/)      
 
 - $ `sudo su`    
 - $ `source ~/.bash_profile`  
@@ -172,11 +163,11 @@ local
 
 ---
 
-[Git](http://www.vogella.com/tutorials/Git/article.html)  
-mvn versions:display-plugin-updates      
-mvn eclipse:clean eclipse:eclipse -Dwtpversion=2.0    
-  
----
-
-Eclipse VM: -XX:MaxPermSize=1024M -Xms1024m -Xmx1024m -Dlog4j.debug=true  
-
+Useful info:
+- [Git](http://www.vogella.com/tutorials/Git/article.html)  
+- mvn versions:display-plugin-updates      
+- mvn eclipse:clean eclipse:eclipse -Dwtpversion=2.0    
+- Eclipse VM: -XX:MaxPermSize=1024M -Xms1024m -Xmx1024m -Dlog4j.debug=true  
+- [inspect WebSocket messages](http://www.websocket.org/echo.html)-> ws://0.0.0.0:9292/wcrstorm     
+- [Shapeshifter](https://github.com/turn/shapeshifter): Protocol Buffers -> JSON    
+- [JSON -> JavaScript](http://www.mkyong.com/javascript/how-to-access-json-object-in-javascript/)  

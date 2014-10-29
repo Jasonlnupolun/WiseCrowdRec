@@ -108,12 +108,12 @@ public class InitializeWCR implements java.io.Serializable{
 //		GlobalVariables.RBM_DATA_COLLECTION_DURATION = 30*1000; 
 //		GlobalVariables.RBM_EACH_TRAIN_DURATION = 8*8*1000; 
 //		GlobalVariables.RBM_EACH_TEST_DURATION = 2*8*1000; 
-		GlobalVariables.RBM_USER_MAX_NUMBER_TRAIN = 1; //3
-		GlobalVariables.RBM_USER_MAX_NUMBER_TEST = 1; //2
+		GlobalVariables.RBM_USER_MAX_NUMBER_TRAIN = 8; //3
+		GlobalVariables.RBM_USER_MAX_NUMBER_TEST = 2; //2
 		GlobalVariables.RBM_SIZE_SOFTMAX = 5; // Sentiment(5-point scale/5-way softmax): "Very negative(0)", "Negative(1)", "Neutral(2)", "Positive(3)", "Very positive(4)"
 		GlobalVariables.RBM_SIZE_HIDDEN_UNITS = 6; // http://en.wikipedia.org/wiki/List_of_genres
 		GlobalVariables.RBM_LEARNING_RATE = 0.1;
-		GlobalVariables.RBM_NUM_EPOCHS = 6; //50
+		GlobalVariables.RBM_NUM_EPOCHS = 5; //50
 		GlobalVariables.RBM_DRAW_CHART = true; // true
 	}
 	

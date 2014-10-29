@@ -64,6 +64,7 @@ public class MovieRecommendation {
 		String d3DataString = d3Data.toString();
 		log.info(" [x] RABBITMQ_QUEUE_NAME_SPARK Message Sent to queue buffer, movies client might like: "+ d3DataString);
 		GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_SPARK, null, d3DataString.getBytes());
+		bw.close();
 	}
 
 	private void createFileForRMSE() throws IOException {
