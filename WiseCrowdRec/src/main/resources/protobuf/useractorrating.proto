@@ -1,0 +1,8 @@
+option java_package = "com.feiyu.protobuf";
+option java_outer_classname = "UserActorRatingProtos";
+
+message User {
+	optional int64 userid = 1;
+	optional string candidateactor = 2;
+	optional int32 rating = 3;
+}

@@ -20,9 +20,16 @@
         <cassandra.version>2.0.7</cassandra.version>
         <scala.version>2.10.2</scala.version>
         <spark.version>1.0.0</spark.version>
+        <protobuf.version>2.6.1</protobuf.version>
     </properties>
 
     <dependencies>
+        <!-- protobuf -->
+        <dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${protobuf.version}</version>
+		</dependency>
         <!-- freebase -->
         <dependency>
           <groupId>com.google.api-client</groupId>
@@ -524,7 +531,7 @@
                 <directory>${basedir}/src/main/resources/</directory>
             </resource>
         </resources>
-
+<pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
@@ -718,7 +725,34 @@
                         <skipTests>true</skipTests>
                     </configuration>
                 </plugin> 
+                <!-- protocol buffer plugin -->
+                <!--
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                    <executions>
+                        <execution>
+                            <id>generate-sources</id>
+                            <phase>generate-sources</phase>
+                            <configuration>
+                                <tasks>
+                                    <echo>Generating Google Protobuf Java classes...</echo> 
+                                    <exec executable="protoc">
+                                        <arg value="\-\-java_out=${basedir}/src/main/java/"/>
+                                        <arg value="${basedir}/src/main/resources/protobuf/addressbook.proto"/>
+                                    </exec>
+                                </tasks>
+                                <sourceRoot>${basedir}/src/main/java/</sourceRoot>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                -->
             </plugins>
+            </pluginManagement>
         </build>
 
         <repositories>

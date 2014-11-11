@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.feiyu.protobuf.UserActorRatingProtos.User;
 import com.feiyu.springmvc.model.RBMDataQueueElementInfo;
 import com.feiyu.springmvc.model.RBMMovieInfo;
 import com.feiyu.springmvc.model.RBMUserInfo;
@@ -53,26 +54,48 @@ public class RabbitMQServerSideStoreTriple2RBM {
 				QueueingConsumer.Delivery delivery = null;
 				try {
 					delivery = consumer.nextDelivery();
-					String message = new String(delivery.getBody());
-					log.info(" [...x...] "+ threadName +" server received '" + message.replaceAll("\\s+","") + "'");
+//					String message = new String(delivery.getBody());
+//					log.info(" [...x...] "+ threadName +" server received '" + message.replaceAll("\\s+","") + "'");
+//					// triple(userid, candidateactor, rating)
+//					JSONParser parser = new JSONParser();
+//					JSONObject jsonTipleUCR = (JSONObject)parser.parse(message);
+//
+//					String actorMovieList = GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(jsonTipleUCR.get("candidateactor").toString(), false);
+//					JSONObject jsonActorMovieList= (JSONObject)parser.parse(actorMovieList);
+//					JSONArray jsonArrayMovieList = (JSONArray)jsonActorMovieList.get("result");
+//					log.info("%%%%%% " + jsonArrayMovieList.size() +" movies of the actor named " + jsonTipleUCR.get("candidateactor").toString());
+//					for (Object result : jsonArrayMovieList) {
+//						this.storeTripleIntoRBMDataMatix(
+//								jsonTipleUCR.get("userid").toString(), 
+//								JsonPath.read(result,"$.name").toString(), // @ java.lang.NullPointerException 
+//								JsonPath.read(result,"$.mid").toString(), 
+//								jsonTipleUCR.get("rating").toString(),
+//								isForTrain);
+//						log.info(jsonTipleUCR.get("userid")+" -- "+JsonPath.read(result,"$.name").toString()+" -- "+jsonTipleUCR.get("rating"));
+//					}
 
-					// triple(userid, candidateactor, rating)
+					User newUser = User.parseFrom(delivery.getBody());
+					log.info(" [...x...] "+ threadName +" server received triple(" 
+					      + newUser.getUserid() + ","
+					      + newUser.getCandidateactor() + ","
+					      + newUser.getRating() 
+					      + ")");
+					String actorMovieList = GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(newUser.getCandidateactor(), false);
+					
 					JSONParser parser = new JSONParser();
-					JSONObject jsonTipleUCR = (JSONObject)parser.parse(message);
-
-					String actorMovieList = GlobalVariables.FREEBASE_GET_ACTOR_MOVIES.getMovieListByActorName(jsonTipleUCR.get("candidateactor").toString(), false);
 					JSONObject jsonActorMovieList= (JSONObject)parser.parse(actorMovieList);
 					JSONArray jsonArrayMovieList = (JSONArray)jsonActorMovieList.get("result");
-					log.info("%%%%%% " + jsonArrayMovieList.size() +" movies of the actor named " + jsonTipleUCR.get("candidateactor").toString());
+					log.info("%%%%%% " + jsonArrayMovieList.size() +" movies of the actor named " + newUser.getCandidateactor());
 					for (Object result : jsonArrayMovieList) {
 						this.storeTripleIntoRBMDataMatix(
-								jsonTipleUCR.get("userid").toString(), 
+								String.valueOf(newUser.getUserid()), 
 								JsonPath.read(result,"$.name").toString(), // @ java.lang.NullPointerException 
 								JsonPath.read(result,"$.mid").toString(), 
-								jsonTipleUCR.get("rating").toString(),
+								String.valueOf(newUser.getRating()),
 								isForTrain);
-						log.info(jsonTipleUCR.get("userid")+" -- "+JsonPath.read(result,"$.name").toString()+" -- "+jsonTipleUCR.get("rating"));
+						log.info(newUser.getUserid()+" -- "+JsonPath.read(result,"$.name").toString()+" -- "+newUser.getRating());
 					}
+
 					
 					int numUsers = GlobalVariables.RBM_USER_HASHMAP.size(); 
 					if (isForTrain) {

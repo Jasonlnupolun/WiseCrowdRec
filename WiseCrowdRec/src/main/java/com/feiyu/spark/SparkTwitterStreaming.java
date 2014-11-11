@@ -27,11 +27,13 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.feiyu.elasticsearch.SerializeBeans2JSON;
 import com.feiyu.nlp.SentimentAnalyzerCoreNLP;
+import com.feiyu.protobuf.UserActorRatingProtos.User;
 import com.feiyu.springmvc.model.EntityInfo;
 import com.feiyu.springmvc.model.EntityWithSentiment;
 import com.feiyu.springmvc.model.Tweet;
 import com.feiyu.utils.GlobalVariables;
 import com.feiyu.utils.InitializeWCR;
+import com.google.protobuf.Message;
 
 import scala.Tuple2;
 import twitter4j.Status;
@@ -181,22 +183,35 @@ public class SparkTwitterStreaming implements java.io.Serializable   {
 
 					@Override
 					public String call(EntityInfo entityInfo) throws Exception {
-						JSONObject jsonObject;
-						jsonObject = new JSONObject();
-						try {
-							jsonObject.put("userid", String.valueOf(entityInfo.getUserid()));
-							jsonObject.put("candidateactor", entityInfo.getEntity());
-							jsonObject.put("rating", String.valueOf(entityInfo.getSentitment())); //sentiment
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+//						JSONObject jsonObject;
+//						jsonObject = new JSONObject();
+//						try {
+//							jsonObject.put("userid", String.valueOf(entityInfo.getUserid()));
+//							jsonObject.put("candidateactor", entityInfo.getEntity());
+//							jsonObject.put("rating", String.valueOf(entityInfo.getSentitment())); //sentiment
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//
+//						String json = jsonObject.toString();
+//						log.debug("\n-------------------\n-------------------\ntriple(userid, candidateactor, rating):\n"+json);
+//						
+//						// rabbitmq, sending training/testing to RBM
+//						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, null, json.getBytes());
+//						log.info(" [x] RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION: Message Sent to queue buffer: "+ json);
 
-						String json = jsonObject.toString();
-						log.debug("\n-------------------\n-------------------\ntriple(userid, candidateactor, rating):\n"+json);
+					    User newUser = User.newBuilder()
+					        .setUserid(entityInfo.getUserid())
+					        .setCandidateactor(entityInfo.getEntity())
+					        .setRating(entityInfo.getSentitment())
+					        .build();
+					    Message protobufMsg = (Message) newUser;
+					    String msg = newUser.toString();
+						log.debug("\n-------------------\n-------------------\ntriple(userid, candidateactor, rating):\n"+msg);
 						
 						// rabbitmq, sending training/testing to RBM
-						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, null, json.getBytes());
-						log.info(" [x] RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION: Message Sent to queue buffer: "+ json);
+						GlobalVariables.RABBITMQ_CHANNEL.basicPublish("", GlobalVariables.RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION, null, protobufMsg.toByteArray());
+						log.info(" [x] RABBITMQ_QUEUE_NAME_RBMDATACOLLECTION: Message Sent to queue buffer: "+ msg);
 
 						return entityInfo.getEntity();
 					}
