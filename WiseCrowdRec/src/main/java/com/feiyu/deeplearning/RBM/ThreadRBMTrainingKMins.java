@@ -121,7 +121,7 @@ public class ThreadRBMTrainingKMins  implements Runnable {
 		rbmSoftmax.getRMSEOfRBMModel();
 	}
 
-	private void trainOrTestRBM(RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax, boolean isForTrain) {
+	private void trainOrTestRBM(RestrictedBoltzmannMachinesWithSoftmax rbmSoftmax, boolean isForTrain) throws IOException {
 		Iterator<Entry<String, RBMUserInfo>> itUser;
 		if (isForTrain) {
 			this.successfullyTrainedThisRBM = false;

@@ -122,7 +122,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	}
 
 	public void predictUserPreference_VisibleToHiddenToVisible(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices,
-			boolean isForClient) {
+			boolean isForClient) throws IOException {
 		log.info("\n----------------------------\n----------------------------\nPredict User Preference..");
 		boolean isForTrain = false;
 		boolean isPositiveCD = true;
@@ -136,7 +136,8 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		this.getTheNvpMatrix_oneUser(isForTrain);
 
 		// get the root mean squared error of current user for correctness testing
-		this.getRMSE_oneUser();
+//		this.getRMSE_oneUser();
+		this.getRMSE_oneUser_onlyRatedMovies(ratedMoviesIndices);
 		
 		if (isForClient) {
 			log.info("********Get movies client might like..");
@@ -154,12 +155,18 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 	}
 
 	public void getRMSEOfRBMModel() throws IOException {
-		this.RMSERBMModel /= this.numRMSERecords;
+		double rmseNoSqrt = this.RMSERBMModel;
+		this.RMSERBMModel = Math.sqrt(this.RMSERBMModel/this.numRMSERecords);
 		this.bufferedWriter.write(this.numEpochs+" "+this.RMSERBMModel+"\n");
+//		this.bufferedWriter.newLine();
+		this.bufferedWriter.flush();
 
 		log.info("\n----------------------------"
 				+ "\n----------------------------"
-				+ "\nRoot Mean Squared Error (RMSE) of this RBM Model: "+ this.RMSERBMModel);
+				+ "\nRoot Mean Squared Error (RMSE) of this RBM Model: "+ this.RMSERBMModel
+				+ " -- rmseNoSqrt:"+rmseNoSqrt
+				+ " -- numRMSERecords:"+this.numRMSERecords
+				);
 		// please refer to the method getRMSE_oneUser() for details 
 	}
 
@@ -496,6 +503,7 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 		}
 	}	
 
+	/*
 	private void getRMSE_oneUser() {
 		// use Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
 		int curRealRating, curPredRating;
@@ -521,5 +529,48 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 
 		rmse = Math.sqrt(rmse/this.numMovies);
 		log.info("rmse for current user: "+rmse);
+	}
+	*/
+	
+	private void getRMSE_oneUser_onlyRatedMovies(ArrayList<Tuple<Integer,Integer>> ratedMoviesIndices) throws IOException {
+		// use Root Mean Squared Error (RMSE) https://www.kaggle.com/wiki/RootMeanSquaredError
+		int curRealRating, curPredRating;
+		boolean findRealRating, findPredRating;
+		double rmse=0; // Root Mean Squared Error (RMSE) for current user https://www.kaggle.com/wiki/RootMeanSquaredError
+		
+		for (Tuple<Integer,Integer> ratedMovie : ratedMoviesIndices) {
+			int y = ratedMovie.getFirst(); 
+			this.numRMSERecords++;
+			curRealRating=-1; curPredRating=-1;
+			findRealRating = false; findPredRating = false;
+			for (int z=0; z<this.sizeSoftmax && (!findRealRating || !findPredRating); z++) {
+				if (this.Md[0][y][z] == 1) {
+					curRealRating = z;
+					findRealRating = true;
+				}
+				if (this.Mnvs[0][y][z] == 1) {
+					curPredRating = z;
+					findPredRating = true;
+				}
+			}
+			log.info("curRealRating: "+ curRealRating +", curPredRating: "+curPredRating);
+			rmse += Math.pow(curRealRating-curPredRating, 2);
+		}
+		this.RMSERBMModel += rmse;
+
+		rmse = Math.sqrt(rmse/this.numMovies);
+		log.info("getRMSE_oneUser_onlyRatedMovies: rmse for current user: "+rmse);
+
+		double rmseWhole = this.RMSERBMModel;
+		rmseWhole = Math.sqrt(rmseWhole/this.numRMSERecords);
+		this.bufferedWriter.write(this.numEpochs+" <--> "+rmseWhole+"\n");
+//		this.bufferedWriter.newLine();
+		this.bufferedWriter.flush();
+
+		log.info("\n----------------------------"
+				+ "\n----------------------------"
+				+ "\nRMSE_Current: "+ rmseWhole
+				);
+		// please refer to the method getRMSE_oneUser() for details 
 	}
 }
