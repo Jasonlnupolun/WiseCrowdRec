@@ -14,88 +14,88 @@ import com.feiyu.websocket.StormHistogramChartWebSocketHandler;
 
 public class StartInitSetupAutomatically extends HttpServlet {
 
-	private static final long serialVersionUID = -1685928905690566889L;
+  private static final long serialVersionUID = -1685928905690566889L;
 
-	public void init() {
-		InitializeWCR initWcr = new InitializeWCR();
+  public void init() {
+    InitializeWCR initWcr = new InitializeWCR();
 
-		try {
-			initWcr.getWiseCrowdRecConfigInfo();
-			initWcr.twitterInitDyna();
-			initWcr.twitterInitBack();
-			initWcr.coreNLPInitial();
-			initWcr.calaisNLPInitial();
-			initWcr.cassandraInitial();
-			initWcr.elasticsearchInitial();
-			initWcr.themoviedbOrgInitial();
-			initWcr.rabbitmqInit();
-			initWcr.initializeRBM();
-			initWcr.getFreebaseInfo();
-			initWcr.signInWithTwitterGetAppOauth();
-			
-			GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
+    try {
+      initWcr.getWiseCrowdRecConfigInfo();
+      initWcr.twitterInitDyna();
+      initWcr.twitterInitBack();
+      initWcr.coreNLPInitial();
+      initWcr.calaisNLPInitial();
+      initWcr.cassandraInitial();
+      initWcr.elasticsearchInitial();
+      initWcr.themoviedbOrgInitial();
+      initWcr.rabbitmqInit();
+      initWcr.initializeRBM();
+      initWcr.getFreebaseInfo();
+      initWcr.signInWithTwitterGetAppOauth();
 
-			Thread StormHistogramChartWebSocketHandlerThread = new Thread () {
-				public void run () {
-					try {
-						StormHistogramChartWebSocketHandler.start();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			StormHistogramChartWebSocketHandlerThread.start();
-			
-			Thread SparkHistogramWebSocketHandlerThread = new Thread () {
-				public void run () {
-					try {
-						SparkHistogramWebSocketHandler.start();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			SparkHistogramWebSocketHandlerThread.start();
+      GlobalVariables.SPARK_TWT_STREAMING.sparkInit();
 
-			Thread SparkWebSocketHandlerThread = new Thread () {
-				public void run () {
-					try {
-						SparkWebSocketHandler.start();//Open Spark server side websocket
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			SparkWebSocketHandlerThread.start();
-			
-			Thread StormThread = new Thread () {
-				public void run () {
-					try {
-						BackgroundTopology t = new BackgroundTopology();
-//						boolean isFakeTopologyForTest = true;
-						boolean isFakeTopologyForTest = false;
-						t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			StormThread.start();
-			
-			Thread LikeOrNotWSHandlerThread = new Thread () {
-				public void run () {
-					try {
-						LikeOrNotWSHandler.start();
-					} catch (Exception e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			LikeOrNotWSHandlerThread.start();
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+      Thread StormHistogramChartWebSocketHandlerThread = new Thread () {
+        public void run () {
+          try {
+            StormHistogramChartWebSocketHandler.start();
+          } catch (Exception e) {
+            e.printStackTrace();
+          } 
+        }
+      };
+      StormHistogramChartWebSocketHandlerThread.start();
 
-	}
+      Thread SparkHistogramWebSocketHandlerThread = new Thread () {
+        public void run () {
+          try {
+            SparkHistogramWebSocketHandler.start();
+          } catch (Exception e) {
+            e.printStackTrace();
+          } 
+        }
+      };
+      SparkHistogramWebSocketHandlerThread.start();
+
+      Thread SparkWebSocketHandlerThread = new Thread () {
+        public void run () {
+          try {
+            SparkWebSocketHandler.start();//Open Spark server side websocket
+          } catch (Exception e) {
+            e.printStackTrace();
+          } 
+        }
+      };
+      SparkWebSocketHandlerThread.start();
+
+      Thread StormThread = new Thread () {
+        public void run () {
+          try {
+            BackgroundTopology t = new BackgroundTopology();
+            //						boolean isFakeTopologyForTest = true;
+            boolean isFakeTopologyForTest = false;
+            t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
+          } catch (Exception e) {
+            e.printStackTrace();
+          } 
+        }
+      };
+      StormThread.start();
+
+      Thread LikeOrNotWSHandlerThread = new Thread () {
+        public void run () {
+          try {
+            LikeOrNotWSHandler.start();
+          } catch (Exception e) {
+            e.printStackTrace();
+          } 
+        }
+      };
+      LikeOrNotWSHandlerThread.start();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+  }
 }

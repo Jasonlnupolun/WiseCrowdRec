@@ -6,11 +6,11 @@ package com.feiyu.protobuf;
 public final class UserActorRatingProtos {
   private UserActorRatingProtos() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
+                                           com.google.protobuf.ExtensionRegistry registry) {
   }
   public interface UserOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:User)
-      com.google.protobuf.MessageOrBuilder {
+  // @@protoc_insertion_point(interface_extends:User)
+  com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>optional int64 userid = 1;</code>
@@ -33,7 +33,7 @@ public final class UserActorRatingProtos {
      * <code>optional string candidateactor = 2;</code>
      */
     com.google.protobuf.ByteString
-        getCandidateactorBytes();
+    getCandidateactorBytes();
 
     /**
      * <code>optional int32 rating = 3;</code>
@@ -48,9 +48,9 @@ public final class UserActorRatingProtos {
    * Protobuf type {@code User}
    */
   public static final class User extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:User)
-      UserOrBuilder {
+  com.google.protobuf.GeneratedMessage implements
+  // @@protoc_insertion_point(message_implements:User)
+  UserOrBuilder {
     // Use User.newBuilder() to construct.
     private User(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
@@ -70,13 +70,13 @@ public final class UserActorRatingProtos {
     private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
+    getUnknownFields() {
       return this.unknownFields;
     }
     private User(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+                 com.google.protobuf.CodedInputStream input,
+                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                     throws com.google.protobuf.InvalidProtocolBufferException {
       initFields();
       @SuppressWarnings("unused")
       int mutable_bitField0_ = 0;
@@ -92,7 +92,7 @@ public final class UserActorRatingProtos {
               break;
             default: {
               if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
+                extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -119,30 +119,30 @@ public final class UserActorRatingProtos {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
+          e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
+    getDescriptor() {
       return com.feiyu.protobuf.UserActorRatingProtos.internal_static_User_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
+    internalGetFieldAccessorTable() {
       return com.feiyu.protobuf.UserActorRatingProtos.internal_static_User_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.feiyu.protobuf.UserActorRatingProtos.User.class, com.feiyu.protobuf.UserActorRatingProtos.User.Builder.class);
+            com.feiyu.protobuf.UserActorRatingProtos.User.class, com.feiyu.protobuf.UserActorRatingProtos.User.Builder.class);
     }
 
     public static com.google.protobuf.Parser<User> PARSER =
         new com.google.protobuf.AbstractParser<User>() {
       public User parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+                                   com.google.protobuf.CodedInputStream input,
+                                   com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                       throws com.google.protobuf.InvalidProtocolBufferException {
         return new User(input, extensionRegistry);
       }
     };
@@ -197,12 +197,12 @@ public final class UserActorRatingProtos {
      * <code>optional string candidateactor = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getCandidateactorBytes() {
+    getCandidateactorBytes() {
       java.lang.Object ref = candidateactor_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+              (java.lang.String) ref);
         candidateactor_ = b;
         return b;
       } else {
@@ -241,7 +241,7 @@ public final class UserActorRatingProtos {
     }
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+        throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt64(1, userid_);
@@ -263,15 +263,15 @@ public final class UserActorRatingProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, userid_);
+            .computeInt64Size(1, userid_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getCandidateactorBytes());
+            .computeBytesSize(2, getCandidateactorBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, rating_);
+            .computeInt32Size(3, rating_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -286,14 +286,14 @@ public final class UserActorRatingProtos {
     }
 
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+                                                                          com.google.protobuf.ByteString data)
+                                                                              throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+                                                                          com.google.protobuf.ByteString data,
+                                                                          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                                                              throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(byte[] data)
@@ -301,9 +301,9 @@ public final class UserActorRatingProtos {
       return PARSER.parseFrom(data);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+                                                                          byte[] data,
+                                                                          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                                                              throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(java.io.InputStream input)
@@ -311,9 +311,9 @@ public final class UserActorRatingProtos {
       return PARSER.parseFrom(input);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+                                                                          java.io.InputStream input,
+                                                                          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                                                              throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseDelimitedFrom(java.io.InputStream input)
@@ -321,20 +321,20 @@ public final class UserActorRatingProtos {
       return PARSER.parseDelimitedFrom(input);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+                                                                                   java.io.InputStream input,
+                                                                                   com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                                                                       throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+                                                                          com.google.protobuf.CodedInputStream input)
+                                                                              throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
     public static com.feiyu.protobuf.UserActorRatingProtos.User parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+                                                                          com.google.protobuf.CodedInputStream input,
+                                                                          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                                                              throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
 
@@ -347,7 +347,7 @@ public final class UserActorRatingProtos {
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                                        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -355,19 +355,19 @@ public final class UserActorRatingProtos {
      * Protobuf type {@code User}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:User)
-        com.feiyu.protobuf.UserActorRatingProtos.UserOrBuilder {
+    com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+    // @@protoc_insertion_point(builder_implements:User)
+    com.feiyu.protobuf.UserActorRatingProtos.UserOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
+      getDescriptor() {
         return com.feiyu.protobuf.UserActorRatingProtos.internal_static_User_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
+      internalGetFieldAccessorTable() {
         return com.feiyu.protobuf.UserActorRatingProtos.internal_static_User_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.feiyu.protobuf.UserActorRatingProtos.User.class, com.feiyu.protobuf.UserActorRatingProtos.User.Builder.class);
+              com.feiyu.protobuf.UserActorRatingProtos.User.class, com.feiyu.protobuf.UserActorRatingProtos.User.Builder.class);
       }
 
       // Construct using com.feiyu.protobuf.UserActorRatingProtos.User.newBuilder()
@@ -376,7 +376,7 @@ public final class UserActorRatingProtos {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                      com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -404,7 +404,7 @@ public final class UserActorRatingProtos {
       }
 
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return com.feiyu.protobuf.UserActorRatingProtos.internal_static_User_descriptor;
       }
 
@@ -472,9 +472,9 @@ public final class UserActorRatingProtos {
       }
 
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
+                               com.google.protobuf.CodedInputStream input,
+                               com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                                   throws java.io.IOException {
         com.feiyu.protobuf.UserActorRatingProtos.User parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
@@ -550,12 +550,12 @@ public final class UserActorRatingProtos {
        * <code>optional string candidateactor = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getCandidateactorBytes() {
+      getCandidateactorBytes() {
         java.lang.Object ref = candidateactor_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                (java.lang.String) ref);
           candidateactor_ = b;
           return b;
         } else {
@@ -566,11 +566,11 @@ public final class UserActorRatingProtos {
        * <code>optional string candidateactor = 2;</code>
        */
       public Builder setCandidateactor(
-          java.lang.String value) {
+                                       java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         candidateactor_ = value;
         onChanged();
         return this;
@@ -588,11 +588,11 @@ public final class UserActorRatingProtos {
        * <code>optional string candidateactor = 2;</code>
        */
       public Builder setCandidateactorBytes(
-          com.google.protobuf.ByteString value) {
+                                            com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
         candidateactor_ = value;
         onChanged();
         return this;
@@ -642,42 +642,42 @@ public final class UserActorRatingProtos {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_User_descriptor;
+  internal_static_User_descriptor;
   private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_User_fieldAccessorTable;
+  com.google.protobuf.GeneratedMessage.FieldAccessorTable
+  internal_static_User_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
   private static com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+  descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n1src/main/resources/protobuf/useractorr" +
-      "ating.proto\">\n\004User\022\016\n\006userid\030\001 \001(\003\022\026\n\016c" +
-      "andidateactor\030\002 \001(\t\022\016\n\006rating\030\003 \001(\005B+\n\022c" +
-      "om.feiyu.protobufB\025UserActorRatingProtos"
+                                         "\n1src/main/resources/protobuf/useractorr" +
+                                             "ating.proto\">\n\004User\022\016\n\006userid\030\001 \001(\003\022\026\n\016c" +
+                                             "andidateactor\030\002 \001(\t\022\016\n\006rating\030\003 \001(\005B+\n\022c" +
+                                             "om.feiyu.protobufB\025UserActorRatingProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
+      public com.google.protobuf.ExtensionRegistry assignDescriptors(
+                                                                     com.google.protobuf.Descriptors.FileDescriptor root) {
+        descriptor = root;
+        return null;
+      }
+    };
     com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+    .internalBuildGeneratedFileFrom(descriptorData,
+      new com.google.protobuf.Descriptors.FileDescriptor[] {
+    }, assigner);
     internal_static_User_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+        getDescriptor().getMessageTypes().get(0);
     internal_static_User_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_User_descriptor,
-        new java.lang.String[] { "Userid", "Candidateactor", "Rating", });
+        com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+          internal_static_User_descriptor,
+          new java.lang.String[] { "Userid", "Candidateactor", "Rating", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

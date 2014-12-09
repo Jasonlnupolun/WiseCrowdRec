@@ -26,39 +26,39 @@ import backtype.storm.contrib.jms.bolt.JmsBolt;
 import backtype.storm.tuple.Tuple;
 
 public class StormJmsBolt implements java.io.Serializable {
-	private static Logger log= Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
-	private static final long serialVersionUID = 8795229050766399663L;
-	SerializeBeans2JSON sb2json = new SerializeBeans2JSON();
-	MovieWithCount movieWithCount = new MovieWithCount();
+  private static Logger log= Logger.getLogger(ForTestGetMovieDataBolt.class.getName());
+  private static final long serialVersionUID = 8795229050766399663L;
+  SerializeBeans2JSON sb2json = new SerializeBeans2JSON();
+  MovieWithCount movieWithCount = new MovieWithCount();
 
-	public JmsBolt jmsBolt() {
-		JmsBolt jmsBolt = new JmsBolt();
+  public JmsBolt jmsBolt() {
+    JmsBolt jmsBolt = new JmsBolt();
 
-		// set Jms Provider
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("SpringApplicationContext.xml");
-		JmsProvider jmsProvider = new JmsProviderSpring(
-				(ConnectionFactory)applicationContext.getBean("jmsConnectionFactory"),
-				(Destination)applicationContext.getBean("notificationQueue"));
-		jmsBolt.setJmsProvider(jmsProvider);
+    // set Jms Provider
+    ApplicationContext applicationContext = new ClassPathXmlApplicationContext("SpringApplicationContext.xml");
+    JmsProvider jmsProvider = new JmsProviderSpring(
+      (ConnectionFactory)applicationContext.getBean("jmsConnectionFactory"),
+      (Destination)applicationContext.getBean("notificationQueue"));
+    jmsBolt.setJmsProvider(jmsProvider);
 
-		// set Jms Message Producer
-		JmsMessageProducer jmsMessageProducer = new JmsMessageProducer() {
-			private static final long serialVersionUID = 7895970552658437305L;
-			@Override
-			public Message toMessage(Session session, Tuple tuple) throws JMSException {
-				movieWithCount = (MovieWithCount) tuple.getValueByField("movieWithCount");
-				String jsonMsg = null; // @@@ note json message can be null
-				try {
-					jsonMsg = sb2json.serializeBeans2JSON(movieWithCount);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				log.debug("jsonMsg----=======+++++++-> "+ jsonMsg);
-				return session.createTextMessage(jsonMsg);//@@@ lots of options
-			}
-		};
-		jmsBolt.setJmsMessageProducer(jmsMessageProducer);
+    // set Jms Message Producer
+    JmsMessageProducer jmsMessageProducer = new JmsMessageProducer() {
+      private static final long serialVersionUID = 7895970552658437305L;
+      @Override
+      public Message toMessage(Session session, Tuple tuple) throws JMSException {
+        movieWithCount = (MovieWithCount) tuple.getValueByField("movieWithCount");
+        String jsonMsg = null; // @@@ note json message can be null
+        try {
+          jsonMsg = sb2json.serializeBeans2JSON(movieWithCount);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        log.debug("jsonMsg----=======+++++++-> "+ jsonMsg);
+        return session.createTextMessage(jsonMsg);//@@@ lots of options
+      }
+    };
+    jmsBolt.setJmsMessageProducer(jmsMessageProducer);
 
-		return jmsBolt;
-	}
+    return jmsBolt;
+  }
 }

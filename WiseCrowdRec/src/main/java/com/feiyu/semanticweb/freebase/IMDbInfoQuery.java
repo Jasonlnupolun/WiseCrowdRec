@@ -21,19 +21,19 @@ import com.omertron.themoviedbapi.model.MovieDb;
  */
 
 public class IMDbInfoQuery {
-	private static Logger LOG = Logger.getLogger(IMDbInfoQuery.class.getName());
+  private static Logger LOG = Logger.getLogger(IMDbInfoQuery.class.getName());
 
-	public String getMoiveName(String IMDbID) throws MovieDbException {
-		MovieDb result = GlobalVariables.TMDB.getMovieInfoImdb(IMDbID,"en-US"); // WiseCrowdRec only analyze english tweets
-		return result.getOriginalTitle();
-	}
+  public String getMoiveName(String IMDbID) throws MovieDbException {
+    MovieDb result = GlobalVariables.TMDB.getMovieInfoImdb(IMDbID,"en-US"); // WiseCrowdRec only analyze english tweets
+    return result.getOriginalTitle();
+  }
 
-	public static void main(String[] argv) throws MovieDbException, IOException {
-		InitializeWCR initWcr = new InitializeWCR();
-		initWcr.getWiseCrowdRecConfigInfo();
-		initWcr.themoviedbOrgInitial();
+  public static void main(String[] argv) throws MovieDbException, IOException {
+    InitializeWCR initWcr = new InitializeWCR();
+    initWcr.getWiseCrowdRecConfigInfo();
+    initWcr.themoviedbOrgInitial();
 
-		IMDbInfoQuery imdbIQ = new IMDbInfoQuery();	
-		LOG.info(imdbIQ.getMoiveName("tt0109830"));
-	}
+    IMDbInfoQuery imdbIQ = new IMDbInfoQuery();	
+    LOG.info(imdbIQ.getMoiveName("tt0109830"));
+  }
 }

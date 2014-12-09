@@ -1,4 +1,7 @@
 package com.feiyu.springmvc.controller;
+/**
+ * @author feiyu
+ */
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -33,131 +36,131 @@ import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 @Controller
 public class TweetsAnalyzerController {
-	private static Logger logger = Logger.getLogger(TweetsAnalyzerController.class.getName());
-	private SignInWithTwitterService signInWithTwitterService = new SignInWithTwitterService();
-	private InitializeWCR initWcr = new InitializeWCR();
-	String userID = null;
+  private static Logger logger = Logger.getLogger(TweetsAnalyzerController.class.getName());
+  private SignInWithTwitterService signInWithTwitterService = new SignInWithTwitterService();
+  private InitializeWCR initWcr = new InitializeWCR();
+  String userID = null;
 
-	//	@Autowired
-	//	public TweetsAnalyzerController(SignInWithTwitterService signInWithTwitterService) {
-	//		this.signInWithTwitterService = signInWithTwitterService;
-	//	}
+  //	@Autowired
+  //	public TweetsAnalyzerController(SignInWithTwitterService signInWithTwitterService) {
+  //		this.signInWithTwitterService = signInWithTwitterService;
+  //	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(HttpServletRequest req, HttpServletResponse resp,Locale locale, Model model) throws Exception {
-		logger.info("Welcome home! The client locale is "+locale.toString()+"." );
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  public String home(HttpServletRequest req, HttpServletResponse resp,Locale locale, Model model) throws Exception {
+    logger.info("Welcome home! The client locale is "+locale.toString()+"." );
 
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		String formattedDate = dateFormat.format(date);
-		model.addAttribute("serverTime", formattedDate );
+    Date date = new Date();
+    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+    String formattedDate = dateFormat.format(date);
+    model.addAttribute("serverTime", formattedDate );
 
-		return "index";
-	}
+    return "index";
+  }
 
-	@RequestMapping(value = "restapi/searchPhrases", method = RequestMethod.GET)
-	@ResponseBody
-	public void searchPhrases(@RequestParam("searchPhrases") final String searchPhrases)  {
-		//		if (searchPhrases == null) {
-		//			return _entityList;
-		//		}
+  @RequestMapping(value = "restapi/searchPhrases", method = RequestMethod.GET)
+  @ResponseBody
+  public void searchPhrases(@RequestParam("searchPhrases") final String searchPhrases)  {
+    //		if (searchPhrases == null) {
+    //			return _entityList;
+    //		}
 
-		GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
-		GlobalVariables.RBM_DATA_CLC_MDL_TRN_TST.start();
-	}
+    GlobalVariables.SPARK_TWT_STREAMING.startSpark(searchPhrases);
+    GlobalVariables.RBM_DATA_CLC_MDL_TRN_TST.start();
+  }
 
-	@RequestMapping(value = "signinwithtwitter/login", params = {"callbackURL"} , method = RequestMethod.GET)
-	@ResponseBody
-	public String signinwithtwitter(@RequestParam(value = "callbackURL") final String callbackURL) 
-			throws IOException, KeyManagementException, InvalidKeyException, NoSuchAlgorithmException, HttpException {
-		initWcr.getWiseCrowdRecConfigInfo();
-		initWcr.signInWithTwitterGetAppOauth();
+  @RequestMapping(value = "signinwithtwitter/login", params = {"callbackURL"} , method = RequestMethod.GET)
+  @ResponseBody
+  public String signinwithtwitter(@RequestParam(value = "callbackURL") final String callbackURL) 
+      throws IOException, KeyManagementException, InvalidKeyException, NoSuchAlgorithmException, HttpException {
+    initWcr.getWiseCrowdRecConfigInfo();
+    initWcr.signInWithTwitterGetAppOauth();
 
-		return signInWithTwitterService.obtainingARequestToken(callbackURL);
-	}
+    return signInWithTwitterService.obtainingARequestToken(callbackURL);
+  }
 
-	@RequestMapping(value = "twitter/callback", params = {"oauth_token", "oauth_verifier"} , method = RequestMethod.GET)
-	@ResponseBody
-	public String converRequestToken2AccessToken(
-			@RequestParam(value = "oauth_token") final String oauth_token, 
-			@RequestParam(value = "oauth_verifier") final String oauth_verifier)
-					throws Exception  { 
-		return signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
-	}
+  @RequestMapping(value = "twitter/callback", params = {"oauth_token", "oauth_verifier"} , method = RequestMethod.GET)
+  @ResponseBody
+  public String converRequestToken2AccessToken(
+                                               @RequestParam(value = "oauth_token") final String oauth_token, 
+                                               @RequestParam(value = "oauth_verifier") final String oauth_verifier)
+                                                   throws Exception  { 
+    return signInWithTwitterService.converRequestToken2AccessToken(oauth_token, oauth_verifier);
+  }
 
-	@RequestMapping(value = "startWebSocketWithUserID", params = {"user_id"}, method = RequestMethod.GET)
-	@ResponseBody
-	public void startWebSocketWithUserID(@RequestParam(value = "user_id") final String user_id) {
-		userID = user_id;
+  @RequestMapping(value = "startWebSocketWithUserID", params = {"user_id"}, method = RequestMethod.GET)
+  @ResponseBody
+  public void startWebSocketWithUserID(@RequestParam(value = "user_id") final String user_id) {
+    userID = user_id;
 
-		StartWebSocket startWS = new StartWebSocket();
-		startWS.startWebSocketWithUserID(user_id);
-		logger.info("controller startWebSocketWithUserID");
-	}
+    StartWebSocket startWS = new StartWebSocket();
+    startWS.startWebSocketWithUserID(user_id);
+    logger.info("controller startWebSocketWithUserID");
+  }
 
-	@RequestMapping(value = "smcSubGraphws", params = {"user_id"}, method = RequestMethod.GET)
-	@ResponseBody
-	public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) 
-			throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {
-		GetD3VerticesEdgesFromFollowingList fw = new GetD3VerticesEdgesFromFollowingList();
-		fw.getVerticesEdgesInJson(user_id);
-		logger.info("controller smcSubGraphws");
-	}
+  @RequestMapping(value = "smcSubGraphws", params = {"user_id"}, method = RequestMethod.GET)
+  @ResponseBody
+  public void smgSubGraphSSEmessage(@RequestParam(value = "user_id") final String user_id) 
+      throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {
+    GetD3VerticesEdgesFromFollowingList fw = new GetD3VerticesEdgesFromFollowingList();
+    fw.getVerticesEdgesInJson(user_id);
+    logger.info("controller smcSubGraphws");
+  }
 
-	@RequestMapping(value = "/rbmRecPredic" )
-	@ResponseBody
-	public void rbmRecommendationPrediction() throws IOException{
-		MovieRecommendation movieRec = new MovieRecommendation();
-		movieRec.startMovieRec();
-		logger.info("controller -> rbmRecommendationPrediction");
-	} 
+  @RequestMapping(value = "/rbmRecPredic" )
+  @ResponseBody
+  public void rbmRecommendationPrediction() throws IOException{
+    MovieRecommendation movieRec = new MovieRecommendation();
+    movieRec.startMovieRec();
+    logger.info("controller -> rbmRecommendationPrediction");
+  } 
 
-	@RequestMapping(value = "/smcSubGraphSSEmessagebutton" )
-	@ResponseBody
-	public void smcSubGraphSSEmessagebutton() 
-			throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {
-		GetD3VerticesEdgesFromFollowingList fw = new GetD3VerticesEdgesFromFollowingList();
-		fw.getVerticesEdgesInJson(userID);
-		logger.info("controller welcome -> smcSubGraphSSEmessagebutton");
-	}
+  @RequestMapping(value = "/smcSubGraphSSEmessagebutton" )
+  @ResponseBody
+  public void smcSubGraphSSEmessagebutton() 
+      throws NumberFormatException, ConnectionException, TwitterException, IOException, ParseException {
+    GetD3VerticesEdgesFromFollowingList fw = new GetD3VerticesEdgesFromFollowingList();
+    fw.getVerticesEdgesInJson(userID);
+    logger.info("controller welcome -> smcSubGraphSSEmessagebutton");
+  }
 
-	@RequestMapping(value = "/startbackgroundtopology")
-	@ResponseBody
-	public void startBackgroundTopology() throws Exception { 
-		//        WebServer webServer = WebServers.createWebServer(9876)
-		//                .add("/hellowebsocket", new WS())
-		//                .add(new StaticFileHandler("/web"));
-		//        webServer.start();
-		//        System.out.println("Server running at " + webServer.getUri());
+  @RequestMapping(value = "/startbackgroundtopology")
+  @ResponseBody
+  public void startBackgroundTopology() throws Exception { 
+    //        WebServer webServer = WebServers.createWebServer(9876)
+    //                .add("/hellowebsocket", new WS())
+    //                .add(new StaticFileHandler("/web"));
+    //        webServer.start();
+    //        System.out.println("Server running at " + webServer.getUri());
 
-		logger.info("Welcome -> startbackgroundtopology");
-		//		initWcr.getWiseCrowdRecConfigInfo();
-		//		initWcr.twitterInitBack();
-		//		initWcr.cassandraInitial();
-		//		initWcr.coreNLPInitial();
-		//		initWcr.themoviedbOrgInitial();
+    logger.info("Welcome -> startbackgroundtopology");
+    //		initWcr.getWiseCrowdRecConfigInfo();
+    //		initWcr.twitterInitBack();
+    //		initWcr.cassandraInitial();
+    //		initWcr.coreNLPInitial();
+    //		initWcr.themoviedbOrgInitial();
 
-		//		initWcr.twitterInitDyna();
-		//		initWcr.elasticsearchInitial();
-		//		sts.sparkInit();
+    //		initWcr.twitterInitDyna();
+    //		initWcr.elasticsearchInitial();
+    //		sts.sparkInit();
 
-		//		BackgroundTopology t = new BackgroundTopology();
-		//
-		//		boolean isFakeTopologyForTest = false;
-		//		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
-	}
+    //		BackgroundTopology t = new BackgroundTopology();
+    //
+    //		boolean isFakeTopologyForTest = false;
+    //		t.startTopology(isFakeTopologyForTest, "wcr_topology_back", "I rated #IMDb");
+  }
 
-	@RequestMapping(value = "/startdynamicsearch")
-	@ResponseBody
-	public void startDynamicSearch() throws Exception { 
-		logger.info("Welcome -> start dynamic search");
+  @RequestMapping(value = "/startdynamicsearch")
+  @ResponseBody
+  public void startDynamicSearch() throws Exception { 
+    logger.info("Welcome -> start dynamic search");
 
-		//		initWcr.getWiseCrowdRecConfigInfo();//@
-		//		initWcr.coreNLPInitial();//@
-		//		initWcr.twitterInitDyna();
-		//		initWcr.elasticsearchInitial();
-		//		initWcr.rabbitmqInit();
+    //		initWcr.getWiseCrowdRecConfigInfo();//@
+    //		initWcr.coreNLPInitial();//@
+    //		initWcr.twitterInitDyna();
+    //		initWcr.elasticsearchInitial();
+    //		initWcr.rabbitmqInit();
 
-		GlobalVariables.SPARK_TWT_STREAMING.startSpark("movie");
-	}
+    GlobalVariables.SPARK_TWT_STREAMING.startSpark("movie");
+  }
 }

@@ -35,86 +35,86 @@ import com.feiyu.springmvc.service.SearchTweetsImpl;
 
 @SuppressWarnings("serial")
 public class TwitterQueryStreamBackSpout extends BaseRichSpout {
-	private SpoutOutputCollector _collector;
-	private LinkedBlockingQueue<Status> _queue = null;
-	private TwitterStream _twitterStream;
-	private String _keywordPhrase;
+  private SpoutOutputCollector _collector;
+  private LinkedBlockingQueue<Status> _queue = null;
+  private TwitterStream _twitterStream;
+  private String _keywordPhrase;
 
-	public TwitterQueryStreamBackSpout (String keywordPhrase) {
-		_keywordPhrase = keywordPhrase;
-	}
+  public TwitterQueryStreamBackSpout (String keywordPhrase) {
+    _keywordPhrase = keywordPhrase;
+  }
 
-	@Override
-	public Map<String, Object> getComponentConfiguration() {
-		Config ret = new Config();
-		ret.setMaxTaskParallelism(1);
-		return ret;
-	}    
+  @Override
+  public Map<String, Object> getComponentConfiguration() {
+    Config ret = new Config();
+    ret.setMaxTaskParallelism(1);
+    return ret;
+  }    
 
-	@SuppressWarnings({ "rawtypes" })
-	@Override
-	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-		_queue = new LinkedBlockingQueue<Status>(1000);
-		_collector = collector;
-		StatusListener listener = new StatusListener() {
+  @SuppressWarnings({ "rawtypes" })
+  @Override
+  public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+    _queue = new LinkedBlockingQueue<Status>(1000);
+    _collector = collector;
+    StatusListener listener = new StatusListener() {
 
-			@Override
-			public void onStatus(Status status) {
-				_queue.offer(status);
-			}
+      @Override
+      public void onStatus(Status status) {
+        _queue.offer(status);
+      }
 
-			@Override
-			public void onDeletionNotice(StatusDeletionNotice sdn) {
-			}
+      @Override
+      public void onDeletionNotice(StatusDeletionNotice sdn) {
+      }
 
-			@Override
-			public void onTrackLimitationNotice(int i) {
-			}
+      @Override
+      public void onTrackLimitationNotice(int i) {
+      }
 
-			@Override
-			public void onScrubGeo(long l, long l1) {
-			}
+      @Override
+      public void onScrubGeo(long l, long l1) {
+      }
 
-			@Override
-			public void onException(Exception e) {
-			}
+      @Override
+      public void onException(Exception e) {
+      }
 
-			@Override
-			public void onStallWarning(StallWarning warning) {
+      @Override
+      public void onStallWarning(StallWarning warning) {
 
-			}
+      }
 
-		};
-		SearchTweetsImpl t = new SearchTweetsImpl(listener, _twitterStream, _keywordPhrase);
-		t.searchTweetsFromNowOn(false);
-		//t.searchTweetsRandomSample();
-	}
+    };
+    SearchTweetsImpl t = new SearchTweetsImpl(listener, _twitterStream, _keywordPhrase);
+    t.searchTweetsFromNowOn(false);
+    //t.searchTweetsRandomSample();
+  }
 
-	@Override
-	public void nextTuple() {
-		Status ret = _queue.poll();
-		if(ret==null) {
-			Utils.sleep(5);
-		} else {
-			_collector.emit(new Values(ret));
-		}
-	}
+  @Override
+  public void nextTuple() {
+    Status ret = _queue.poll();
+    if(ret==null) {
+      Utils.sleep(5);
+    } else {
+      _collector.emit(new Values(ret));
+    }
+  }
 
-	@Override
-	public void ack(Object id) {
-	}
+  @Override
+  public void ack(Object id) {
+  }
 
-	@Override
-	public void fail(Object id) {
-	}
+  @Override
+  public void fail(Object id) {
+  }
 
-	@Override
-	public void close() {
-		_twitterStream.shutdown();
-	}
+  @Override
+  public void close() {
+    _twitterStream.shutdown();
+  }
 
-	@Override
-	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("tweet"));
-	}
+  @Override
+  public void declareOutputFields(OutputFieldsDeclarer declarer) {
+    declarer.declare(new Fields("tweet"));
+  }
 }

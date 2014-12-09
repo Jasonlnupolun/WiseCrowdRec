@@ -25,138 +25,138 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class GetActorMovieGenreSubgraphVectorNEdge {
-	private static Logger log = Logger.getLogger(GetActorMovieGenreSubgraphVectorNEdge.class.getName());
-	HttpTransport httpTransport = new NetHttpTransport();
-	HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
-	JSONParser parser = new JSONParser();
+  private static Logger log = Logger.getLogger(GetActorMovieGenreSubgraphVectorNEdge.class.getName());
+  HttpTransport httpTransport = new NetHttpTransport();
+  HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
+  JSONParser parser = new JSONParser();
 
-	public String getMovieListByActorName(String actorName, boolean printResult) throws IOException, ParseException {
-		log.info("-----Actor Name: "+actorName+"------getMovieListByActorName");
-		String query = "[{\"starring\": [{\"actor\": \""
-				+ actorName 
-				+"\"}],\"type\": \"/film/film\",\"name\": null,\"mid\": null}]";
-		//      String query = "[{\"id\":null,\"name\":null,\"type\":\"/astronomy/planet\"}]";
-		GlobalVariables.FREEBASE_URL.put("query", query);
-		HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
-		HttpResponse httpResponse = request.execute();
-		
-		String returnMsg = httpResponse.parseAsString();
-		
-		if (printResult) {
-			JSONObject response = (JSONObject)parser.parse(returnMsg);
-			JSONArray results = (JSONArray)response.get("result");
-			for (Object result : results) {
-				log.info(JsonPath.read(result,"$.name").toString());
-				//			log.info(JsonPath.read(result,"$.mid").toString());
-			}
-		}
+  public String getMovieListByActorName(String actorName, boolean printResult) throws IOException, ParseException {
+    log.info("-----Actor Name: "+actorName+"------getMovieListByActorName");
+    String query = "[{\"starring\": [{\"actor\": \""
+        + actorName 
+        +"\"}],\"type\": \"/film/film\",\"name\": null,\"mid\": null}]";
+    //      String query = "[{\"id\":null,\"name\":null,\"type\":\"/astronomy/planet\"}]";
+    GlobalVariables.FREEBASE_URL.put("query", query);
+    HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
+    HttpResponse httpResponse = request.execute();
 
-		return returnMsg;
-	}
+    String returnMsg = httpResponse.parseAsString();
 
-	public void getActorNamesByMovieName(String movieName) throws IOException, ParseException {
-		log.info("-----Movie Name: "+movieName+"------getActorNamesByMovieName");
-		// https://code.google.com/p/json-path/
-		String query = "[{\"type\":\"/film/film\",\"name\":\""
-				+ movieName
-				+ "\",\"mid\":null,\"starring\":[{\"actor\":null,\"mid\":null}]}]";
-		GlobalVariables.FREEBASE_URL.put("query", query);
-		HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
-		HttpResponse httpResponse = request.execute();
+    if (printResult) {
+      JSONObject response = (JSONObject)parser.parse(returnMsg);
+      JSONArray results = (JSONArray)response.get("result");
+      for (Object result : results) {
+        log.info(JsonPath.read(result,"$.name").toString());
+        //			log.info(JsonPath.read(result,"$.mid").toString());
+      }
+    }
 
-		JSONObject response = (JSONObject)parser.parse(httpResponse.parseAsString());
-		JSONArray results = (JSONArray)response.get("result");
-		for (Object result : results) {
-			//				log.info(JsonPath.read(result,"$.starring[*].actor").toString());
-			String[] actors= JsonPath.read(result,"$.starring[*].actor").toString()
-					.replace("[\"", "")
-					.replace("\"]", "")
-					.split("\",\"");
-			for (String actor : actors) {
-				log.info(actor);
-			}
-		}
-	}
+    return returnMsg;
+  }
 
-	public void getActorNamesByIMDbMovieID(String IMDbID) throws MovieDbException, IOException, ParseException {
-		IMDbInfoQuery imdbIQ = new IMDbInfoQuery();
-		String movieName = imdbIQ.getMoiveName(IMDbID);
-		log.info("-----Movie Name: "+movieName+"------getActorNamesByIMDbMovieID");
-		this.getActorNamesByMovieName(movieName);
-	}
+  public void getActorNamesByMovieName(String movieName) throws IOException, ParseException {
+    log.info("-----Movie Name: "+movieName+"------getActorNamesByMovieName");
+    // https://code.google.com/p/json-path/
+    String query = "[{\"type\":\"/film/film\",\"name\":\""
+        + movieName
+        + "\",\"mid\":null,\"starring\":[{\"actor\":null,\"mid\":null}]}]";
+    GlobalVariables.FREEBASE_URL.put("query", query);
+    HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
+    HttpResponse httpResponse = request.execute();
 
-	public String getFilmGenresByActorNMovieName(String actorName, String movieName, boolean printResult) throws IOException, ParseException {
-		log.info("-----Movie Genre of "+movieName+" "+actorName+"------getFilmGenreByActorNMovieName");
+    JSONObject response = (JSONObject)parser.parse(httpResponse.parseAsString());
+    JSONArray results = (JSONArray)response.get("result");
+    for (Object result : results) {
+      //				log.info(JsonPath.read(result,"$.starring[*].actor").toString());
+      String[] actors= JsonPath.read(result,"$.starring[*].actor").toString()
+          .replace("[\"", "")
+          .replace("\"]", "")
+          .split("\",\"");
+      for (String actor : actors) {
+        log.info(actor);
+      }
+    }
+  }
 
-		String query = "[{\"type\":\"/film/film\",\"name\":\""
-				+movieName
-				+"\",\"genre\": [],\"starring\":[{\"actor\":\""
-				+actorName
-				+"\"}]}]";
-		GlobalVariables.FREEBASE_URL.put("query", query);
-		HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
-		HttpResponse httpResponse = request.execute();
-		
-		String returnMsg = httpResponse.parseAsString();
-		
-		JSONObject response = (JSONObject)parser.parse(returnMsg);
-		JSONArray results = (JSONArray)response.get("result");
-		for (Object result : results) {
-			//				log.info(JsonPath.read(result,"$.starring[*].actor").toString());
-			String[] genres = JsonPath.read(result,"$.genre").toString()
-					.replace("[\"", "")
-					.replace("\"]", "")
-					.split("\",\"");
-			for (String genre : genres) {
-				log.info(genre);
-			}
-		}
+  public void getActorNamesByIMDbMovieID(String IMDbID) throws MovieDbException, IOException, ParseException {
+    IMDbInfoQuery imdbIQ = new IMDbInfoQuery();
+    String movieName = imdbIQ.getMoiveName(IMDbID);
+    log.info("-----Movie Name: "+movieName+"------getActorNamesByIMDbMovieID");
+    this.getActorNamesByMovieName(movieName);
+  }
 
-		return returnMsg;
-	}
+  public String getFilmGenresByActorNMovieName(String actorName, String movieName, boolean printResult) throws IOException, ParseException {
+    log.info("-----Movie Genre of "+movieName+" "+actorName+"------getFilmGenreByActorNMovieName");
 
-	public String getFilmGenresByMovieId(String mid, boolean printResult) throws IOException, ParseException {
-		log.info("-----Movie Genre of " + mid + " ------getFilmGenreByActorNMovieName");
-		String query = "[{ \"type\": \"/film/film\", \"mid\": \""
-				+ mid
-				+ "\", \"/film/film/genre\": [] }]"; 
-		GlobalVariables.FREEBASE_URL.put("query", query);
-		HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
-		HttpResponse httpResponse = request.execute();
+    String query = "[{\"type\":\"/film/film\",\"name\":\""
+        +movieName
+        +"\",\"genre\": [],\"starring\":[{\"actor\":\""
+        +actorName
+        +"\"}]}]";
+    GlobalVariables.FREEBASE_URL.put("query", query);
+    HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
+    HttpResponse httpResponse = request.execute();
 
-		String returnMsg = httpResponse.parseAsString();
+    String returnMsg = httpResponse.parseAsString();
 
-		JSONObject response = (JSONObject)parser.parse(returnMsg);
-		JSONArray results = (JSONArray)response.get("result");
-		for (Object result : results) {
-			String[] genres = JsonPath.read(result,"$./film/film/genre").toString()
-					.replace("[\"", "")
-					.replace("\"]", "")
-					.split("\",\"");
-			for (String genre : genres) {
-				log.debug(genre);
-			}
-		}
-		
-		return returnMsg;
-	}
+    JSONObject response = (JSONObject)parser.parse(returnMsg);
+    JSONArray results = (JSONArray)response.get("result");
+    for (Object result : results) {
+      //				log.info(JsonPath.read(result,"$.starring[*].actor").toString());
+      String[] genres = JsonPath.read(result,"$.genre").toString()
+          .replace("[\"", "")
+          .replace("\"]", "")
+          .split("\",\"");
+      for (String genre : genres) {
+        log.info(genre);
+      }
+    }
 
-	public static void main(String[] args) {
-		try {
-			InitializeWCR initWCR = new InitializeWCR();
-			initWCR.getWiseCrowdRecConfigInfo();
-			initWCR.themoviedbOrgInitial();
-			initWCR.getFreebaseInfo();
+    return returnMsg;
+  }
 
-			GetActorMovieGenreSubgraphVectorNEdge getAMGSubGraphVE = new GetActorMovieGenreSubgraphVectorNEdge();
-			getAMGSubGraphVE.getMovieListByActorName("Kiefer Sutherland", true);
-			getAMGSubGraphVE.getActorNamesByMovieName("Stand by Me");
-			getAMGSubGraphVE.getActorNamesByIMDbMovieID("tt0109830");
-			getAMGSubGraphVE.getFilmGenresByActorNMovieName("Kiefer Sutherland", "Flatliners", true);
-			getAMGSubGraphVE.getFilmGenresByMovieId("/m/0bdjd", true);
+  public String getFilmGenresByMovieId(String mid, boolean printResult) throws IOException, ParseException {
+    log.info("-----Movie Genre of " + mid + " ------getFilmGenreByActorNMovieName");
+    String query = "[{ \"type\": \"/film/film\", \"mid\": \""
+        + mid
+        + "\", \"/film/film/genre\": [] }]"; 
+    GlobalVariables.FREEBASE_URL.put("query", query);
+    HttpRequest request = requestFactory.buildGetRequest(GlobalVariables.FREEBASE_URL);
+    HttpResponse httpResponse = request.execute();
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+    String returnMsg = httpResponse.parseAsString();
+
+    JSONObject response = (JSONObject)parser.parse(returnMsg);
+    JSONArray results = (JSONArray)response.get("result");
+    for (Object result : results) {
+      String[] genres = JsonPath.read(result,"$./film/film/genre").toString()
+          .replace("[\"", "")
+          .replace("\"]", "")
+          .split("\",\"");
+      for (String genre : genres) {
+        log.debug(genre);
+      }
+    }
+
+    return returnMsg;
+  }
+
+  public static void main(String[] args) {
+    try {
+      InitializeWCR initWCR = new InitializeWCR();
+      initWCR.getWiseCrowdRecConfigInfo();
+      initWCR.themoviedbOrgInitial();
+      initWCR.getFreebaseInfo();
+
+      GetActorMovieGenreSubgraphVectorNEdge getAMGSubGraphVE = new GetActorMovieGenreSubgraphVectorNEdge();
+      getAMGSubGraphVE.getMovieListByActorName("Kiefer Sutherland", true);
+      getAMGSubGraphVE.getActorNamesByMovieName("Stand by Me");
+      getAMGSubGraphVE.getActorNamesByIMDbMovieID("tt0109830");
+      getAMGSubGraphVE.getFilmGenresByActorNMovieName("Kiefer Sutherland", "Flatliners", true);
+      getAMGSubGraphVE.getFilmGenresByMovieId("/m/0bdjd", true);
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }

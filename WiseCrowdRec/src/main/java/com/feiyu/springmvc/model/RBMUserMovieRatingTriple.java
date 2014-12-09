@@ -4,34 +4,34 @@ package com.feiyu.springmvc.model;
  */
 
 public class RBMUserMovieRatingTriple {
-	private int userIdx;
-	private int movieIdx;
-	private int softmaxIdx;
+  private int userIdx;
+  private int movieIdx;
+  private int softmaxIdx;
 
-	public RBMUserMovieRatingTriple(int userIdx, int movieIdx, int softmaxIdx) {
-		this.userIdx = userIdx;
-		this.movieIdx = movieIdx;
-		this.softmaxIdx = softmaxIdx;
-	}
+  public RBMUserMovieRatingTriple(int userIdx, int movieIdx, int softmaxIdx) {
+    this.userIdx = userIdx;
+    this.movieIdx = movieIdx;
+    this.softmaxIdx = softmaxIdx;
+  }
 
-	public int getUserIdx() {
-		return this.userIdx;
-	}
+  public int getUserIdx() {
+    return this.userIdx;
+  }
 
-	public int getMovieIdx() {
-		return this.movieIdx;
-	}
+  public int getMovieIdx() {
+    return this.movieIdx;
+  }
 
-	public int getSoftmaxIdx() {
-		return this.softmaxIdx;
-	}
+  public int getSoftmaxIdx() {
+    return this.softmaxIdx;
+  }
 
-	@Override
-	public String toString() {
-		return "RBMUserMovieRatingTriple:{"
-				+"userIdx:"+ this.userIdx
-				+",movieIdx:" + this.movieIdx 
-				+",softmaxIdx:" + this.softmaxIdx
-				+ "}";
-	} 
+  @Override
+  public String toString() {
+    return "RBMUserMovieRatingTriple:{"
+        +"userIdx:"+ this.userIdx
+        +",movieIdx:" + this.movieIdx 
+        +",softmaxIdx:" + this.softmaxIdx
+        + "}";
+  } 
 }

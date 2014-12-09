@@ -15,60 +15,60 @@ import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
 public class StormHistogramChartWebSocket implements WebSocket.OnTextMessage{
-	private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_STORMHISTOGRAMCHART;
-//	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
+  private final static String QUEUE_NAME = GlobalVariables.RABBITMQ_QUEUE_NAME_STORMHISTOGRAMCHART;
+  //	private org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection;
 
-	@Override
-	public void onOpen(org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection) {
-//		this.jettyWSconnection = jettyWSconnection;
+  @Override
+  public void onOpen(org.eclipse.jetty.websocket.WebSocket.Connection jettyWSconnection) {
+    //		this.jettyWSconnection = jettyWSconnection;
 
-		// RabbitMQ
-		try {
-			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost("localhost");
-			com.rabbitmq.client.Connection rabbitmqConnection;
-			rabbitmqConnection = factory.newConnection();
-			Channel channel = rabbitmqConnection.createChannel();
-			channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-			System.out.println(" [*] StormHistogramChartWebSocket server is waiting for messages. To exit press CTRL+C");
+    // RabbitMQ
+    try {
+      ConnectionFactory factory = new ConnectionFactory();
+      factory.setHost("localhost");
+      com.rabbitmq.client.Connection rabbitmqConnection;
+      rabbitmqConnection = factory.newConnection();
+      Channel channel = rabbitmqConnection.createChannel();
+      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+      System.out.println(" [*] StormHistogramChartWebSocket server is waiting for messages. To exit press CTRL+C");
 
-			QueueingConsumer consumer = new QueueingConsumer(channel);
-			channel.basicConsume(QUEUE_NAME, true, consumer);
-			while (true) {
-				QueueingConsumer.Delivery delivery = null;
-				try {
-					delivery = consumer.nextDelivery();
-				} catch (ShutdownSignalException | ConsumerCancelledException
-						| InterruptedException e) {
-					e.printStackTrace();
-				}
-				String message = new String(delivery.getBody());
-				System.out.println(" [...x...] StormHistogramChartWebSocket server received '" + message + "'");
+      QueueingConsumer consumer = new QueueingConsumer(channel);
+      channel.basicConsume(QUEUE_NAME, true, consumer);
+      while (true) {
+        QueueingConsumer.Delivery delivery = null;
+        try {
+          delivery = consumer.nextDelivery();
+        } catch (ShutdownSignalException | ConsumerCancelledException
+            | InterruptedException e) {
+          e.printStackTrace();
+        }
+        String message = new String(delivery.getBody());
+        System.out.println(" [...x...] StormHistogramChartWebSocket server received '" + message + "'");
 
-				try {
-					jettyWSconnection.sendMessage(message);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+        try {
+          jettyWSconnection.sendMessage(message);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
 
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}// RabbitMQ end
-	}
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }// RabbitMQ end
+  }
 
-	@Override
-	public void onClose(int i, String s) {
-		System.out.println("StormHistogramChartWebSocket server is closed");
-	}
+  @Override
+  public void onClose(int i, String s) {
+    System.out.println("StormHistogramChartWebSocket server is closed");
+  }
 
-	@Override
-	public void onMessage(String s) {
-		System.out.println("StormHistogramChartWebSocket server got message: " + s);
-//		try {
-//			jettyWSconnection.sendMessage("StormHistogramChartWebSocket server got " + s);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-	}
+  @Override
+  public void onMessage(String s) {
+    System.out.println("StormHistogramChartWebSocket server got message: " + s);
+    //		try {
+    //			jettyWSconnection.sendMessage("StormHistogramChartWebSocket server got " + s);
+    //		} catch (IOException e) {
+    //			e.printStackTrace();
+    //		}
+  }
 }
