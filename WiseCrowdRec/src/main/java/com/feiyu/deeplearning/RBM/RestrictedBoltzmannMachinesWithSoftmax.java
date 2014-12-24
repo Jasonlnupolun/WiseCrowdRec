@@ -563,9 +563,9 @@ public class RestrictedBoltzmannMachinesWithSoftmax {
 
     double rmseWhole = this.RMSERBMModel;
     rmseWhole = Math.sqrt(rmseWhole/this.numRMSERecords);
-    this.bufferedWriter.write(this.numEpochs+" <--> "+rmseWhole+"\n");
+    //this.bufferedWriter.write(this.numEpochs+" <--> "+rmseWhole+"\n");
     //		this.bufferedWriter.newLine();
-    this.bufferedWriter.flush();
+    //this.bufferedWriter.flush();
 
     log.info("\n----------------------------"
         + "\n----------------------------"
