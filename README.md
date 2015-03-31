@@ -1,15 +1,15 @@
 WiseCrowdRec
 ============
 
-- Project video demo can be viewed by clicking the following image:  
-[![Project demo](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/WiseCrowdRecUI.png)](https://drive.google.com/file/d/0B-OcoMYLimAlZVRVcnlWQ1BEcDA/view?usp=sharing)     
-    
+- Video Demo -> [click here](https://drive.google.com/file/d/0B-OcoMYLimAlZVRVcnlWQ1BEcDA/view?usp=sharing)
 
-- Check List:  
+![Demo in gif format](pics/gifDemo.gif)
+
+#### Check List:  
 - [x] Streaming processing   
     - [x] [Storm](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/storm/streamingdatacollection)       
-    - [x] [Spark Streaming (Apache Spark 0.9.1)](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/spark)        
-- [x] Deap learning  
+    - [x] [Spark Streaming (Apache Spark 0.9.1)](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/spark/SparkTwitterStreaming.java)
+- [x] Deep learning  
     - [x] [Restricted Boltzmann Machines (RBM) for Collaborative Filtering](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/deeplearning/RBM)        
 - [x] Machine learning lib 
     - [x] [Mahout on Hadoop (Collaborative Filtering)](https://github.com/faustineinsun/MahoutHadoopUseCase)           
@@ -20,7 +20,7 @@ WiseCrowdRec
     - [x] Multithreading (in Java)    
     - [x] Parallel      
     - [ ] Distributed      
-- [x] [WebSocket](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/websocket)    
+- [x] WebSocket
 - [x] [Rabbitmq](https://github.com/faustineinsun/WiseCrowdRec/search?p=1&q=rabbitmq&utf8=%E2%9C%93)        
 - [x] [ActiveMQ](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/storm/streamingdatacollection/stormmsg2websockets)    
 - [x] [Apache Camel](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/resources/SpringApplicationContext.xml) -> from(“file://xxxx").to("activemq://xxxx") (to ActiveMQ's JMS)  
@@ -31,69 +31,47 @@ WiseCrowdRec
     - $ `sudo lsof -i -n -P | grep TCP`  
 - [x] [Storm JMS](https://github.com/ptgoetz/storm-jms) -> Java Message Service (JMS)      
 - [x] [Freebase](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/semanticweb/freebase)    
-- [x] [Twitter4J](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/java/com/feiyu/semanticweb/freebase)    
+- [x] Twitter4J
 - [x] [Sign in with Twitter](https://github.com/faustineinsun/WiseCrowdRec/blob/c2eb79b360ade0aae0b9b44b6c54221110ad05d9/WiseCrowdRec/src/main/java/com/feiyu/springmvc/controller/TweetsAnalyzerController.java)    
 - [x] [nosql - Cassandra](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/Cassandra)     
 - [x] [data search - Elasticsearch](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/elasticsearch)     
 - [x] Hadoop 2.2.0   
-- [x] [Tomcat 7](https://github.com/faustineinsun/WiseCrowdRec/tree/master/bin)      
+- [x] Tomcat 7
 - [x] [Spring MVC](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/java/com/feiyu/springmvc)    
-- [x] REST API  
-- [x] Google Compute Engine  
+- [x] Amazon EC2
+- [ ] Google Compute Engine  
 - [x] Google Web Toolkit (GWT)  
 - [x] [D3.js Force-Directed Graph](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/main/webapp/resources/js/wisecrowdrec)    
 - [x] Jetty  
 - [ ] kafka  
 - [ ] Akka  
 - [ ] Zookeeper  
-- [ ] Ajax  
-- [ ] node.js  
-- [x] [Scripts for running this project automatically](https://github.com/faustineinsun/WiseCrowdRec/tree/master/scripts)  
+- [x] [Scripts for running this project automatically](https://github.com/faustineinsun/WiseCrowdRec/tree/master/bin)
 - [x] [Unit Test](https://github.com/faustineinsun/WiseCrowdRec/tree/master/WiseCrowdRec/src/test/java/com/feiyu)  
 - [x] [log4j](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/src/main/resources/log4j.properties)    
 - [x] [Maven](https://github.com/faustineinsun/WiseCrowdRec/blob/master/WiseCrowdRec/pom.xml)    
 - [x] [WebApp](https://github.com/faustineinsun/WiseCrowdRec/tree/c2eb79b360ade0aae0b9b44b6c54221110ad05d9/WiseCrowdRec/src/main/webapp)    
+
+---
    
 - Multithreading Parallel RBM   
-![Multithreading Parallel RBM](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/MultithreadingParallelRBM.png)
+![Multithreading Parallel RBM](pics/MultithreadingParallelRBM.png)
 
 - RBM for CF With Softmax and Bias   
-![RBMcfSoftmaxWithBias](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/RBMcfSoftmaxWithBias.png)
+![RBMcfSoftmaxWithBias](pics/RBMcfSoftmaxWithBias.png)
+
+- Project Snapshot
+![Project Snapshot](pics/WiseCrowdRecUI.png)     
      
 - WiseCrowdRec UI: RealTime Histogram        
-![WiseCrowdRecUIRealTimeHistogram](https://github.com/faustineinsun/WiseCrowdRec/blob/master/pics/WiseCrowdRecUIRealTimeHistogram.png)
+![WiseCrowdRecUIRealTimeHistogram](pics/WiseCrowdRecUIRealTimeHistogram.png)
 
 ---
 
-Cassandra   
-  - ~~Pelops,Hector~~ -> [Astyanax](https://github.com/Netflix/astyanax): A Java client library for the Cassandra database    
-  - Open Cassandra -> $ bin/cassandra -f  
-  - Open CQL3 -> $ bin/cqlsh   
-  - chmod +x schemaCassandra.txt  
-  - Put schema into cassandra -> $ cat schemaCassandra.txt | bin/cassandra-cli -h localhost  
-  - run java code  
-  - $ bin/cassandra-cli -h localhost  
-      - [default@unknown] use wcrkeyspace;  
-      - [default@unknown] DESCRIBE wcrkeyspace;   
-      - [default@unknown] list backgroundsearch;   
-      - [default@unknown] list dynamicsearch;   
+### Setup
 
-"[NOTE: Transactional topologies have been deprecated -- use the Trident framework instead.](https://github.com/nathanmarz/storm/wiki/Transactional-topologies)"  
-[Trident tutorial](https://github.com/nathanmarz/storm/wiki/Trident-tutorial)    
+#### On Local Machine (Mac OS X)
 
----
-
-Elasticsearch
-
-- $ ./bin/elasticsearch -d  
-- $ curl -XGET localhost:9200/wcresidx/_search?  
-- $ curl -XDELETE 'http://localhost:9200/wcresidx/'  
-- $ curl http://localhost:9200/_aliases  (list all indexes)    
-
-
----
-
-Setup project path in system bash file, for example, in Mac OS:  
 - $ `vim ~/.bash_profile`    
 
 ```
@@ -103,67 +81,45 @@ export PATH=$PATH:$WISECROWDREC_HOME/bin
 ```
 
 - $ `source ~/.bash_profile`    
-
----
-
 - Create the file named `config.properties` in `src/main/resources`  
 - Put your [twitter app](https://apps.twitter.com/) OAuth and WiseCrowdRec config info in `config.properties` as follows:   
 
 ```
 debug=true
-oauth.consumerKey=********
-oauth.consumerSecret=********
-oauth.accessToken=********
-oauth.accessTokenSecret=********
 
-SEARCH_PHRASES=movie
+#WiseCrowdRec-Local
+oauth.consumerKey3=***********
+oauth.consumerSecret3=***********
+oauth.accessToken3=***********
+oauth.accessTokenSecret3=***********
+
+#WiseCrowdRec-EC2
+#oauth.consumerKey3=***********
+#oauth.consumerSecret3=***********
+#oauth.accessToken3=***********
+#oauth.accessTokenSecret3=***********
+
+CalaisApiKey=***********
+themoviedbApiKey=***********
+freebase.api.key=***********
 ```
----
 
-both on local and GCE    
-
-- /Library/Tomcat/bin/startup.sh    
-- /Library/Tomcat/bin/shutdown.sh     
-- $ `mvn clean package tomcat7:deploy`    
-- $ `mvn tomcat7:undeploy`    
-
+- $ `bin/local/1-start-tools-local.sh`
+- $ `bin/local/2-deployWCRonTomcat-local.sh`
 
 ---
 
-local     
+#### On Amazon EC2 (Ubuntu 14.04)
 
-- $ `gcloud auth login`    
-- $ `gcutil listinstances`    
-- get `ssh` link from gce client website, and then use this link connect remote machine    
-
-[http://localhost:9999/](http://localhost:9999/)      
-[http://localhost:9999/docs/](http://localhost:9999/docs/)    
-[http://localhost:9999/examples/](http://localhost:9999/examples/)      
-[http://localhost:9999/manager/html](http://localhost:9999/manager/html)      
-[http://localhost:9999/host-manager/html](http://localhost:9999/host-manager/html)     
-
-- Before importing this Maven project into eclipse, run $ `mvn eclipse:eclipse`      
+```
+$ bin/ec2/1-download-tools-ec2.sh
+$ bin/ec2/2-start-tools-ec2.sh
+$ bin/ec2/3-deployWCRonTomcat-ec2.sh
+```
 
 ---
 
-[GCE (Google Compute Engine)](https://cloud.google.com/products/compute-engine/)      
-
-- $ `sudo su`    
-- $ `source ~/.bash_profile`  
-
-[http://173.255.114.111:9999/](http://173.255.114.111:9999/)    
-[http://173.255.114.111:9999/docs/](http://173.255.114.111:9999/docs/)    
-[http://173.255.114.111:9999/examples/](http://173.255.114.111:9999/examples/)    
-[http://173.255.114.111:9999/manager/html](http://173.255.114.111:9999/manager/html)    
-[http://173.255.114.111:9999/host-manager/html](http://173.255.114.111:9999/host-manager/html)    
-
-~~sudo service tomcat7 start~~    
-~~sudo service tomcat7 restart~~    
-~~sudo service tomcat7 stop~~      
-
----
-
-Useful info:
+#### Useful info
 - [Git](http://www.vogella.com/tutorials/Git/article.html)  
 - mvn versions:display-plugin-updates      
 - mvn eclipse:clean eclipse:eclipse -Dwtpversion=2.0    
