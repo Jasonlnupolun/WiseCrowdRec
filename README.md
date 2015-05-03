@@ -1,9 +1,7 @@
 WiseCrowdRec
 ============
 
-- Video Demo -> [click here](https://drive.google.com/file/d/0B-OcoMYLimAlZVRVcnlWQ1BEcDA/view?usp=sharing)
-
-![Demo in gif format](pics/gifDemo.gif)
+![Demo in gif format](pics/gifDemo_cur.gif)
 
 #### Check List:  
 - [x] Streaming processing   
@@ -61,10 +59,10 @@ WiseCrowdRec
 ![RBMcfSoftmaxWithBias](pics/RBMcfSoftmaxWithBias.png)
 
 - Project Snapshot
-![Project Snapshot](pics/WiseCrowdRecUI.png)     
+![Project Snapshot](pics/WiseCrowdRecUI_cur.png)     
      
 - WiseCrowdRec UI: RealTime Histogram        
-![WiseCrowdRecUIRealTimeHistogram](pics/WiseCrowdRecUIRealTimeHistogram.png)
+![WiseCrowdRecUIRealTimeHistogram](pics/WiseCrowdRecUIRealTimeHistogram_cur.png)
 
 ---
 

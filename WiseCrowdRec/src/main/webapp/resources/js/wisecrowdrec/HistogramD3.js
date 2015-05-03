@@ -88,6 +88,8 @@
 	  		.attr("x", x)
 	  		.attr("dy", -3)
 	  		.attr("text-anchor", "middle")
+	  		.attr("fill", "Beige")
+	  		.attr("stroke", "none")
 	  		.text(String);
 	  		        
 	  		// vertical grid lines
@@ -96,7 +98,7 @@
 	  		.attr("x2", x)
 	  		.attr("y1", 0)
 	  		.attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
-	  		.style("stroke", "#ccc");
+	  		.style("stroke", "none");
 	  		
 	  		// bar labels
 	  		var labelsContainer = chart.append('g')
@@ -104,7 +106,7 @@
 	  		labelsContainer.selectAll('text').data(sortedData).enter().append('text')
 	  		.attr('y', yText)
 	  		.attr('stroke', 'none')
-	  		.attr('fill', 'black')
+	  		.attr('fill', 'Beige')
 	  		  .attr("dy", ".35em") // vertical-align: middle
 	  		  .attr('text-anchor', 'end')
 	  		  .text(barLabel);
@@ -116,8 +118,8 @@
 	  		.attr('y', y)
 	  		.attr('height', yScale.rangeBand())
 	  		.attr('width', function(d) { return x(barValue(d)); })
-	  		.attr('stroke', 'white')
-	  		.attr('fill', 'steelblue');
+	  		.attr('stroke', 'Beige')
+	  		.attr('fill', 'Beige');
 	  		
 	  		// bar value labels
 	  		barsContainer.selectAll("text").data(sortedData).enter().append("text")
@@ -126,7 +128,7 @@
 	  		  .attr("dx", 3) // padding-left
 	  		  .attr("dy", ".35em") // vertical-align: middle
 	  		  .attr("text-anchor", "start") // text-align: right
-	  		  .attr("fill", "black")
+	  		  .attr("fill", "Beige")
 	  		  .attr("stroke", "none")
 	  		  .text(function(d) { return d3.round(barValue(d), 2); });
 	  		
@@ -134,7 +136,7 @@
 	  		barsContainer.append("line")
 	  		.attr("y1", -gridChartOffset)
 	  		.attr("y2", yScale.rangeExtent()[1] + gridChartOffset)
-	  		.style("stroke", "#000");
+	  		.style("stroke", "Beige");
 	 }
  }
 

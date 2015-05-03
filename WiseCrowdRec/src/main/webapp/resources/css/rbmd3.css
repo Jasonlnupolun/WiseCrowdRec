@@ -14,7 +14,7 @@ rect {
     pointer-events: none;
 }
 .node.typegenre {
-    fill:#ef027d;
+    fill:#FF4081;
 }
 .node.typemovie {
     fill:#33bdef;
@@ -44,13 +44,13 @@ rect {
     -moz-box-shadow: -7px 9px 4px -4px #fbafe3;
     -webkit-box-shadow: -7px 9px 4px -4px #fbafe3;
     box-shadow: -7px 9px 4px -4px #fbafe3;
-    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff5bb0), color-stop(1, #ef027d));
-    background:-moz-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
-    background:-webkit-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
-    background:-o-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
-    background:-ms-linear-gradient(top, #ff5bb0 5%, #ef027d 100%);
-    background:linear-gradient(to bottom, #ff5bb0 5%, #ef027d 100%);
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bb0', endColorstr='#ef027d', GradientType=0);
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff5bb0), color-stop(1, #FF4081));
+    background:-moz-linear-gradient(top, #ff5bb0 5%, #FF4081 100%);
+    background:-webkit-linear-gradient(top, #ff5bb0 5%, #FF4081 100%);
+    background:-o-linear-gradient(top, #ff5bb0 5%, #FF4081 100%);
+    background:-ms-linear-gradient(top, #ff5bb0 5%, #FF4081 100%);
+    background:linear-gradient(to bottom, #ff5bb0 5%, #FF4081 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bb0', endColorstr='#FF4081', GradientType=0);
     background-color:#ff5bb0;
     -moz-border-radius:32px;
     -webkit-border-radius:32px;
@@ -65,14 +65,14 @@ rect {
     text-shadow:-2px 3px 1px #c70067;
 }
 .genresDislikeButton:hover {
-    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ef027d), color-stop(1, #ff5bb0));
-    background:-moz-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
-    background:-webkit-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
-    background:-o-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
-    background:-ms-linear-gradient(top, #ef027d 5%, #ff5bb0 100%);
-    background:linear-gradient(to bottom, #ef027d 5%, #ff5bb0 100%);
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ef027d', endColorstr='#ff5bb0', GradientType=0);
-    background-color:#ef027d;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #FF4081), color-stop(1, #ff5bb0));
+    background:-moz-linear-gradient(top, #FF4081 5%, #ff5bb0 100%);
+    background:-webkit-linear-gradient(top, #FF4081 5%, #ff5bb0 100%);
+    background:-o-linear-gradient(top, #FF4081 5%, #ff5bb0 100%);
+    background:-ms-linear-gradient(top, #FF4081 5%, #ff5bb0 100%);
+    background:linear-gradient(to bottom, #FF4081 5%, #ff5bb0 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF4081', endColorstr='#ff5bb0', GradientType=0);
+    background-color:#FF4081;
 }
 .genresDislikeButton:active {
     position:relative;
@@ -195,4 +195,3 @@ rect {
     position:relative;
     top:1px;
 }
-
