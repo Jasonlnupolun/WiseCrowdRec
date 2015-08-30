@@ -1,0 +1,15 @@
+*pom.xml.tag
+*pom.xml.releaseBackup
+*pom.xml.next
+*release.properties
+*.settings/
+*.classpath
+*.project
+*.pydevproject
+*.cache
+*target/
+*test-output
+*config.properties
+*wcrloging.log
+*log/
+*esPath/

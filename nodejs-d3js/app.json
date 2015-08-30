@@ -1,0 +1,7 @@
+{
+  "name": "WCR-DEMO",
+  "description": "Template is from https://github.com/faustineinsun/scalaJS-playground",
+  "repository": "https://github.com/faustineinsun/scalaJS-playground",
+  "logo": "http://node-js-sample.herokuapp.com/public/img/node.svg",
+  "keywords": ["node", "express", "static"]
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Reference https://github.com/ptgoetz/storm-jms/wiki/Spring and https://github.com/P7h/StormTweetsSentimentD3Viz/blob/acacec61e7baa7a0ce37ef648e02fcdb9b342355/src/main/resources/applicationContext.xml-->
+<beans 
+  xmlns="http://www.springframework.org/schema/beans" 
+  xmlns:amq="http://activemq.apache.org/schema/core"
+  xmlns:camel="http://camel.apache.org/schema/spring"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.9.0.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+  
+    <camel:camelContext id="camel" trace="false">
+        <camel:routeBuilder ref="stormActiveMQ2WebSocketsRoute"/>
+    </camel:camelContext>
+
+    <bean id="stormActiveMQ2WebSocketsRoute" class="com.feiyu.storm.streamingdatacollection.stormmsg2websockets.StormActiveMQ2WebSocketsRoute"/>
+    
+    <amq:queue id="notificationQueue" physicalName="backtype.storm.contrib.example.queue" />
+    <amq:topic id="notificationTopic" physicalName="backtype.storm.contrib.example.topic" />
+    <!-- amq:connectionFactory id="jmsConnectionFactory" brokerURL="tcp://localhost:61616" / this one need to open activemq first-->
+    <amq:connectionFactory id="jmsConnectionFactory" brokerURL="vm://vmBrokerURL"/>
+    
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent" depends-on="broker">
+        <property name="brokerURL" value="vm://vmBrokerURL?create=false&amp;waitForStart=5000"/>
+    </bean>
+
+    <amq:broker id="broker" useJmx="true" persistent="false" brokerName="vmBrokerURL" useShutdownHook="false">
+        <amq:transportConnectors>
+            <amq:transportConnector name="vm" uri="vm://vmBrokerURL"/>
+        </amq:transportConnectors>
+    </amq:broker>  
+
+</beans>

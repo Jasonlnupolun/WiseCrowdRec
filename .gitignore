@@ -13,3 +13,8 @@
 *wcrloging.log
 *log/
 *esPath/
+*node_modules/
+*.env
+*.DS_Store
+*.idea/
+*dump.rdb

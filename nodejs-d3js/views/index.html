@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>WCR-Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="faustineinsun">
+
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+  <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <script src="//cdn.socket.io/socket.io-1.3.5.js"></script>
+
+  <link href="css/style.css" rel="stylesheet">
+  <script type="text/javascript" src="js/scripts.js"></script>
+  <script type="text/javascript">
+  window.onload = function() {
+    var rbmd3 = new RBMD3();
+    rbmd3.socketioevents();
+  };
+  </script>
+
+</head>
+
+<body>
+  <d3amggraph></d3amggraph>
+  <div class="overlayPanelTweet">
+    <p style='color:SlateBlue; text-align:center; font-size:100%; font-family:verdana'>Tweets contains keyword [movie]:</p>
+    <div id = "instantTweets" ></div>
+  </div>
+
+  <div class="overlayPanelPersonName">
+    <p style='color:SlateBlue; text-align:center; font-size:100%; font-family:verdana'>Extracted [Person Names] from Tweets:</p>
+    <div id = "extractedPersonNames"></div>
+  </div>
+
+  <div class="overlayPanelTopKPerson">
+    <p style='color:SlateBlue; text-align:center; font-size:100%; font-family:verdana'>[Top 7 Person Names] mentioned currently:</p>
+    <div id = "topKPerson"></div>
+  </div>
+
+  <div class="overlayPanelMovie">
+    <p style='color:SlateBlue; text-align:center; font-size:100%; font-family:verdana'>Related [movies]:</p>
+    <div id = "relatedMovies"></div>
+  </div>
+
+  <div class="overlayPanelRec">
+    <p style='color:SlateBlue; text-align:center; font-size:100%; font-family:verdana'>[Movies] to watch:</p>
+    <div id="movieRatingResults"></div>
+  </div>
+  <script type="text/template" id="movieRatingResultInBootstrap">
+    <div class="col-md-12" id="{{msgID}}">
+      <div class="alert alert-warning">
+        {{text}}
+      </div>
+    </div>
+  </script>
+
+  <div id="showLikeOrDis" class="showLikeOrDisStyle"></div>
+
+  <div class="licensePanel">
+    <center>
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+      <br />This work by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/faustineinsun" property="cc:attributionName" rel="cc:attributionURL">faustineinsun</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+    </center>
+  </div>
+</body>
+</html>
